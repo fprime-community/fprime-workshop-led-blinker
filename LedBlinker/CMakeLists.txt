@@ -24,6 +24,7 @@ include("${FPRIME_FRAMEWORK_PATH}/cmake/FPrime-Code.cmake")
 ###
 # Components and Topology
 ###
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/../Components")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Top")
 
 set(SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/Main.cpp")

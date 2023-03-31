@@ -45,6 +45,8 @@ module LedBlinker {
     instance textLogger
     instance uplink
     instance systemResources
+    #instance gpioDriver
+    instance led
 
     # ----------------------------------------------------------------------
     # Pattern graph specifiers
@@ -95,6 +97,7 @@ module LedBlinker {
       rateGroup1.RateGroupMemberOut[0] -> tlmSend.Run
       rateGroup1.RateGroupMemberOut[1] -> fileDownlink.Run
       rateGroup1.RateGroupMemberOut[2] -> systemResources.run
+      rateGroup1.RateGroupMemberOut[3] -> led.run
 
       # Rate group 2
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup2] -> rateGroup2.CycleIn
@@ -129,6 +132,7 @@ module LedBlinker {
 
     connections LedBlinker {
       # Add here connections to user-defined components
+      #led.gpioSet -> gpioDriver.gpioWrite
     }
 
   }

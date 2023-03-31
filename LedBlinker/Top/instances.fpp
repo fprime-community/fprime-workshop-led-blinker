@@ -82,6 +82,11 @@ module LedBlinker {
     stack size Default.STACK_SIZE \
     priority 96
 
+  instance led: Components.Led base id 0x0E00 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 95
+
   # ----------------------------------------------------------------------
   # Queued component instances
   # ----------------------------------------------------------------------
@@ -120,5 +125,7 @@ module LedBlinker {
   instance uplink: Svc.Deframer base id 0x4900
 
   instance systemResources: Svc.SystemResources base id 0x4A00
+
+  instance gpioDriver: Drv.LinuxGpioDriver base id 0x4C00
 
 }
