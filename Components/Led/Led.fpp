@@ -2,7 +2,7 @@ module Components {
     @ Component to blink an LED driven by a rate group
     active component Led {
         @ Command to turn on or off the blinking LED
-        async command TURN_ON_OFF(on_off: Fw.On) opcode 0
+        async command BLINKING_ON_OFF(on_off: Fw.On) opcode 0
 
         @ Blinking interval in rate group ticks
         param BLINK_INTERVAL: U32

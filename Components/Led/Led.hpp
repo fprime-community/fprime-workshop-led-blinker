@@ -7,9 +7,9 @@
 #ifndef Led_HPP
 #define Led_HPP
 
-#include "LedBlinker/Led/LedComponentAc.hpp"
+#include "Components/Led/LedComponentAc.hpp"
 
-namespace LedBlinker {
+namespace Components {
 
 class Led : public LedComponentBase {
   public:
@@ -20,12 +20,6 @@ class Led : public LedComponentBase {
     //! Construct object Led
     //!
     Led(const char* const compName /*!< The component name*/
-    );
-
-    //! Initialize object Led
-    //!
-    void init(const NATIVE_INT_TYPE queueDepth,  /*!< The queue depth*/
-              const NATIVE_INT_TYPE instance = 0 /*!< The instance number*/
     );
 
     //! Destroy object Led
@@ -55,12 +49,14 @@ class Led : public LedComponentBase {
 
     //! Implementation for TURN_ON_OFF command handler
     //! Command to turn on or off the blinking LED
-    void TURN_ON_OFF_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
+    void BLINKING_ON_OFF_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
                                 const U32 cmdSeq,          /*!< The command sequence number*/
                                 Fw::On on_off);
 
-    U32 m_count;
-    bool m_blinking;
+    Fw::On state;
+    U64 transitions;
+    U32 count;
+    bool blinking;
 };
 
 }  // end namespace LedBlinker
