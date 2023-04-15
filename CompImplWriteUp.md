@@ -90,9 +90,6 @@ Open Led.hpp, and add the following private member variables.
     bool blinking; //! Flag: if true then LED blinking will occur else no blinking will happen
 ```
 
-
-
-
 ### Commands
 
 Commands are used for ground to command the component. We will add a command named `BLINKING_ON_OFF` to turn on or off the blinking LED. This command will take in an argument named `on_off` of type `Fw.On`.
@@ -155,30 +152,39 @@ Open Led.cpp-template and copy this block of code and replace the `TODO_cmdHandl
 
 Now we will implement what actions the `BLINKING_ON_OFF` command should perform.
 
-### Command LED
+```cpp
+  void Led ::
+    BLINKING_ON_OFF_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq,
+        Fw::On on_off
+    )
+  {
+    // Create a variable to represent the command response
+    auto cmdResp = Fw::CmdResponse::OK;
 
-Implement the command handler. This handler will be called when ground issues the BLINKING_ON_OFF command.
+    // Verify if on_off is a valid argument.
+    // Note: isValid is autogenerate for enums defined in fpp.
+    if(!on_off.isValid())
+    {
+        // TODO: Add an event that indicates we received an invalid argument.
+        // NOTE: Add this event after going through the "Events" exercise.
 
-```c++
-void Led ::BLINKING_ON_OFF_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Fw::On on_off) {
+        // Update command response with a validation error
+        cmdResp = Fw::CmdResponse::VALIDATION_ERROR;
+    }
+    else
+    {
+      this->count = 0; // Reset count on any command
+      this->blinking = Fw::On::ON == on_off; // Update blinking state
+      // TODO: Add an event that reports the state we set to blinking.
+      // NOTE: Add this event after going through the "Events" exercise.
+    }
 
-    // 1. Check the command input before processing
-    FW_ASSERT(on_off == Fw::On::ON or on_off == Fw::On::OFF, on_off.e);
-
-    // 2. Reset count
-    //TODO
-
-    // 3. Set blinking state to commanded state
-    //TODO
-
-    // 4. Send out event
-    // Call event here
-
-    // 4. Send out command response
-    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
-}
-```
-
+    // Provide command response
+    this->cmdResponse_out(opCode,cmdSeq,cmdResp);
+  }
+  ```
 
 ### Telemetry
 
