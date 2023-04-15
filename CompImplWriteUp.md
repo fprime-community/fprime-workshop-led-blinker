@@ -77,11 +77,37 @@ Generate implementation files (yes/no)? yes
 ```
 Your new component is located in `Led`.
 
+## Component State
+
+During the design phase of a component, you may discover the need to manage and keep track of the component's state. In this exercise, we give you the state we want the Led component to update and report.
+
+Open Led.hpp, and add the following private member variables.
+
+```cpp
+    Fw::On state; //! Keeps track if LED is on or off
+    U64 transitions; //! The number of on/off transitions that have occurred from FSW boot up
+    U32 count; //! Keeps track of how many ticks the LED has been on for
+    bool blinking; //! Flag: if true then LED blinking will occur else no blinking will happen
+```
+
+
+
+
 ### Commands
 
-Commands are used for ground to command the component. We will add a command to turn on or off the blinking LED.
-Add a command to `Led.fpp` named `BLINKING_ON_OFF`. This command should take in an argument named `on_off` of type `Fw.On`.
+Commands are used for ground to command the component. We will add a command named `BLINKING_ON_OFF` to turn on or off the blinking LED. This command will take in an argument named `on_off` of type `Fw.On`.
 
+
+Inside your Led directory, open the file `Led.fpp` and search for the following:
+
+```
+        # One async command/port is required for active components
+        # This should be overridden by the developers with a useful command/port
+        @ TODO
+        async command TODO opcode 0
+```
+
+Replace that block with the following:
 
 ```
 @ Command to turn on or off the blinking LED
@@ -90,6 +116,44 @@ async command BLINKING_ON_OFF(
 )
 ```
 
+Exit the text editor, and run the following:
+
+```bash
+fprime-util impl
+```
+
+This command will auto generate two files: Led.hpp-template and Led.cpp-template. These files contain stubs for the command you specified in the fpp.
+
+Open Led.hpp-template and copy this block of code and replace the `TODO_cmdHandler` block inside of Led.hpp
+
+```cpp
+      //! Implementation for BLINKING_ON_OFF command handler
+      //! Command to turn on or off the blinking LED
+      void BLINKING_ON_OFF_cmdHandler(
+          const FwOpcodeType opCode, /*!< The opcode*/
+          const U32 cmdSeq, /*!< The command sequence number*/
+          Fw::On on_off /*!< 
+          Indicates whether the blinking should be on or off
+          */
+      );
+```
+
+Open Led.cpp-template and copy this block of code and replace the `TODO_cmdHandler` block inside of Led.cpp
+
+```cpp
+  void Led ::
+    BLINKING_ON_OFF_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq,
+        Fw::On on_off
+    )
+  {
+    // TODO
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+```
+
+Now we will implement what actions the `BLINKING_ON_OFF` command should perform.
 
 ### Command LED
 
