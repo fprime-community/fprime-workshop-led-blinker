@@ -164,7 +164,7 @@ Now we will implement what actions the `BLINKING_ON_OFF` command should perform.
     auto cmdResp = Fw::CmdResponse::OK;
 
     // Verify if on_off is a valid argument.
-    // Note: isValid is autogenerate for enums defined in fpp.
+    // Note: isValid is an autogenerate helper function for enums defined in fpp.
     if(!on_off.isValid())
     {
         // TODO: Add an event that indicates we received an invalid argument.
@@ -177,6 +177,7 @@ Now we will implement what actions the `BLINKING_ON_OFF` command should perform.
     {
       this->count = 0; // Reset count on any command
       this->blinking = Fw::On::ON == on_off; // Update blinking state
+
       // TODO: Add an event that reports the state we set to blinking.
       // NOTE: Add this event after going through the "Events" exercise.
     }
