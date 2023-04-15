@@ -1,35 +1,97 @@
 # Component Implementation Workshop
 
-The purpose of this exercise is to show you the typical steps in creating and implementing an fprime component. In this exercise you will create and implement an LED-blinking component.
+The purpose of this exercise is to walk you through the creation and implemention of an F Prime component. We will implement the component to control the blinking of an LED.
 
-## 1. Create the component
+## Set up
 
-In a terminal, navigate to fprime-workshop-led-blinker/Components and run
+In a terminal, run the following:
+
 ```bash
-fprime-util new component Led
+# Check out the F Prime project for this exercise
+git clone https://github.jpl.nasa.gov/FPRIME/fprime-workshop-led-blinker.git
+
+# Change directory into the F Prime project
+cd fprime-workshop-led-blinker
+
+# Initialize the F Prime submodule
+git submodule update --init
+
+# Create a python virtual environment in which we will install the tools needed for F Prime.
+python3 -m venv fprime-venv
+
+# Need to run this in each new terminal in which you want to run fprime-util
+source fprime-venv/bin/activate
+
+# Install dependencies
+pip install -U setuptools setuptools_scm wheel pip
+
+# Install F Prime dependencies
+pip install -r fprime/requirements.txt
+
+# Generate the build cache to support other commands run by fprime-util
+fprime-util generate
 ```
 
-The following steps will occur inside of fprime-workshop-led-blinker/Components/Led.
+## Create the component
 
-## 2. FPP
+In a terminal, navigate to the project's root directory. Run the following:
 
-In your preferred text editor, open the Led.fpp file. You will find the following structure:
+```bash
+# This is the directory in which we want to create our components
+cd Components
+
+# This creates a new component for us
+fprime-util new --component
+```
+You will be prompted for information regarding your component. Fill out the prompts as shown below:
+
+```bash
+[INFO] Cookiecutter source: using builtin
+component_name [MyComponent]: Led
+component_short_description [Example Component for F Prime FSW framework.]: Component to blink an LED driven by a rate group
+component_namespace [Led]: Led
+Select component_kind:
+1 - active
+2 - passive
+3 - queued
+Choose from 1, 2, 3 [1]: 1
+Select enable_commands:
+1 - yes
+2 - no
+Choose from 1, 2 [1]: 1  
+Select enable_telemetry:
+1 - yes
+2 - no
+Choose from 1, 2 [1]: 1
+Select enable_events:
+1 - yes
+2 - no
+Choose from 1, 2 [1]: 1
+Select enable_parameters:
+1 - yes
+2 - no
+Choose from 1, 2 [1]: 1
+[INFO] Found CMake file at 'fprime-workshop-led-blinker/Components/CMakeLists.txt'
+Add component Led to fprime-workshop-led-blinker/Components/CMakeLists.txt at end of file (yes/no)? yes
+Generate implementation files (yes/no)? yes
+```
+Your new component is located in `Led`.
+
+### Commands
+
+Commands are used for ground to command the component. We will add a command to turn on or off the blinking LED.
+Add a command to `Led.fpp` named `BLINKING_ON_OFF`. This command should take in an argument named `on_off` of type `Fw.On`.
+
 
 ```
-module Components {
-    active component Led {
-
-    }
-}
+@ Command to turn on or off the blinking LED
+async command BLINKING_ON_OFF(
+    on_off: Fw.On @< Indicates whether the blinking should be on or off
+)
 ```
 
-Commands, telemetry, events, and parameters are added inside of the `active component Led` block. We'll add these in the next sections.
 
-### 2.1. Commands
-
-1. Add a command to enable or disable the blinking LED. The command should take in an argument named `on_off` of type `Fw.On`. This argument will indicate to flight software whether to enable or disable the blinking LED.
-
-### 5.3. Command LED
+### Command LED
 
 Implement the command handler. This handler will be called when ground issues the BLINKING_ON_OFF command.
 
@@ -54,28 +116,28 @@ void Led ::BLINKING_ON_OFF_cmdHandler(const FwOpcodeType opCode, const U32 cmdSe
 ```
 
 
-### 2.2. Telemetry
+### Telemetry
 
 1. Add a telemetry channel of type `U64` to represent the total number of blinks since flight software bootup.
 
-### 2.3. Parameters
+### Parameters
 
 1. Add a parameter of type `U32` for how many rate-group cycle ticks should occur before alternating the LED's current on/off state.
 
-### 2.4. Events
+### Events
 
 1. Add an event for when blinking is turned on or off. The event should report the blinking state as an `Fw.On` type.
 1. Add an event for when the LED turns on or off. The event should report the LED state as an `Fw.On` type.
 1. Add an event for when the LED blink interval is updated. The event should report the blink interval as a U32 type.
 
-### 2.5 Ports
+### Ports
 
 1. Add a synchronous input port called `run`. Make the port be of type `Svc.Sched`. This port is expected to be called on every rate group cycle and perform the LED-blinking logic.
 1. Add an output port called `gpioSet`. Make the port be of type `Drv.GpioWrite`. This port will be used to turn on or off the LED.
 
-## 4. HPP
+## HPP
 
-### 4.1. State
+### State
 
 Add the member variables to LED which will help you keep track of state. Add the following:
 
@@ -86,9 +148,9 @@ Add the member variables to LED which will help you keep track of state. Add the
     bool blinking; //! Flag: if true then LED blinking will occur else no blinking will happen
 ```
 
-### 5. CPP
+### CPP
 
-### 5.1. Initializing Member variables
+### Initializing Member variables
 
 It's important to initialize all your variables before use. Initialize your member variables:
 
@@ -101,7 +163,7 @@ Led ::Led(const char* const compName) : LedComponentBase(compName),
 {}
 ```
 
-### 5.2. Updating Parameter
+### Updating Parameter
 
 For each parameter you define in your fpp, the F' autocoder will autogenerate a SET and SAVE command. The SET command allows ground to update the parameter. The SAVE command allows ground to save the current value of the parameter for use even after FSW reboots.
 
@@ -130,7 +192,7 @@ void Led ::parameterUpdated(FwPrmIdType id) {
 }
 ```
 
-### 5.4. Run Handler
+### Run Handler
 
 TODO Write about gpioSet_out first
 
