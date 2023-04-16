@@ -341,38 +341,14 @@ When you are done, save and close the file. In the terminal, run the following t
 fprime-util build
 ```
 
+**NOTE:** For each parameter you define in your fpp, the F' autocoder will autogenerate a SET and SAVE command. The SET command allows ground to update the parameter. The SAVE command allows ground to save the current value of the parameter for use even after FSW reboots.
+
+When you SET the parameter, the `parameterUpdated` function is called. This function is defined in the parent class of Led; however, its implementation is empty. So we implement the function in the Led class.
+
 ### Ports
 
 1. Add a synchronous input port called `run`. Make the port be of type `Svc.Sched`. This port is expected to be called on every rate group cycle and perform the LED-blinking logic.
 1. Add an output port called `gpioSet`. Make the port be of type `Drv.GpioWrite`. This port will be used to turn on or off the LED.
-
-## HPP
-
-### State
-
-Add the member variables to LED which will help you keep track of state. Add the following:
-
-```c++
-    Fw::On state; //! Keeps track if LED is on or off
-    U64 transitions; //! The number of on/off transitions that have occurred from FSW boot up
-    U32 count; //! Keeps track of how many ticks the LED has been on for
-    bool blinking; //! Flag: if true then LED blinking will occur else no blinking will happen
-```
-
-### CPP
-
-### Initializing Member variables
-
-It's important to initialize all your variables before use. Initialize your member variables:
-
-```c++
-Led ::Led(const char* const compName) : LedComponentBase(compName),
-    state(Fw::On::OFF),
-    transitions(0),
-    count(0),
-    blinking(false)
-{}
-```
 
 ### Updating Parameter
 
