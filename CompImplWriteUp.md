@@ -90,7 +90,7 @@ Open Led.hpp, and add the following private member variables.
     bool blinking; //! Flag: if true then LED blinking will occur else no blinking will happen
 ```
 
-Open Led.cpp, and initilize your member variables in the constructor:
+Open Led.cpp, and initialize your member variables in the constructor:
 
 ```cpp
 Led ::Led(const char* const compName) : LedComponentBase(compName),
@@ -365,7 +365,7 @@ Save and close the file. In the terminal, run the following to verify your compo
 fprime-util build
 ```
 
-Run the following to autogenrate the stub fuction for the input port.
+Run the following to autogenerate the stub function for the input port.
 
 ```bash
 fprime-util impl
