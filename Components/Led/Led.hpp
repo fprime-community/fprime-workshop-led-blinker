@@ -1,6 +1,6 @@
 // ======================================================================
 // \title  Led.hpp
-// \author mstarch
+// \author mstarch, ortega
 // \brief  hpp file for Led component implementation class
 // ======================================================================
 
@@ -9,56 +9,57 @@
 
 #include "Components/Led/LedComponentAc.hpp"
 
-namespace Components {
+namespace LedBlinker {
 
-class Led : public LedComponentBase {
-  public:
-    // ----------------------------------------------------------------------
-    // Construction, initialization, and destruction
-    // ----------------------------------------------------------------------
+  class Led :
+    public LedComponentBase
+  {
 
-    //! Construct object Led
-    //!
-    Led(const char* const compName /*!< The component name*/
-    );
+    public:
 
-    //! Destroy object Led
-    //!
-    ~Led();
+      // ----------------------------------------------------------------------
+      // Construction, initialization, and destruction
+      // ----------------------------------------------------------------------
 
-    //! Emit parameter updated EVR
-    //!
-    void parameterUpdated(FwPrmIdType id /*!< The parameter ID*/
-    );
+      //! Construct object Led
+      //!
+      Led(
+          const char *const compName /*!< The component name*/
+      );
 
-  PRIVATE:
-    // ----------------------------------------------------------------------
-    // Handler implementations for user-defined typed input ports
-    // ----------------------------------------------------------------------
+      //! Destroy object Led
+      //!
+      ~Led();
 
-    //! Handler implementation for run
-    //!
-    void run_handler(const NATIVE_INT_TYPE portNum, /*!< The port number*/
-                     NATIVE_UINT_TYPE context       /*!< The call order*/
-    );
+      //! Emit parameter updated EVR
+      //!
+      void parameterUpdated(FwPrmIdType id /*!< The parameter ID*/
+      );
 
-  PRIVATE:
-    // ----------------------------------------------------------------------
-    // Command handler implementations
-    // ----------------------------------------------------------------------
+    PRIVATE:
 
-    //! Implementation for TURN_ON_OFF command handler
-    //! Command to turn on or off the blinking LED
-    void BLINKING_ON_OFF_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
-                                const U32 cmdSeq,          /*!< The command sequence number*/
-                                Fw::On on_off);
+      // ----------------------------------------------------------------------
+      // Command handler implementations
+      // ----------------------------------------------------------------------
 
-    Fw::On state;
-    U64 transitions;
-    U32 count;
-    bool blinking;
-};
+      //! Implementation for BLINKING_ON_OFF command handler
+      //! Command to turn on or off the blinking LED
+      void BLINKING_ON_OFF_cmdHandler(
+          const FwOpcodeType opCode, /*!< The opcode*/
+          const U32 cmdSeq, /*!< The command sequence number*/
+          Fw::On on_off /*!< 
+          Indicates whether the blinking should be on or off
+          */
+      );
 
-}  // end namespace LedBlinker
+
+    Fw::On state; //! Keeps track if LED is on or off
+    U64 transitions; //! The number of on/off transitions that have occurred from FSW boot up
+    U32 count; //! Keeps track of how many ticks the LED has been on for
+    bool blinking; //! Flag: if true then LED blinking will occur else no blinking will happen
+
+    };
+
+} // end namespace LedBlinker
 
 #endif
