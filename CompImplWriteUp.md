@@ -1,6 +1,6 @@
 # Component Implementation Workshop
 
-The purpose of this exercise is to walk you through the creation and implemention of an F Prime component. We will implement the component to control the blinking of an LED.
+The purpose of this exercise is to walk you through the creation and implementation of an F Prime component. We will implement the component to control the blinking of an LED.
 
 ## Set up
 
@@ -19,7 +19,7 @@ git submodule update --init
 # Create a python virtual environment in which we will install the tools needed for F Prime.
 python3 -m venv fprime-venv
 
-# Need to run this in each new terminal in which you want to run fprime-util
+# Need to run this one line in each new terminal in which you want to run fprime-util
 source fprime-venv/bin/activate
 
 # Install dependencies
@@ -75,7 +75,7 @@ Choose from 1, 2 [1]: 1
 Add component Led to fprime-workshop-led-blinker/Components/CMakeLists.txt at end of file (yes/no)? yes
 Generate implementation files (yes/no)? yes
 ```
-Your new component is located in `Led`.
+Your new component is located in directory `Led`.
 
 ## Component State
 
@@ -119,7 +119,7 @@ Exit the text editor, and run the following:
 fprime-util impl
 ```
 
-This command will auto generate two files: Led.hpp-template and Led.cpp-template. These files contain stubs for the command you specified in the fpp.
+This command will auto generate two files: Led.hpp-template and Led.cpp-template. These files contain the stub function for the command you specified in the fpp.
 
 Open Led.hpp-template and copy this block of code and replace the `TODO_cmdHandler` block inside of Led.hpp
 
@@ -175,7 +175,7 @@ Now we will implement what actions the `BLINKING_ON_OFF` command should perform.
     }
     else
     {
-      this->count = 0; // Reset count on any command
+      this->count = 0; // Reset count on any successful command
       this->blinking = Fw::On::ON == on_off; // Update blinking state
 
       // TODO: Add an event that reports the state we set to blinking.
