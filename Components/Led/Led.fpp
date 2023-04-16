@@ -10,6 +10,9 @@ module Components {
         @ Telemetry channel to report blinking state.
         telemetry BlinkingState: Fw.On
 
+        @ Telemetry channel counting LED transitions
+        telemetry LedTransitions: U64
+
         @ Indicates we received an invalid argument.
         event InvalidBlinkArgument(badArgument: Fw.On) \
             severity warning low \
@@ -19,6 +22,16 @@ module Components {
         event SetBlinkingState(state: Fw.On) \
             severity activity high \
             format "Set blinking state to {}."
+
+        @ Event logged when the LED turns on or off
+        event LedState(on_off: Fw.On) \
+            severity activity low \
+            format "LED is {}"
+
+        @ Event logged when the LED blink interval is updated
+        event BlinkIntervalSet(interval: U32) \
+            severity activity high \
+            format "LED blink interval set to {}"
 
         @ Blinking interval in rate group ticks
         param BLINK_INTERVAL: U32

@@ -37,7 +37,7 @@ namespace Components
         if ((PARAMID_BLINK_INTERVAL == id) && (Fw::ParamValid::VALID == isValid))
         {
             // Emit the blink set event
-            // TODO: Add an event with, severity activity high, named BlinkIntervalSet that takes in an argument of type U32 to report the blink interval.
+            this->log_ACTIVITY_HI_BlinkIntervalSet(interval);
         }
     }
 
@@ -52,7 +52,7 @@ namespace Components
     {
         // Read back the parameter value
         Fw::ParamValid isValid;
-        U32 interval = 0; // TODO: Get BLINK_INTERVAL parameter value
+        U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
 
         // Force interval to be 0 when invalid or not set
         interval = ((Fw::ParamValid::INVALID == isValid) || (Fw::ParamValid::UNINIT == isValid)) ? 0 : interval;
@@ -75,7 +75,7 @@ namespace Components
             if (this->state != new_state)
             {
                 this->transitions = this->transitions + 1;
-                // TODO: Add an event to report the number of LED transitions (this->transitions)
+                this->tlmWrite_LedTransitions(this->transitions);
 
                 // Port may not be connected, so check before sending output
                 if (this->isConnected_gpioSet_OutputPort(0))
@@ -83,7 +83,7 @@ namespace Components
                     this->gpioSet_out(0, (Fw::On::ON == new_state) ? Fw::Logic::HIGH : Fw::Logic::LOW);
                 }
 
-                // TODO: Add an event to report the LED state (new_state).
+                this->log_ACTIVITY_LO_LedState(new_state);
                 this->state = new_state;
             }
 
