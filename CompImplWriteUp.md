@@ -297,7 +297,49 @@ fprime-util build
 
 ### Parameters
 
-1. Add a parameter of type `U32` for how many rate-group cycle ticks should occur before alternating the LED's current on/off state.
+Open the Led.fpp file. After the events you added in the previous section, add a parameter for the blinking interval. Give the parameter the name `BLINK_INTERVAL` of type `U32`.
+
+```
+        @ Blinking interval in rate group ticks
+        param BLINK_INTERVAL: U32
+```
+
+Save and close the file. In the terminal, run the following to verify your component is building correctly.
+
+```bash
+fprime-util build
+```
+
+Open the file Led.hpp and add the following function signature:
+
+```cpp
+    //! Emit parameter updated EVR
+    //!
+    void parameterUpdated(FwPrmIdType id /*!< The parameter ID*/
+    );
+```
+
+Save and close the file. Open Led.cpp and add the implementation for `parameterUpdated`:
+
+```cpp
+void Led ::parameterUpdated(FwPrmIdType id) {
+    // Read back the parameter value
+    Fw::ParamValid isValid;
+    U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
+
+    // Check the parameter ID is expected and the read was valid before sending the event
+    if ((PARAMID_BLINK_INTERVAL == id) && (Fw::ParamValid::VALID == isValid)) {
+        // Emit the blink set event
+        // TODO: Add an event with, severity activity high, named BlinkIntervalSet that takes in an argument of type U32 to report the blink interval.
+    }
+}
+```
+
+When you are done, save and close the file. In the terminal, run the following to verify your component is building correctly.
+
+```bash
+fprime-util build
+```
 
 ### Ports
 
