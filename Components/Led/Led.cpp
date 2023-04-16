@@ -42,6 +42,56 @@ namespace Components
     }
 
     // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    void Led ::
+        run_handler(
+            const NATIVE_INT_TYPE portNum,
+            NATIVE_UINT_TYPE context)
+    {
+        // Read back the parameter value
+        Fw::ParamValid isValid;
+        U32 interval = 0; // TODO: Get BLINK_INTERVAL parameter value
+
+        // Force interval to be 0 when invalid or not set
+        interval = ((Fw::ParamValid::INVALID == isValid) || (Fw::ParamValid::UNINIT == isValid)) ? 0 : interval;
+
+        // Only perform actions when counting
+        if (this->blinking)
+        {
+            Fw::On new_state = this->state;
+            // Check for transitions
+            if ((0 == this->count) && (this->state == Fw::On::OFF))
+            {
+                new_state = Fw::On::ON;
+            }
+            else if (((interval / 2) == this->count) && (this->state == Fw::On::ON))
+            {
+                new_state = Fw::On::OFF;
+            }
+
+            // A transition has occurred
+            if (this->state != new_state)
+            {
+                this->transitions = this->transitions + 1;
+                // TODO: Add an event to report the number of LED transitions (this->transitions)
+
+                // Port may not be connected, so check before sending output
+                if (this->isConnected_gpioSet_OutputPort(0))
+                {
+                    this->gpioSet_out(0, (Fw::On::ON == new_state) ? Fw::Logic::HIGH : Fw::Logic::LOW);
+                }
+
+                // TODO: Add an event to report the LED state (new_state).
+                this->state = new_state;
+            }
+
+            this->count = ((this->count + 1) >= interval) ? 0 : (this->count + 1);
+        }
+    }
+
+    // ----------------------------------------------------------------------
     // Command handler implementations
     // ----------------------------------------------------------------------
 

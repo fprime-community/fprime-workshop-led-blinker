@@ -347,97 +347,117 @@ When you SET the parameter, the `parameterUpdated` function is called. This func
 
 ### Ports
 
-1. Add a synchronous input port called `run`. Make the port be of type `Svc.Sched`. This port is expected to be called on every rate group cycle and perform the LED-blinking logic.
-1. Add an output port called `gpioSet`. Make the port be of type `Drv.GpioWrite`. This port will be used to turn on or off the LED.
+Open the Led.fpp file. After the parameters you added in the previous section, add the following two ports:
 
-### Updating Parameter
-
-For each parameter you define in your fpp, the F' autocoder will autogenerate a SET and SAVE command. The SET command allows ground to update the parameter. The SAVE command allows ground to save the current value of the parameter for use even after FSW reboots.
-
-When you SET the parameter, the `parameterUpdated` function is called. This function is defined in the parent class of Led; however, its implementation is empty. Implement this functionality in the Led class. Do the following:
-
-1. Add the `parameterUpdated` signature to Led.hpp
-```c++
-    //! Emit parameter updated EVR
-    //!
-    void parameterUpdated(FwPrmIdType id /*!< The parameter ID*/
-    );
 ```
-2. Implement `parameterUpdated` in your cpp file. 
+        @ Port receiving calls from the rate group
+        sync input port run: Svc.Sched
 
-```c++
-void Led ::parameterUpdated(FwPrmIdType id) {
-    // 1. Read the parameter value
-    Fw::ParamValid isValid;
-    U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
-    // 2. Check the parameter ID is expected and the read is valid. If parameter ID and read is valid, then send event indicating the Blink Interval was set
-    U32 local_parameter_id = (id - this->getIdBase());
-    if ((PARAMID_BLINK_INTERVAL == local_parameter_id ) && (Fw::ParamValid::VALID == isValid)) {
-        // 3. Emit the blink set event
-        //TODO
-    }
-}
+        @ Port sending calls to the GPIO driver
+        output port gpioSet: Drv.GpioWrite
 ```
 
-### Run Handler
+**NOTE:** "run" is not a name of significance. Input ports can be given any name that you choose. In this example, we choose "run" since it is appropriate for what the port will do.
 
-TODO Write about gpioSet_out first
+Save and close the file. In the terminal, run the following to verify your component is building correctly.
 
-The run handler will be called on every rate cycle. Implement the logic which handles blinking of the LED.
+```bash
+fprime-util build
+```
 
-```c++
-void Led ::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
-    // 1. Read back the parameter value
-    Fw::ParamValid isValid;
-    U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
+Run the following to autogenrate the stub fuction for the input port.
 
-    // 2. Force interval to be 0 when invalid or not set
-    interval = ((Fw::ParamValid::INVALID == isValid) || (Fw::ParamValid::UNINIT == isValid)) ? 0 : interval;
+```bash
+fprime-util impl
+```
 
-    // 3. if blinking
-    if (this->blinking) {
-      Fw::On new_state = this->state;
-    // Check for transitions
-    if ((0 == this->count) && (this->state == Fw::On::OFF)) {
-            new_state = Fw::On::ON;
-        } else if (((interval/2) == this->count) && (this->state == Fw::On::ON)) {
-            new_state = Fw::On::OFF;
-        }
+Open Led.hpp-template file and copy this block over to Led.hpp
 
-        // A transition has occurred
-        if (this->state != new_state) {
+```cpp
+    PRIVATE:
 
-            // Port may not be connected, so check before sending output
-            if (this->isConnected_gpioSet_OutputPort(0)) {
+      // ----------------------------------------------------------------------
+      // Handler implementations for user-defined typed input ports
+      // ----------------------------------------------------------------------
+
+      //! Handler implementation for run
+      //!
+      void run_handler(
+          const NATIVE_INT_TYPE portNum, /*!< The port number*/
+          NATIVE_UINT_TYPE context /*!< 
+      The call order
+      */
+      );
+```
+
+Open Led.cpp-template file and copy this block over to Led.cpp.
+```cpp
+  // ----------------------------------------------------------------------
+  // Handler implementations for user-defined typed input ports
+  // ----------------------------------------------------------------------
+
+  void Led ::
+    run_handler(
+        const NATIVE_INT_TYPE portNum,
+        NATIVE_UINT_TYPE context
+    )
+  {
+    // TODO
+  }
+```
+
+This input handler called "run" is expected to be called on every rate cycle. Here is the implementation of the logic which handles blinking of the LED. Fill in the "TODOs" with what you learned from the previous sections.
+
+```cpp
+    void Led ::
+        run_handler(
+            const NATIVE_INT_TYPE portNum,
+            NATIVE_UINT_TYPE context)
+    {
+        // Read back the parameter value
+        Fw::ParamValid isValid;
+        U32 interval = 0; // TODO: Get BLINK_INTERVAL parameter value
+
+        // Force interval to be 0 when invalid or not set
+        interval = ((Fw::ParamValid::INVALID == isValid) || (Fw::ParamValid::UNINIT == isValid)) ? 0 : interval;
+
+        // Only perform actions when counting
+        if (this->blinking)
+        {
+            Fw::On new_state = this->state;
+            // Check for transitions
+            if ((0 == this->count) && (this->state == Fw::On::OFF))
+            {
+                new_state = Fw::On::ON;
             }
-            this->state = new_state;
+            else if (((interval / 2) == this->count) && (this->state == Fw::On::ON))
+            {
+                new_state = Fw::On::OFF;
+            }
+
+            // A transition has occurred
+            if (this->state != new_state)
+            {
+                this->transitions = this->transitions + 1;
+                // TODO: Add an event to report the number of LED transitions (this->transitions)
+
+                // Port may not be connected, so check before sending output
+                if (this->isConnected_gpioSet_OutputPort(0))
+                {
+                    this->gpioSet_out(0, (Fw::On::ON == new_state) ? Fw::Logic::HIGH : Fw::Logic::LOW);
+                }
+
+                // TODO: Add an event to report the LED state (new_state).
+                this->state = new_state;
+            }
+
+            this->count = ((this->count + 1) >= interval) ? 0 : (this->count + 1);
         }
-
-
-
-        this->count = ((this->count + 1) >= interval) ? 0 : (this->count + 1);
-
-    if (this->blinking) {
-        // 3.1 Check for transition from on to off or off to on
-        // TODO
-
-
-        // 3.2 If a transition occurred, then
-        //   3.2.1 Call the gpio to turn on or off based on the new state
-        //         TODO
-
-        //   3.2.2 Update component's state (e.g. this->state, this->transition)
-        //         TODO
-
-        //   3.2.3 Report transition telemetry
-        //         TODO
-
-        //   3.2.4 Report LedState
-        //         TODO
-
-
-        // 3.3 Update this->count
-        //         TODO
     }
-}
+```
+
+Save and close the file. In the terminal, run the following to verify your component is building correctly.
+
+```bash
+fprime-util build
 ```
