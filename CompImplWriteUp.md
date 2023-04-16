@@ -49,7 +49,7 @@ You will be prompted for information regarding your component. Fill out the prom
 [INFO] Cookiecutter source: using builtin
 component_name [MyComponent]: Led
 component_short_description [Example Component for F Prime FSW framework.]: Component to blink an LED driven by a rate group
-component_namespace [Led]: Led
+component_namespace [Led]: LedBlinker
 Select component_kind:
 1 - active
 2 - passive

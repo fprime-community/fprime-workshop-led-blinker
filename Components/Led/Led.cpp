@@ -1,26 +1,31 @@
 // ======================================================================
 // \title  Led.cpp
-// \author mstarch
+// \author mstarch, ortega
 // \brief  cpp file for Led component implementation class
 // ======================================================================
 
-#include <FpConfig.hpp>
+
 #include <Components/Led/Led.hpp>
+#include <FpConfig.hpp>
 
-namespace Components {
+namespace Led {
 
-// ----------------------------------------------------------------------
-// Construction, initialization, and destruction
-// ----------------------------------------------------------------------
+  // ----------------------------------------------------------------------
+  // Construction, initialization, and destruction
+  // ----------------------------------------------------------------------
 
-Led ::Led(const char* const compName) : LedComponentBase(compName),
+  Led ::Led(const char* const compName) : LedComponentBase(compName),
     state(Fw::On::OFF),
     transitions(0),
     count(0),
     blinking(false)
 {}
 
-Led ::~Led() {}
+  Led ::
+    ~Led()
+  {
+
+  }
 
 void Led ::parameterUpdated(FwPrmIdType id) {
     // Read back the parameter value
