@@ -90,6 +90,17 @@ Open Led.hpp, and add the following private member variables.
     bool blinking; //! Flag: if true then LED blinking will occur else no blinking will happen
 ```
 
+Open Led.cpp, and initilize your member variables in the constructor:
+
+```cpp
+Led ::Led(const char* const compName) : LedComponentBase(compName),
+    state(Fw::On::OFF),
+    transitions(0),
+    count(0),
+    blinking(false)
+{}
+```
+
 ### Commands
 
 Commands are used for ground to command the component. We will add a command named `BLINKING_ON_OFF` to turn on or off the blinking LED. This command will take in an argument named `on_off` of type `Fw.On`.
@@ -179,27 +190,114 @@ Now we will implement what actions the `BLINKING_ON_OFF` command should perform.
       this->blinking = Fw::On::ON == on_off; // Update blinking state
 
       // TODO: Add an event that reports the state we set to blinking.
-      // NOTE: Add this event after going through the "Events" exercise.
+      // NOTE: This event will be added during the "Events" exercise.
+
+      // TODO: Report the blinking state via a telemetry channel.
+      // NOTE: This telemetry channel will be added during the "Telemetry" exercise.
     }
 
     // Provide command response
     this->cmdResponse_out(opCode,cmdSeq,cmdResp);
   }
-  ```
+```
+
+Save and close the file. In the terminal, run the following to verify your component is building correctly.
+
+```bash
+fprime-util build
+```
 
 ### Telemetry
 
-1. Add a telemetry channel of type `U64` to represent the total number of blinks since flight software bootup.
+Open the Led.fpp file. After the command you added in the previous section, add a telemetry channel of type `Fw.On` to report the blinking state.
+
+```
+        @ Telemetry channel to report blinking state.
+        telemetry BlinkingState: Fw.On
+```
+
+Save and close the file. In the terminal, run the following to verify your component is building correctly.
+
+```bash
+fprime-util build
+```
+
+Open Led.cpp, and navigate to the `BLINKING_ON_OFF` command. Report the blinking state via the telemetry channel we just added. So, replace the following
+
+```cpp
+      // TODO: Report the blinking state via a telemetry channel.
+      // NOTE: This telemetry channel will be added during the "Telemetry" exercise.
+```
+
+with this
+
+```cpp
+this->tlmWrite_BlinkingState(on_off);
+```
+
+Save and close the file. In the terminal, run the following to verify your component is building correctly.
+
+```bash
+fprime-util build
+```
+
+### Events
+
+Open the Led.fpp file. After the telemetry channel you added in the previous section, add two events:
+
+```
+        @ Indicates we received an invalid argument.
+        event InvalidBlinkArgument(badArgument: Fw.On) \
+            severity warning low \
+            format "Invalid Blinking Argument: {}"
+
+        @ Reports the state we set to blinking.
+        event SetBlinkingState(state: Fw.On) \
+            severity activity high \
+            format "Set blinking state to {}."
+```
+
+Save and close the file. In the terminal, run the following to verify your component is building correctly.
+
+```bash
+fprime-util build
+```
+
+Open Led.cpp, and navigate to the `BLINKING_ON_OFF` command. Report via an event if there is an error in the input argument. Similarly, use an event to report the set state of the blinking state. So, replace the following
+
+```cpp
+        // TODO: Add an event that indicates we received an invalid argument.
+        // NOTE: Add this event after going through the "Events" exercise.
+```
+
+with
+
+```cpp
+        this->log_WARNING_LO_InvalidBlinkArgument(on_off);
+```
+
+And replace the following
+
+```cpp
+      // TODO: Add an event that reports the state we set to blinking.
+      // NOTE: This event will be added during the "Events" exercise.
+```
+
+with
+
+```cpp
+      this->log_ACTIVITY_HI_SetBlinkingState(on_off);
+```
+
+Save and close the file. In the terminal, run the following to verify your component is building correctly.
+
+```bash
+fprime-util build
+```
 
 ### Parameters
 
 1. Add a parameter of type `U32` for how many rate-group cycle ticks should occur before alternating the LED's current on/off state.
-
-### Events
-
-1. Add an event for when blinking is turned on or off. The event should report the blinking state as an `Fw.On` type.
-1. Add an event for when the LED turns on or off. The event should report the LED state as an `Fw.On` type.
-1. Add an event for when the LED blink interval is updated. The event should report the blink interval as a U32 type.
 
 ### Ports
 
