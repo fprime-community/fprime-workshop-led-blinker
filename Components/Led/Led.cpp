@@ -7,7 +7,7 @@
 #include <Components/Led/Led.hpp>
 #include <FpConfig.hpp>
 
-namespace LedBlinker
+namespace Components
 {
 
     // ----------------------------------------------------------------------
@@ -81,4 +81,4 @@ namespace LedBlinker
         this->cmdResponse_out(opCode, cmdSeq, cmdResp);
     }
 
-} // end namespace LedBlinker
+} // end namespace Components

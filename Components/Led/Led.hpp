@@ -9,7 +9,7 @@
 
 #include "Components/Led/LedComponentAc.hpp"
 
-namespace LedBlinker {
+namespace Components {
 
   class Led :
     public LedComponentBase
@@ -60,6 +60,6 @@ namespace LedBlinker {
 
     };
 
-} // end namespace LedBlinker
+} // end namespace Components
 
 #endif

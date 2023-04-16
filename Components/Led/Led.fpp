@@ -1,4 +1,4 @@
-module LedBlinker {
+module Components {
     @ Component to blink an LED driven by a rate group
     active component Led {
 
