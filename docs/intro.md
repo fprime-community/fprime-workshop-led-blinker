@@ -23,3 +23,10 @@ understand F´ basics
 
 > Attendees to an in-person F´ workshop will have access to the hardware indicated in prerequisite 3. Attendees should
 > ensure correct wiring before use.
+
+## Tutorial Steps
+
+1. [Component Design and Implementation](./component-implementation.md)
+2. [System Configuration and Cross-Compiling](./waaaaaaaa.md)
+3. [Unit-Testing](./unit-testing.md)
+4. [System Testing](./waaaaaaaa.md)
