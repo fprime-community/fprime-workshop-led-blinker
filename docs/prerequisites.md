@@ -15,16 +15,16 @@ These are the basic requirements for students' computers to work through this se
 3. 5GB of free disk space, 8 GB of RAM
 4. Knowledge of the command line for your operating system (Bash, PowerShell, etc).
 
-The following steps elaborate on the F´ [installation guide](https://nasa.github.io/fprime/INSTALL.html) with specifics
-for the F´ system reference used by this class. We include a breakdown of setup for each common OS type. Users may
+We include a breakdown of setup for each common OS type. Users may
 consult the troubleshooting section of the installation guide if problems arise.
 
 
-## Step 1: Setting Up An Ubuntu Virtual Machine and Necessary Packages
+## Step 1: Setting Up An Ubuntu Machine and Necessary Packages
 
 In this section we will set up Linux to run on each type of laptop. This is typically done through the use of virtual
-machines and/or emulation. Please follow the instructions for the operating system you run on your laptop. Our goal will
-be to get up and running with Ubuntu 20.04 or 22.04 on each type of laptop. *This does not require dual booting*.
+machines and/or emulation unless the laptop already runs linux. Please follow the instructions for the operating system
+you run on your laptop. Our goal will be to get up and running with Ubuntu 20.04 or 22.04 on each type of laptop.
+*This does not require dual booting*.
 
 **Note:** you will need one of the operating systems found here. If you run something else, try setting up an Ubuntu
 20.04 virtual machine in something like VirtualBox.
@@ -85,12 +85,12 @@ sudo apt install build-essential git g++ gdb cmake python3 python3-venv python3-
 Installing the cross-compilers will use the Linaro package. Follow these instructions to install these tools to `/opt`
 
 ```bash
-wget https://releases.linaro.org/components/toolchain/binaries/latest-7/arm-linux-gnueabihf/gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf.tar.xz
-sudo mkdir -p /opt
-sudo tar -C /opt -xf gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf.tar.tar
+sudo mkdir -p /opt/toolchains
+sudo chown $USER /opt/toolchains
+curl -Ls https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu.tar.xz | tar -JC /opt/toolchains --strip-components=1 -x
 ```
 
-> When cross compiling, these tools will need to be added to the path using `export PATH=/opt/gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf:$PATH`
+> When cross compiling, these tools will need to be added to the path using `export PATH=/opt/toolchains/bin:$PATH`
 
 ### Mac OS X
 
