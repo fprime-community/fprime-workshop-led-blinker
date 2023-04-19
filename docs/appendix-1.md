@@ -1,4 +1,4 @@
-Appendix I: Installing Rancher Desktop and the F´ ARM Container
+# Appendix I: Installing Rancher Desktop and the F´ ARM Container
 
 Some users may with to run cross-compilers within docker to minimize the impact of those tools on their systems.
 Macintosh users will be required to use docker as the ARM/Linux cross-compilers are not available natively for macOS and
