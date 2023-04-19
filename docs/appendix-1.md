@@ -1,4 +1,4 @@
-# IMU Exercise Appendix II: Installing Rancher Desktop and the F´ ARM Container
+Appendix I: Installing Rancher Desktop and the F´ ARM Container
 
 Some users may with to run cross-compilers within docker to minimize the impact of those tools on their systems.
 Macintosh users will be required to use docker as the ARM/Linux cross-compilers are not available natively for macOS and
@@ -18,18 +18,18 @@ presented with a "Welcome to Rancher Desktop" dialog, choose the following setti
 2. Select `dockerd`
 3. Configure PATH Automatic
 
-![Rancher Config](../img/rancher-config.png)
+![Rancher Config](./img/rancher-config.png)
 
 Ensure that Rancher Desktop is running and that the VM it uses has been started. You can confirm this by ensuring no
 pop-ups nor progress bars are visible in Rancher Desktop's main window as shown below.
 
-![Rancher Main Window](../img/rancher-running.png)
+![Rancher Main Window](./img/rancher-running.png)
 
 Once this is done, users can install the container by running the following command in their host terminal. It should
 complete without errors.
 
 ```bash
-docker pull nasafprime/fprime-arm:devel
+docker pull nasafprime/fprime-arm:latest
 ```
 
 ## Running The Container
