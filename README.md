@@ -18,15 +18,15 @@ In order to run through this tutorial, users must do the following:
 
 1. Follow the [Hello World Tutorial](https://github.com/nasa/fprime/blob/devel/docs/Tutorials/HelloWorld/Tutorial.md) to
 understand F´ basics
-2. Set up a [cross-compiling environment](./environment.md) for ARM processors
-3. Acquire and set up the appropriate [hardware](./hardware.md) used by this tutorial
+2. Set up a [cross-compiling environment](docs/environment.md) for ARM processors
+3. Acquire and set up the appropriate [hardware](docs/hardware.md) used by this tutorial
 
 > Attendees to an in-person F´ workshop will have access to the hardware indicated in prerequisite 3. Attendees should
 > ensure correct wiring before use.
 
 ## Tutorial Steps
 
-1. [Component Design and Implementation](./component-implementation.md)
+1. [Component Design and Implementation](docs/component-implementation.md)
 2. [System Configuration and Cross-Compiling](./waaaaaaaa.md)
-3. [Unit-Testing](./unit-testing.md)
+3. [Unit-Testing](docs/unit-testing.md)
 4. [System Testing](./waaaaaaaa.md)

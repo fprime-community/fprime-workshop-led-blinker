@@ -2,6 +2,12 @@
 
 The purpose of this exercise is to walk you through the creation and implementation of an F Prime component. We will implement the component to control the blinking of an LED.
 
+TODO: add design block diagram and "what we are going to do".
+Thread sync problem between set command and run port. Make guarded
+Update  C++ code
+TODO add comment saying isValid is always valid in parameter 
+TODO: next step and conclusion section
+
 ## Set up
 
 In a terminal, run the following:

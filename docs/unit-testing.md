@@ -2,6 +2,10 @@
 
 This exercise will walk through development of unit tests of the Led component created in the component implementation workshop.
 
+TODO: coverage
+TODO: closing section
+TODO test UTs on tlm and EVR
+
 ## Unit Test Generation
 
 To start off, use `fprime-util` to generate a unit test outline for the Led component.
