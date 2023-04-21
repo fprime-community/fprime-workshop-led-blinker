@@ -467,3 +467,7 @@ Save and close the file. In the terminal, run the following to verify your compo
 ```bash
 fprime-util build
 ```
+
+## Conclusion
+
+Congratulations! You just learned how to create an F Prime component; implement F Prime commands, events, telemetry and parameters; and build an F Prime component. Head on over to the next section, [Unit-Testing](unit-testing.md), to learn about unit testing your component.
