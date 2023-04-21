@@ -2,41 +2,12 @@
 
 The purpose of this exercise is to walk you through the creation and implementation of an F Prime component. We will implement the component to control the blinking of an LED.
 
-TODO: add design block diagram and "what we are going to do".
-Thread sync problem between set command and run port. Make guarded
-Update  C++ code
-TODO add comment saying isValid is always valid in parameter 
-TODO: next step and conclusion section
+## Design
 
-## Set up
+Below is the component block diagram. The diagram shows the input ports on the left side of the Led block, and the output ports on the right side of the block.
+![LEDBlockDiagram](img/Led.png)
 
-In a terminal, run the following:
-
-```bash
-# Check out the F Prime project for this exercise
-git clone https://github.jpl.nasa.gov/FPRIME/fprime-workshop-led-blinker.git
-
-# Change directory into the F Prime project
-cd fprime-workshop-led-blinker
-
-# Initialize the F Prime submodule
-git submodule update --init
-
-# Create a python virtual environment in which we will install the tools needed for F Prime.
-python3 -m venv fprime-venv
-
-# Need to run this one line in each new terminal in which you want to run fprime-util
-source fprime-venv/bin/activate
-
-# Install dependencies
-pip install -U setuptools setuptools_scm wheel pip
-
-# Install F Prime dependencies
-pip install -r fprime/requirements.txt
-
-# Generate the build cache to support other commands run by fprime-util
-fprime-util generate
-```
+In this exercise, we will implement the behavior of the `run` and `cmdIn` input port. The `run` port will be invoked at a specific rate. It's purpose is to implement the logic that will control the blinking of the LED. We expect to call the `gpioSet` output port to set high or low the GPIO controlling the LED. The `cmdIn` port is a special port. It will handle the commands to the Led component. For this exercise, we want to implement a command called `BLINKING_ON_OFF` that will allow ground to control whether to turn on or off the blinking LED.
 
 ## Create the component
 
