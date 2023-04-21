@@ -32,12 +32,16 @@ namespace Components
         // Read back the parameter value
         Fw::ParamValid isValid;
         U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
+        // NOTE: isValid is always
+        FW_ASSERT(isValid == Fw::ParamValid::VALID, isValid);
 
-        // Check the parameter ID is expected and the read was valid before sending the event
-        if ((PARAMID_BLINK_INTERVAL == id) && (Fw::ParamValid::VALID == isValid))
+        // Check the parameter ID is expected
+        if (PARAMID_BLINK_INTERVAL == id)
         {
-            // Emit the blink set event
-            this->log_ACTIVITY_HI_BlinkIntervalSet(interval);
+            {
+                // Emit the blink set event
+                this->log_ACTIVITY_HI_BlinkIntervalSet(interval);
+            }
         }
     }
 

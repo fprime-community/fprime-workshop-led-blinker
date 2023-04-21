@@ -332,9 +332,11 @@ void Led ::parameterUpdated(FwPrmIdType id) {
     // Read back the parameter value
     Fw::ParamValid isValid;
     U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
+    // NOTE: isValid is always
+    FW_ASSERT(isValid == Fw::ParamValid::VALID, isValid);
 
-    // Check the parameter ID is expected and the read was valid before sending the event
-    if ((PARAMID_BLINK_INTERVAL == id) && (Fw::ParamValid::VALID == isValid)) {
+    // Check the parameter ID is expected
+    if (PARAMID_BLINK_INTERVAL == id) {
         // Emit the blink set event
         // TODO: Add an event with, severity activity high, named BlinkIntervalSet that takes in an argument of type U32 to report the blink interval.
     }
