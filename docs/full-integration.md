@@ -40,7 +40,7 @@ This is done by adding the following line to the `configureTopology` function de
 ```
 void configureTopology() {
     ...
-    bool gpio_success = open(13, Drv::LinuxGpioDriver::GpioDirection::GPIO_OUT);
+    bool gpio_success = gpioDriver.open(13, Drv::LinuxGpioDriver::GpioDirection::GPIO_OUT);
     if (gpio_success) {
         printf("[ERROR] Failed to open GPIO pin\n");
     }

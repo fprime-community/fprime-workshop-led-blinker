@@ -2,3 +2,6 @@
 	path = fprime
 	url = http://github.com/nasa/fprime.git
 	branch = devel
+[submodule "fprime-arm-linux"]
+	path = fprime-arm-linux
+	url = https://github.com/fprime-community/fprime-arm-linux.git

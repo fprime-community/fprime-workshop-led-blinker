@@ -74,6 +74,11 @@
         <channel name="systemResources.CPU_15"/>
     </packet>
 
+    <packet name="LedChannels" id="8" level="1">
+        <channel name="led.LedTransitions"/>
+        <channel name="led.BlinkingState"/>
+    </packet>
+
     <!-- Ignored packets -->
 
     <ignore>

@@ -113,6 +113,10 @@ void configureTopology() {
 
     // Note: Uncomment when using Svc:TlmPacketizer
     //tlmSend.setPacketList(LedBlinkerPacketsPkts, LedBlinkerPacketsIgnore, 1);
+    bool gpio_success = gpioDriver.open(13, Drv::LinuxGpioDriver::GpioDirection::GPIO_OUT);
+    if (!gpio_success) {
+        printf("[ERROR] Failed to open GPIO pin\n");
+    }
 }
 
 // Public functions for use in main program are namespaced with deployment name LedBlinker

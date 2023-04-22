@@ -4,6 +4,11 @@ In this section, users will create a deployment and perform the initial integrat
 
 > Users must have created the basic Led component in order to run through this section. Users may continue to define commands, events, telemetry, and ports after this initial integration.
 
+TODO: `<channel name="led.LedTransitions"/>`
+
+        <channel name="led.LedTransitions"/>
+        <channel name="led.BlinkingState"/>
+
 ## Creating the `LedBlinker` Deployment
 
 In order to produce an executable to run the software, users need to create a deployment. A deployment is one software executable that contains the main entrypoint, and F´ system topology.  A new deployment may be created with:

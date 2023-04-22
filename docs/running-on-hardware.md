@@ -2,6 +2,9 @@
 
 In order to run on hardware, the deployment needs to be built for the given hardware (a process called cross-compiling), the executable needs to be uploaded to the hardware, and the executable needs to be run. This section will walk the user through cross-compiling, uploading, and running on hardware.
 
+## TODO> Add notes for macOS
+## Update F´ baseline
+
 ## Acquiring Cross-Compilers
 
 In the setup for this tutorial the Arm Linux cross-compilers were installed. However, the F´ CMake system still needs the appropriate integration files called "CMake Toolchain Files". There is an F´ package that provides cross-compiler integration for standard ARM Linux cross-compilers (i.e. those provided as binary downloads from ARM).

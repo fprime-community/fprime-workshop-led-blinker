@@ -45,7 +45,7 @@ module LedBlinker {
     instance textLogger
     instance uplink
     instance systemResources
-    #instance gpioDriver
+    instance gpioDriver
     instance led
 
     # ----------------------------------------------------------------------
@@ -130,9 +130,9 @@ module LedBlinker {
       fileUplink.bufferSendOut -> fileUplinkBufferManager.bufferSendIn
     }
 
-    connections LedBlinker {
+    connections LedConnections {
       # Add here connections to user-defined components
-      #led.gpioSet -> gpioDriver.gpioWrite
+      led.gpioSet -> gpioDriver.gpioWrite
     }
 
   }
