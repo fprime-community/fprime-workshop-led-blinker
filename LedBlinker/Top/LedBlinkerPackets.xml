@@ -39,7 +39,6 @@
 
     <packet name="DriveTlm" id="3" level="1">
         <channel name="blockDrv.BD_Cycles"/>
-        <channel name="led.LedTransitions"/>
     </packet>
 
     <packet name="SystemRes1" id="5" level="2">

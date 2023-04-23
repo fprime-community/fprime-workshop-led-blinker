@@ -1,64 +1,68 @@
-# Unit Testing Guide
+# LED Blinker: Unit Testing
 
-This exercise will walk through development of unit tests of the Led component created in the component implementation workshop.
-
-TODO: coverage
-TODO: closing section
-TODO test UTs on tlm and EVR
+This exercise will walk through development of basic unit tests for the `Led` component created in the component implementation section.
 
 ## Unit Test Generation
 
-To start off, use `fprime-util` to generate a unit test outline for the Led component.
+To start off, use `fprime-util` to generate a unit test outline for the `Led` component.
 
-First, register unit tests for the Led component by adding these lines to the component `CMakeLists.txt` file.
+First, register unit tests for the `Led` component with the build system by adding these lines to the component `CMakeLists.txt` file in your `led-blinker/Components/Led` directory.
 
 ```
 set(UT_SOURCE_FILES
     "${CMAKE_CURRENT_LIST_DIR}/Led.fpp"
 )
-
+set(UT_AUTO_HELPERS ON) # Additional Unit-Test autocoding
 register_fprime_ut()
 ```
 
 Next, generate a unit test build cache by running the following terminal commands:
 
 ```shell
-#In: fprime-workshop-led-blinker/Components/Led
-$ fprime-util generate --ut
+#In led-blinker/Components/Led
+fprime-util generate --ut
+```
+> Unit tests run with special build settings and as such need their own build cache generated.
+
+
+Next we will generate unit test template files. This is similar to the component implementations we have run, but will set up the complete unit test harness. 
+
+To do so, run the implementation command in the terminal within your `led-blinker/Components/Led` directory:
+```shell
+#In led-blinker/Components/Led
+fprime-util impl --ut
 ```
 
-To generate unit test template files, run the implementation command on the terminal:
+This step should create the files `Tester.cpp`, `Tester.hpp`, and `TestMain.cpp` in your current directory. Move them to a new subdirectory called `test/ut`.
 
+This is done with:
+```shell
+#In led-blinker/Components/Led
+mkdir -p test/ut
+mv Test* test/ut/
+```
+
+Finally, test the skeleton unit tests with the following command:
 
 ```shell
-#In: fprime-workshop-led-blinker/Components/Led
-$ fprime-util impl --ut
+#In led-blinker/Components/Led
+fprime-util check
 ```
-
-This step should create the files `Tester.cpp`, `Tester.hpp`, `TesterHelpers.cpp`, and `TestMain.cpp` in your current directory.
-
-Now, create a `test/ut` directory and copy those files into them.
-
-```shell
-#In: fprime-workshop-led-blinker/Components/Led
-$ mkdir -p test/ut
-$ cp Test* test/ut/
-```
-
-Finally, test the skeleton unit tests with:
-
-```shell
-#In: fprime-workshop-led-blinker/Components/Led
-$ fprime-util check
-```
+> `check` will build and run unit tests. To simply build them, run `fprime-util build --ut`.
 
 ## Add a New Test Case
 
-Now that unit tests have been written, we can our first unit test case.
+Now that unit tests have been written, we can add our first unit test case. First, remove the default `ToDo` test and add a new test case called `testBlinking`. 
 
-First, remove the default `ToDo` test and add a new test case called `testBlinking`.
+In `led-blinker/Components/Led/test-ut/Tester.hpp` remove the definition for `testToDo` and add:
 
-In `Tester.cpp`:
+```c++
+public:
+    ...
+    void testBlinking();
+```
+
+In `led-blinker/Components/Led/test-ut/Tester.cpp` remove the definition for `testToDo` and add:
 
 ```c++
   void Tester ::
@@ -68,15 +72,7 @@ In `Tester.cpp`:
   }
 ```
 
-In `Tester.hpp`:
-
-```c++
-public:
-    ... other methods ...
-    void testBlinking();
-```
-
-In `TestMain.cpp`:
+In `led-blinker/Components/Led/test-ut/TestMain.cpp`:
 
 ```c++
 TEST(Nominal, TestBlinking) {
@@ -87,11 +83,14 @@ TEST(Nominal, TestBlinking) {
 
 Use `fprime-util check` to make sure the new check builds and passes.
 
+> Ensure all errors are resolved before continuing.
+
+
 ## Write a Test Case
 
 The first test we will write is to test that the LED doesn't blink when blinking is disabled.
 
-Add the following code to the `testBlinking` method:
+Add the following code to the `testBlinking` method in `led-blinker/Components/Led/test-ut/Tester.cpp`:
 
 ```c++
 // Ensure LED stays off when blinking is disabled
@@ -102,12 +101,11 @@ ASSERT_from_gpioSet_SIZE(0); // ensure gpio LED wasn't set
 ASSERT_TLM_LedTransitions_SIZE(0); // ensure no LedTransitions were recorded
 ```
 
-The `this->invoke_to_PORTNAME()` methods are used to call input ports on the component under test.
+The `this->invoke_to_<port-name>()` methods are used to call input ports on the component under test acting like a port invocation in the system topology but driven by out test harness.
 
-The fprime unit testing framework generates a series of history buffers to store a fixed amount of events, telemetry, and output ports emitted from the component.
+The F´ unit testing framework generates a series of history buffers to store a fixed amount of events, telemetry, and output ports emitted from the component.
 
-The `ASSERT_<>_SIZE(size)` (ex: `ASSERT_EVENTS_LedState_SIZE(0)`) macros are used to assert the size of the history buffer matches your expectations
-The `ASSERT_<>(index, <arg 1>, <arg 1>, <arg N>)` macros are used to check that items in the history buffer match expectations.
+The `ASSERT_<>_SIZE(size)` (e.g. `ASSERT_EVENTS_LedState_SIZE(0)`) macros are used to assert the size of the history buffer matches your expectations. The `ASSERT_<>(index, <arg 1>, <arg 1>, <arg N>)` macros are used to check that items in the history buffer match expectations.
 
 Use `fprime-util check` to make sure the test case builds and passes.
 
@@ -119,12 +117,11 @@ this->sendCmd_BLINKING_ON_OFF(0, 0, Fw::On::ON);
 this->component.doDispatch(); // Trigger execution of async command
 ```
 
-The fprime unit test framework provides `this->sendCmd_COMMAND_NAME(args)` that allows calling a command on the component under test.
-Because `BLINKING_ON_OFF` is an `async` command, it's not dispatched immediately, but instead added to an execution queue.
-To dispatch a queued command, unit tests must explicitly call the `doDispatch()` command to execute the first command on the queue.
+The F´ unit test framework provides `this->sendCmd_COMMAND_NAME(args)` function that allows calling a command on the component under test. `BLINKING_ON_OFF` is an `async` command, it's not dispatched immediately, but instead added to an execution queue that would normally be driven off the component's thread. 
 
-Now, check that the state of the component matches expectations after each of three cycles.
-Write assertions to fill in the todo comments.
+To dispatch a queued command, unit tests must explicitly call the `doDispatch()` function to dispatch the first message on the queue.
+
+Now, check that the state of the component matches expectations after each of three cycles. Write assertions to fill in the todo comments.
 
 ```c++
 // Step through 3 run cycles to observe LED turning on and off 3 times
@@ -175,3 +172,22 @@ Add a new test case called `testBlinkInterval` and use the following code as a s
     // TODO: Add logic to test adjusted blink interval
   }
 ```
+
+## Checking Coverage
+
+Coverage of the code can be easily checked by adding the `--coverage` flag and opening the report with your web browser.
+
+```shell
+# In led-blinker/Components/Led
+fprime-util check --coverage
+```
+
+Now open the file `led-blinker/Components/Led/coverage/coverage.html` with your web browser and explore the coverage report.
+
+## Conclusion
+
+Congratulations!  You've tested the `Led` component with some unit-tests!
+
+The final section of this tutorial is to test the component via some system tests!
+
+

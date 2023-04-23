@@ -8,6 +8,4 @@ USER_ID=`id -u`
 GROUP_ID=`id -g`
 
 docker run --platform=linux/amd64 --net host -e USER=$USER -u "${USER_ID}:${GROUP_ID}" -v "${PROJECT_ROOT}:/project" -it \
-    registry.jpl.nasa.gov/fprime/fprime-arm:devel 
-
-#    nasafprime/fprime-arm:latest
+    nasafprime/fprime-arm:latest
