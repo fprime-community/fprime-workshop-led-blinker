@@ -1,4 +1,4 @@
-# Continuing Component Implementation
+# LED Blinker: Continuing Component Implementation
 
 In this section, we will complete the component implementation by sending events, and implementing the behavior of the `run` port, which is called by the rate-group.
 

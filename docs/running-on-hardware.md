@@ -1,9 +1,6 @@
-# Running on Hardware
+# LED Blinker: Running on Hardware
 
 In order to run on hardware, the deployment needs to be built for the given hardware target (a process called cross-compiling). Then the executable needs to be uploaded to the hardware, and the executable needs to be run connecting back to the host running the F´ GDS. This section will walk the user through cross-compiling, uploading, and running on hardware.
-
-## TODO> Add notes for macOS
-## Update F´ baseline
 
 ## Acquiring Cross-Compilers
 
