@@ -22,7 +22,6 @@ In this exercise, the `BLINKING_ON_OFF` command shall toggle the blinking state 
 
 **Commands:**
 1. `BLINKING_ON_OFF`: turn the LED blinking on/off
-2. 
 
 **Telemetry Channels:**
 1. `BlinkingState`: state of the LED blinking
@@ -31,7 +30,8 @@ In this exercise, the `BLINKING_ON_OFF` command shall toggle the blinking state 
 **Events:**
 1. `InvalidBlinkArgument`: emitted when an invalid argument was supplied to the `BLINKING_ON_OFF` command
 2. `SetBlinkingState`: emitted when the component sets the blink state
-3. `LedState`: emitted when the LED is driven to a new state
+3. `BlinkIntervalSet`: emitted when the component blink interval parameter is set
+4. `LedState`: emitted when the LED is driven to a new state
 
 **Parameters:**
 1. `BLINK_INTERVAL`: LED blink period in number of rate group calls
@@ -106,6 +106,8 @@ Led ::Led(const char* const compName) : LedComponentBase(compName),
 ```
 
 Now that the member variables are set up, we can continue into the component implementation.
+
+> The above code will fail to find the `Fw::On` enum type until we use it in the FPP model in the next section. To fix immediately, add `#include <Fw/Types/OnEnumAc.hpp>` to the top of `Led.hpp`.
 
 ### Commands
 

@@ -6,7 +6,7 @@ In this section, we will complete the component implementation by sending events
 
 ## Events
 
-Events represent a log of system activities. Events are typically emitted any time the system takes an action. Events are also emitted to report off-nominal conditions. Our component has three events, two that this section will show two of those and one is left to the student.
+Events represent a log of system activities. Events are typically emitted any time the system takes an action. Events are also emitted to report off-nominal conditions. Our component has four events, two that this section will show and two are left to the student.
 
 Back inside your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the telemetry channels you added in the previous implementation section, add two events:
 
@@ -62,7 +62,7 @@ Save the file and in the terminal, run the following to verify your component is
 fprime-util build
 ```
 
-Finally, add the `LedState` event with an argument of `Fw.On` type to indicate that the LED has been driven to a different state. You will emit this event in a later section. Build the component again to prove the FPP file is correct.
+Finally, add the `BlinkIntervalSet` event with an argument of `U32` type to indicate when the interval parameter is set and the `LedState` event with an argument of `Fw.On` type to indicate that the LED has been driven to a different state. You will emit these event in later sections. Build the component again to prove the FPP file is correct.
 
 > Resolve any `fprime-util build` errors before continuing 
 
@@ -104,12 +104,12 @@ void Led ::parameterUpdated(FwPrmIdType id) {
     // Read back the parameter value
     Fw::ParamValid isValid;
     U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
-    // NOTE: isValid is always
+    // NOTE: isValid is always VALID in parameterUpdated as it was just properly set
     FW_ASSERT(isValid == Fw::ParamValid::VALID, isValid);
 
     // Check the parameter ID is expected
     if (PARAMID_BLINK_INTERVAL == id) {
-        // Emit the blink set event
+        // Emit the blink interval set event
         // TODO: Add an event with, severity activity high, named BlinkIntervalSet that takes in an argument of type U32 to report the blink interval.
     }
 }
@@ -134,7 +134,7 @@ In your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After t
         sync input port run: Svc.Sched
 
         @ Port sending calls to the GPIO driver
-        output port gpioSet: Svc.Sched
+        output port gpioSet: Drv.GpioWrite
 ```
 
 > Input ports can be given any name that you choose. In this example, we choose `run` and `gpioSet` since these names capture the behavioral intent. The types of `Svc.Sched` and `Svc.Sched` are significant as these types must match the remote component.

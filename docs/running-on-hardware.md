@@ -43,8 +43,14 @@ Here is how to build for the 64-bit Arm Linux platform:
 ```shell
 # In led-blinker/LedBLinker
 export ARM_TOOLS_PATH=/opt/toolchains
+
+# For in-person workshops and ARM 64-bit hardware
 fprime-util generate aarch64-linux
-fprime-util build aarch-linux
+fprime-util build aarch64-linux
+
+# For ARM 32-bit hardware
+fprime-util generate arm-hf-linux
+fprime-util build arm-hf-linux
 ```
 > macOS users must run from within the Docker container in the directory `/project/LedBlinker`
 

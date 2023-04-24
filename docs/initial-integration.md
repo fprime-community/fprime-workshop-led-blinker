@@ -58,6 +58,13 @@ Next, the topology needs to use the above definition. This is done by adding the
 
 > No port connections need to be added because thus far the component only defines standard ports and those are connected automatically.
 
+Finally, add the following line to the `led-blinker/LedBlinker/CMakeLists.txt` file.
+
+```cmake
+include("${CMAKE_CURRENT_LIST_DIR}/../project.cmake")
+```
+> This includes the large project (e.g. `Components`) in this deployment's build.
+
 ## Adding `Led` Channels To the Packet Specification
 
 Some users choose to send telemetry packets instead of raw channels to the ground system. Although this tutorial will not use telemetry packets, it is best practice to keep the packet definitions up-to-date to make switching to telemetry packets seamless should the user choose to do so.
