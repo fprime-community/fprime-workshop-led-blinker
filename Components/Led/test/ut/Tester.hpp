@@ -7,85 +7,75 @@
 #ifndef TESTER_HPP
 #define TESTER_HPP
 
-#include "GTestBase.hpp"
 #include "Components/Led/Led.hpp"
+#include "GTestBase.hpp"
 
 namespace Components {
 
-  class Tester :
-    public LedGTestBase
-  {
+class Tester : public LedGTestBase {
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
 
-      // ----------------------------------------------------------------------
-      // Construction and destruction
-      // ----------------------------------------------------------------------
+  public:
+    // Maximum size of histories storing events, telemetry, and port outputs
+    static const NATIVE_INT_TYPE MAX_HISTORY_SIZE = 10;
+    // Instance ID supplied to the component instance under test
+    static const NATIVE_INT_TYPE TEST_INSTANCE_ID = 0;
+    // Queue depth supplied to component instance under test
+    static const NATIVE_INT_TYPE TEST_INSTANCE_QUEUE_DEPTH = 10;
 
-    public:
-      // Maximum size of histories storing events, telemetry, and port outputs
-      static const NATIVE_INT_TYPE MAX_HISTORY_SIZE = 10;
-      // Instance ID supplied to the component instance under test
-      static const NATIVE_INT_TYPE TEST_INSTANCE_ID = 0;
-      // Queue depth supplied to component instance under test
-      static const NATIVE_INT_TYPE TEST_INSTANCE_QUEUE_DEPTH = 10;
+    //! Construct object Tester
+    //!
+    Tester();
 
-      //! Construct object Tester
-      //!
-      Tester();
+    //! Destroy object Tester
+    //!
+    ~Tester();
 
-      //! Destroy object Tester
-      //!
-      ~Tester();
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
 
-    public:
+    //! To do
+    //!
+    void testBlinking();
+    void testBlinkInterval();
 
-      // ----------------------------------------------------------------------
-      // Tests
-      // ----------------------------------------------------------------------
+  private:
+    // ----------------------------------------------------------------------
+    // Handlers for typed from ports
+    // ----------------------------------------------------------------------
 
-      //! To do
-      //!
-      void testBlinking();
-      void testBlinkInterval();
+    //! Handler for from_gpioSet
+    //!
+    void from_gpioSet_handler(const NATIVE_INT_TYPE portNum, /*!< The port number*/
+                              const Fw::Logic& state);
 
-    private:
+  private:
+    // ----------------------------------------------------------------------
+    // Helper methods
+    // ----------------------------------------------------------------------
 
-      // ----------------------------------------------------------------------
-      // Handlers for typed from ports
-      // ----------------------------------------------------------------------
+    //! Connect ports
+    //!
+    void connectPorts();
 
-      //! Handler for from_gpioSet
-      //!
-      void from_gpioSet_handler(
-          const NATIVE_INT_TYPE portNum, /*!< The port number*/
-          const Fw::Logic &state
-      );
+    //! Initialize components
+    //!
+    void initComponents();
 
-    private:
+  private:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
 
-      // ----------------------------------------------------------------------
-      // Helper methods
-      // ----------------------------------------------------------------------
+    //! The component under test
+    //!
+    Led component;
+};
 
-      //! Connect ports
-      //!
-      void connectPorts();
-
-      //! Initialize components
-      //!
-      void initComponents();
-
-    private:
-
-      // ----------------------------------------------------------------------
-      // Variables
-      // ----------------------------------------------------------------------
-
-      //! The component under test
-      //!
-      Led component;
-
-  };
-
-} // end namespace Components
+}  // end namespace Components
 
 #endif

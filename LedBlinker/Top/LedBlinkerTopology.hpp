@@ -4,10 +4,10 @@
 // \brief header file containing the topology instantiation definitions
 //
 // ======================================================================
-#ifndef REF_REFTOPOLOGY_HPP // #!!
+#ifndef REF_REFTOPOLOGY_HPP  // #!!
 #define REF_REFTOPOLOGY_HPP
-// Included for access to LedBlinker::TopologyState and LedBlinker::ConfigObjects::pingEntries. These definitions are required by the
-// autocoder, but are also used in this hand-coded topology.
+// Included for access to LedBlinker::TopologyState and LedBlinker::ConfigObjects::pingEntries. These definitions are
+// required by the autocoder, but are also used in this hand-coded topology.
 #include <LedBlinker/Top/LedBlinkerTopologyDefs.hpp>
 
 // Remove unnecessary LedBlinker:: qualifications
@@ -83,5 +83,5 @@ void startSimulatedCycle(U32 milliseconds = 1000);
  */
 void stopSimulatedCycle();
 
-} // namespace LedBlinker
+}  // namespace LedBlinker
 #endif

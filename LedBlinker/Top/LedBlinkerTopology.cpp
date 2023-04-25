@@ -5,8 +5,8 @@
 //
 // ======================================================================
 // Provides access to autocoded functions
-#include <LedBlinker/Top/LedBlinkerTopologyAc.hpp>
 #include <LedBlinker/Top/LedBlinkerPacketsAc.hpp>
+#include <LedBlinker/Top/LedBlinkerTopologyAc.hpp>
 
 // Necessary project-specified types
 #include <Fw/Types/MallocAllocator.hpp>
@@ -112,7 +112,7 @@ void configureTopology() {
     uplink.setup(deframing);
 
     // Note: Uncomment when using Svc:TlmPacketizer
-    //tlmSend.setPacketList(LedBlinkerPacketsPkts, LedBlinkerPacketsIgnore, 1);
+    // tlmSend.setPacketList(LedBlinkerPacketsPkts, LedBlinkerPacketsIgnore, 1);
     bool gpio_success = gpioDriver.open(13, Drv::LinuxGpioDriver::GpioDirection::GPIO_OUT);
     if (!gpio_success) {
         printf("[ERROR] Failed to open GPIO pin\n");
