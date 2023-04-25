@@ -211,8 +211,11 @@ In your `led-blinker/Components/Led` directory, open `Led.cpp`, copy in the foll
         // Force interval to be 0 when invalid or not set
         interval = ((Fw::ParamValid::INVALID == isValid) || (Fw::ParamValid::UNINIT == isValid)) ? 0 : interval;
 
-        // Only perform actions when counting
-        if (this->blinking)
+        // Only perform actions when set to blinking
+        this->lock.lock();
+        bool is_blinking = this->blinking;
+        this->lock.unlock();
+        if (is_blinking)
         {
             Fw::On new_state = this->state;
             // Check for transitions
@@ -245,6 +248,7 @@ In your `led-blinker/Components/Led` directory, open `Led.cpp`, copy in the foll
         }
     }
 ```
+> Notice we use `lock` to lock the mutex while reading the `blinking` member variable.
 
 Save the file and in the terminal, run the following to verify your component is building correctly.
 

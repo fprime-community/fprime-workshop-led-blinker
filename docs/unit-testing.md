@@ -42,6 +42,23 @@ mkdir -p test/ut
 mv Test* test/ut/
 ```
 
+Next, update the `CMakeLists.txt` file in your `led-blinker/Components/Led` directory to add those files to the list of unit-test source files. Include a module dependency of `Os` for the mutex we used. That section should look like this:
+
+```cmake
+```
+set(UT_SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/Led.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/TestMain.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Tester.cpp"
+)
+set(UT_MOD_DEPS
+    Os
+)
+set(UT_AUTO_HELPERS ON) # Additional Unit-Test autocoding
+register_fprime_ut()
+```
+```
+
 Finally, test the skeleton unit tests with the following command:
 
 ```shell
@@ -172,6 +189,7 @@ Add a new test case called `testBlinkInterval` and use the following code as a s
     // TODO: Add logic to test adjusted blink interval
   }
 ```
+> Don't forget to add `testBlinkInterval()` to `Tester.hpp` as well. Run `fprime-util check and resolve any issues before continuing.
 
 ## Checking Coverage
 
@@ -190,4 +208,4 @@ Congratulations!  You've tested the `Led` component with some unit-tests!
 
 The final section of this tutorial is to test the component via some system tests!
 
-
+### Next Step: [System Testing](./system-testing.md).
