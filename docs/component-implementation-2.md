@@ -137,15 +137,7 @@ In your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After t
         output port gpioSet: Drv.GpioWrite
 ```
 
-> Input ports can be given any name that you choose. In this example, we choose `run` and `gpioSet` since these names capture the behavioral intent. The types of `Svc.Sched` and `Svc.Sched` are significant as these types must match the remote component.
-
-Save the file and in the terminal, run the following to verify your component is building correctly.
-
-```bash
-# In led-blinker/Components/Led
-fprime-util build
-```
-> Resolve any errors before continuing.
+> Input ports can be given any name that you choose. In this example, we choose `run` and `gpioSet` since these names capture the behavioral intent. The types of `Svc.Sched` and `Drv.GpioWrite` are significant as these types must match the remote component.
 
 In your `led-blinker/Components/Led` directory, run the following to autogenerate stub functions for the `run` input port we just added.
 

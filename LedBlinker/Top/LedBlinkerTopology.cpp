@@ -115,7 +115,7 @@ void configureTopology() {
     // tlmSend.setPacketList(LedBlinkerPacketsPkts, LedBlinkerPacketsIgnore, 1);
     bool gpio_success = gpioDriver.open(13, Drv::LinuxGpioDriver::GpioDirection::GPIO_OUT);
     if (!gpio_success) {
-        printf("[ERROR] Failed to open GPIO pin\n");
+        Fw::Logger::logMsg("[ERROR] Failed to open GPIO pin\n");
     }
 }
 

@@ -27,7 +27,7 @@ library_locations: ../fprime-arm-linux
 > /opt/toolchains/bin//aarch64-none-linux-gnu-gcc -v
 > 
 > # For 32-bit ARM hardware
-> /opt/toolchains/bin//aarch64-none-linux-gnu-gcc -v
+> /opt/toolchains/bin/arm-linux-gnueabi-gcc -v
 > ```
 >
 > macOS users must run these commands from within the Docker container described in [Appendix I](./appendix-1.md). Ensure this [script](https://github.com/fprime-community/fprime-workshop-led-blinker/main/bin/macos-docker) was downloaded to `led-blinker/bin/macos-docker` and run it in the terminal.
@@ -41,7 +41,7 @@ Now cross-compiling is as easy as building the deployment for a specific platfor
 Here is how to build for the 64-bit Arm Linux platform:
 
 ```shell
-# In led-blinker/LedBLinker
+# In led-blinker/LedBlinker
 export ARM_TOOLS_PATH=/opt/toolchains
 
 # For in-person workshops and ARM 64-bit hardware

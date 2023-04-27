@@ -82,7 +82,6 @@ Add the following to `led-blinker/LedBlinker/Top/LedBlinkerPackets.xml`:
 Now that this has been added, build the topology:
 
 ```shell
-```shell
 # In led-blinker/LedBlinker
 fprime-util build
 ```
@@ -97,7 +96,7 @@ The topology may now be run. This can be done with the `fprime-gds` command. Sin
 ```shell
 fprime-gds
 ```
-This will likelt open up your browser and show the running flight software.  If it does not open a browser, navigate to `http://localhost:5000`.
+This will likely open up your browser and show the running flight software.  If it does not open a browser, navigate to `http://localhost:5000`.
 
 Test the component integration with the following steps:
 1. **Verify connection**: confirm that there is a green circle and not a red X in the upper right corner.
