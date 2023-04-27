@@ -24,12 +24,14 @@ library_locations: ../fprime-arm-linux
 > Now is a good time to ensure that the ARM toolchains were installed properly. To test run the following command:
 > ```shell
 > # For in-person workhops and 64-bit ARM hardware
-> /opt/toolchains/bin//aarch64-none-linux-gnu-gcc -v
+> /opt/toolchains/bin/aarch64-none-linux-gnu-gcc -v
 > 
 > # For 32-bit ARM hardware
 > /opt/toolchains/bin/arm-linux-gnueabi-gcc -v
 > ```
 >
+> Any output other than "file/command not found" is good.
+> 
 > macOS users must run these commands from within the Docker container described in [Appendix I](./appendix-1.md). Ensure this [script](https://github.com/fprime-community/fprime-workshop-led-blinker/main/bin/macos-docker) was downloaded to `led-blinker/bin/macos-docker` and run it in the terminal.
 
 ## Cross-Compiling for Embedded Arm Linux
@@ -72,7 +74,7 @@ scp -r build-artifacts/arm-hf-linux <username>@<device-address>:LedBlinker
 > Users must fill in the username and device address above.
 
 
-Next run the F´ GDS without launching the native compilation (`-n`) and with the dictionary build above (`--dictionary ./build-artifacts/<platform name>/LedBlinkerAppDictionary.xml`).
+Next run the F´ GDS without launching the native compilation (`-n`) and with the dictionary from the build above (`--dictionary ./build-artifacts/<platform name>/LedBlinkerAppDictionary.xml`).
 
 ```
 # In led-blinker/LedBlinker
