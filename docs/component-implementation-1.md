@@ -1,6 +1,6 @@
 # LED Blinker: Component Design and Initial Implementation
 
-The purpose of this exercise is to walk you through the creation and initial implementation of an F´ component to control the blinking of an LED. This section will discuss the design of the full component, the implementation of a command to start/stop the LED blinking, and the transmission of a telemetry channel.  Users will then proceed to the initial ground testing before finishing the implementation in a later section.
+The purpose of this exercise is to walk you through the creation and initial implementation of an F´ component to control the blinking of an LED. This section will discuss the design of the full component, the implementation of a command to start/stop the LED blinking, and the sending of events.  Users will then proceed to the initial ground testing before finishing the implementation in a later section.
 
 ## Component Design
 
@@ -23,15 +23,15 @@ In this exercise, the `BLINKING_ON_OFF` command shall toggle the blinking state 
 **Commands:**
 1. `BLINKING_ON_OFF`: turn the LED blinking on/off
 
-**Telemetry Channels:**
-1. `BlinkingState`: state of the LED blinking
-2. `LedTransitions`: count of the LED transitions
-
 **Events:**
 1. `InvalidBlinkArgument`: emitted when an invalid argument was supplied to the `BLINKING_ON_OFF` command
 2. `SetBlinkingState`: emitted when the component sets the blink state
 3. `BlinkIntervalSet`: emitted when the component blink interval parameter is set
 4. `LedState`: emitted when the LED is driven to a new state
+
+**Telemetry Channels:**
+1. `BlinkingState`: state of the LED blinking
+2. `LedTransitions`: count of the LED transitions
 
 **Parameters:**
 1. `BLINK_INTERVAL`: LED blink period in number of rate group calls
@@ -232,57 +232,72 @@ fprime-util build
 
 > Fix any errors that occur before proceeding with the rest of the tutorial.
 
-## Telemetry Channels
+## Events
 
-Telemetry channels represent the state of the system. Typically, telemetry channels are defined for any states that give crucial insight into the component's behavior. This tutorial defines two channels: one will be shown, and the other is left up to the student.
+Events represent a log of system activities. Events are typically emitted any time the system takes an action. Events are also emitted to report off-nominal conditions. Our component has four events, two that this section will show and two are left to the student.
 
-Inside your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the command you added in the previous section, add a telemetry channel of type `Fw.On` to report the blinking state.
+Back inside your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the command you added in the previous section, add two events:
 
 ```
-        @ Telemetry channel to report blinking state.
-        telemetry BlinkingState: Fw.On
+        @ Indicates we received an invalid argument.
+        event InvalidBlinkArgument(badArgument: Fw.On) \
+            severity warning low \
+            format "Invalid Blinking Argument: {}"
+
+        @ Reports the state we set to blinking.
+        event SetBlinkingState(state: Fw.On) \
+            severity activity high \
+            format "Set blinking state to {}."
 ```
 
-Save the file. In the terminal, run the following to verify your component is building correctly.
+Save the file and in the terminal, run the following to verify your component is building correctly.
 
 ```bash
 # In led-blinker/Components/Led
 fprime-util build
 ```
+> Resolve any errors before continuing.
 
-> Fix any errors that occur before proceeding with the rest of the tutorial.
+Now open `Led.cpp` in your `led-blinker/Components/Led` directory and navigate to the `BLINKING_ON_OFF` command. Report via our new event when there is an error in the input argument. 
 
-Inside your `led-blinker/Components/Led` directory, open `Led.cpp`, and navigate to the `BLINKING_ON_OFF` command. Report the blinking state via the telemetry channel we just added. To do so, replace the following:
-
+To do so, replace: 
 ```cpp
-      // TODO: Report the blinking state via a telemetry channel.
-      // NOTE: This telemetry channel will be added during the "Telemetry" exercise.
+        // TODO: Add an event that indicates we received an invalid argument.
+        // NOTE: Add this event after going through the "Events" exercise.
 ```
 
-with the command to send the telemetry channel:
-
+with:
 ```cpp
-this->tlmWrite_BlinkingState(on_off);
+        this->log_WARNING_LO_InvalidBlinkArgument(on_off);
 ```
 
-Save the file. In the terminal, run the following to verify your component is building correctly.
+Similarly, use an event to report the blinking state has been set.
+
+Replace the following:
+```cpp
+      // TODO: Add an event that reports the state we set to blinking.
+      // NOTE: This event will be added during the "Events" exercise.
+```
+
+with:
+```cpp
+      this->log_ACTIVITY_HI_SetBlinkingState(on_off);
+```
+
+Save the file and in the terminal, run the following to verify your component is building correctly.
 
 ```bash
-# In led-blinker/Components/Led
 fprime-util build
 ```
-> Fix any errors that occur before proceeding with the rest of the tutorial.
 
+Finally, add the `BlinkIntervalSet` event with an argument of `U32` type to indicate when the interval parameter is set and the `LedState` event with an argument of `Fw.On` type to indicate that the LED has been driven to a different state. You will emit these event in later sections. Build the component again to prove the FPP file is correct.
 
-Now complete the component's telemetry model by adding the `LedTransitions` channel of type `U64` to `Led.fpp`. You will emit this telemetry channel in a further section.
-
-> Build with that new channel and fix any errors before continuing.
-
+> Resolve any `fprime-util build` errors before continuing 
 
 ## Conclusion
 
 Congratulations!  You have now implemented some basic functionality in a new F´ component. Before finishing the implementation, let's take a break and try running the above command through the ground system. This will require integrating the component into the system topology.
 
-> When running in the ground system try running `led.BLINKING_ON_OFF` with a value of `ON` and ensure that the channel `BlinkingState` is emitted indicating the blinking switched to on!
+> When running in the ground system try running `led.BLINKING_ON_OFF` with a value of `ON` and ensure that the event `SetBlinkingState` is emitted indicating the blinking switched to on!
 
 ### Next Step: [Initial Component Integration](./initial-integration.md).

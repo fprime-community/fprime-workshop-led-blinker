@@ -6,7 +6,7 @@ In this section, users will create a deployment and perform the initial integrat
 
 ## Creating the `LedBlinker` Deployment
 
-In order to produce an executable to run the software, users need to create a deployment. A deployment is one software executable that contains the main entrypoint, and an F´ system topology.
+In order to produce an executable to run the software, users need to create a deployment. A deployment is one software executable that contains the main entry point, and an F´ system topology.
 
 Create a new deployment in the `led-blinker` directory with:
 
@@ -65,28 +65,6 @@ include("${CMAKE_CURRENT_LIST_DIR}/../project.cmake")
 ```
 > This includes the large project (e.g. `Components`) in this deployment's build.
 
-## Adding `Led` Channels To the Packet Specification
-
-Some users choose to send telemetry packets instead of raw channels to the ground system. Although this tutorial will not use telemetry packets, it is best practice to keep the packet definitions up-to-date to make switching to telemetry packets seamless should the user choose to do so.
-
-Add the following to `led-blinker/LedBlinker/Top/LedBlinkerPackets.xml`:
-
-```xml
-    <packet name="LedChannels" id="8" level="1">
-        <channel name="led.LedTransitions"/>
-        <channel name="led.BlinkingState"/>
-    </packet>
-```
-> Add this after the opening `<packet>` tag and before the closing `</packet>` tag as a separate block.
-
-Now that this has been added, build the topology:
-
-```shell
-# In led-blinker/LedBlinker
-fprime-util build
-```
-> Fix any errors before continuing
-
 ## Testing the Topology
 
 The topology may now be run. This can be done with the `fprime-gds` command. Since we are currently building for the host platform, that command will run the ground data system (GDS) and the deployment executable automatically in-tandem.
@@ -101,7 +79,7 @@ This will likely open up your browser and show the running flight software.  If 
 Test the component integration with the following steps:
 1. **Verify connection**: confirm that there is a green circle and not a red X in the upper right corner.
 2. **Send a Command**: select the 'Commanding' tab, search for `led.BLINKING_ON_OFF` and send it with the argument set to `ON`.
-3. **Verify Channels**: select the 'Channels' tab and verify that the `led.BlinkingState` channel reads `ON`.
+3. **Verify Event**: select the 'Events' tab and verify that the `SetBlinkingState` event reports the blinking state was set to `ON`.
 
 `CTRL-C` to stop the F´ GDS program.
 
