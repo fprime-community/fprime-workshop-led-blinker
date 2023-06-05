@@ -1,70 +1,76 @@
 # LED Blinker: Continuing Component Implementation
 
-In this section, we will complete the component implementation by sending events, and implementing the behavior of the `run` port, which is called by the rate-group.
+In this section, we will complete the component implementation by transmitting a telemetry channel, and implementing the behavior of the `run` port, which is called by the rate-group.
 
 > Refer back to the [component design](./component-implementation-1.md#component-design) for explanations of what each of these items is intended to do.
 
-## Events
+## Telemetry Channels
 
-Events represent a log of system activities. Events are typically emitted any time the system takes an action. Events are also emitted to report off-nominal conditions. Our component has four events, two that this section will show and two are left to the student.
+Telemetry channels represent the state of the system. Typically, telemetry channels are defined for any states that give crucial insight into the component's behavior. This tutorial defines two channels: one will be shown, and the other is left up to the student.
 
-Back inside your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the telemetry channels you added in the previous implementation section, add two events:
+Inside your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the events you added in the previous implementation section, add a telemetry channel of type `Fw.On` to report the blinking state.
 
 ```
-        @ Indicates we received an invalid argument.
-        event InvalidBlinkArgument(badArgument: Fw.On) \
-            severity warning low \
-            format "Invalid Blinking Argument: {}"
-
-        @ Reports the state we set to blinking.
-        event SetBlinkingState(state: Fw.On) \
-            severity activity high \
-            format "Set blinking state to {}."
+        @ Telemetry channel to report blinking state.
+        telemetry BlinkingState: Fw.On
 ```
 
-Save the file and in the terminal, run the following to verify your component is building correctly.
+Save the file. In the terminal, run the following to verify your component is building correctly.
 
 ```bash
 # In led-blinker/Components/Led
 fprime-util build
 ```
-> Resolve any errors before continuing.
 
-Now open `Led.cpp` in your `led-blinker/Components/Led` directory and navigate to the `BLINKING_ON_OFF` command. Report via our new event when there is an error in the input argument. 
+> Fix any errors that occur before proceeding with the rest of the tutorial.
 
-To do so, replace: 
+Inside your `led-blinker/Components/Led` directory, open `Led.cpp`, and navigate to the `BLINKING_ON_OFF` command. Report the blinking state via the telemetry channel we just added. To do so, replace the following:
+
 ```cpp
-        // TODO: Add an event that indicates we received an invalid argument.
-        // NOTE: Add this event after going through the "Events" exercise.
+      // TODO: Report the blinking state via a telemetry channel.
+      // NOTE: This telemetry channel will be added during the "Telemetry" exercise.
 ```
 
-with:
+with the command to send the telemetry channel:
+
 ```cpp
-        this->log_WARNING_LO_InvalidBlinkArgument(on_off);
+this->tlmWrite_BlinkingState(on_off);
 ```
 
-Similarly, use an event to report the blinking state has been set.
-
-Replace the following:
-```cpp
-      // TODO: Add an event that reports the state we set to blinking.
-      // NOTE: This event will be added during the "Events" exercise.
-```
-
-with:
-```cpp
-      this->log_ACTIVITY_HI_SetBlinkingState(on_off);
-```
-
-Save the file and in the terminal, run the following to verify your component is building correctly.
+Save the file. In the terminal, run the following to verify your component is building correctly.
 
 ```bash
+# In led-blinker/Components/Led
 fprime-util build
 ```
+> Fix any errors that occur before proceeding with the rest of the tutorial.
 
-Finally, add the `BlinkIntervalSet` event with an argument of `U32` type to indicate when the interval parameter is set and the `LedState` event with an argument of `Fw.On` type to indicate that the LED has been driven to a different state. You will emit these event in later sections. Build the component again to prove the FPP file is correct.
 
-> Resolve any `fprime-util build` errors before continuing 
+Now complete the component's telemetry model by adding the `LedTransitions` channel of type `U64` to `Led.fpp`. You will emit this telemetry channel in a further section.
+
+> Build with that new channel and fix any errors before continuing.
+
+### Adding `Led` Channels To the Packet Specification
+
+Some users choose to send telemetry packets instead of raw channels to the ground system. Although this tutorial will not use telemetry packets, it is best practice to keep the packet definitions up-to-date to make switching to telemetry packets seamless should the user choose to do so.
+
+Add the following to `led-blinker/LedBlinker/Top/LedBlinkerPackets.xml`:
+
+```xml
+    <packet name="LedChannels" id="8" level="1">
+        <channel name="led.LedTransitions"/>
+        <channel name="led.BlinkingState"/>
+    </packet>
+```
+> Add this after the opening `<packet>` tag and before the closing `</packet>` tag as a separate block.
+
+Now that this has been added, build the topology:
+
+```shell
+# In led-blinker/LedBlinker
+fprime-util build
+```
+> Fix any errors before continuing
 
 ## Parameters
 
@@ -72,7 +78,7 @@ Parameters are ground-controllable settings for the system. Parameters are used 
 
 For each parameter you define in your fpp, the F´ autocoder will autogenerate a SET and SAVE command. The SET command allows ground to update the parameter. The SAVE command allows ground to save the current value of the parameter for use even after FSW reboots.
 
-In your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the events you added previously, add a parameter for the blinking interval. Give the parameter the name `BLINK_INTERVAL` and type `U32`.
+In your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the telemetry channels you added previously, add a parameter for the blinking interval. Give the parameter the name `BLINK_INTERVAL` and type `U32`.
 
 ```
         @ Blinking interval in rate group ticks
