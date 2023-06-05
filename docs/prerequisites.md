@@ -20,7 +20,7 @@ We include a breakdown of setup for each common OS type. Users may consult the [
 
 In this section we will set up Linux to run on each type of laptop. Unless the laptop is already running Linux, this is  done through the use of virtual machines and/or emulation. Please follow the instructions for the operating system you run on your laptop. Our goal will be to get up and running with Ubuntu 20.04 or 22.04 on each type of laptop. *This does not require dual booting*.
 
-> Users of other Linux distributsions will need to determine the correct packages for their distribution.
+> Users of other Linux distributions will need to determine the correct packages for their distribution.
 
 
 ### Microsoft Windows 10
