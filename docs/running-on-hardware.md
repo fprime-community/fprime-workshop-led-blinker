@@ -27,7 +27,7 @@ library_locations: ../fprime-arm-linux
 > /opt/toolchains/bin/aarch64-none-linux-gnu-gcc -v
 > 
 > # For 32-bit ARM hardware
-> /opt/toolchains/bin/arm-linux-gnueabi-gcc -v
+> /opt/toolchains/bin/arm-none-linux-gnueabihf-gcc -v
 > ```
 >
 > Any output other than "file/command not found" is good.
@@ -80,10 +80,10 @@ Next run the F´ GDS without launching the native compilation (`-n`) and with th
 # In led-blinker/LedBlinker
 
 # For in-person workshops and ARM 64-bit hardware
-fprime-gds -n --dictionary build-artifacts/aarch64-linux/dict/LedBlinkerAppDictionary.xml
+fprime-gds -n --dictionary build-artifacts/aarch64-linux/LedBlinker/dict/LedBlinkerTopologyAppDictionary.xml 
 
 # For ARM 32-bit hardware
-fprime-gds -n --dictionary build-artifacts/aarch64-linux/dict/LedBlinkerAppDictionary.xml
+fprime-gds --dictionary build-artifacts/arm-hf-linux/LedBlinker/dict/LedBlinkerTopologyAppDictionary.xml 
 ```
 
 >  The green circle will not appear until the software is run in the next step.
