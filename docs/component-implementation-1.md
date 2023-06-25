@@ -294,6 +294,15 @@ Finally, add the `BlinkIntervalSet` event with an argument of `U32` type to indi
 
 > Resolve any `fprime-util build` errors before continuing 
 
+## Try it yourself
+
+Below is a table with tasks you should complete. These tasks require you to go back into the component's code and add the missing function calls.
+
+| Task | Missing function calls |
+|-------|-------------|
+| 1. Add an event inside the `BLINKING_ON_OFF` command handler that indicates we received an invalid argument. | `this->log_WARNING_LO_InvalidBlinkArgument(on_off);` |
+| 2. Add an event inside the `BLINKING_ON_OFF` command handler that reports the state we set to blinking. | `this->log_ACTIVITY_HI_SetBlinkingState(on_off);` |
+
 ## Conclusion
 
 Congratulations!  You have now implemented some basic functionality in a new F´ component. Before finishing the implementation, let's take a break and try running the above command through the ground system. This will require integrating the component into the system topology.
