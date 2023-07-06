@@ -45,10 +45,22 @@ fprime-util build
 ```
 > Fix any errors that occur before proceeding with the rest of the tutorial.
 
+## Try it yourself
 
-Now complete the component's telemetry model by adding the `LedTransitions` channel of type `U64` to `Led.fpp`. You will emit this telemetry channel in a further section.
+Below is a table with tasks you should complete. These tasks require you to go back into the component's files and add the missing lines.
 
-> Build with that new channel and fix any errors before continuing.
+| Task | Missing lines |
+|-------|-------------|
+| 1. Add a telemetry channel `LedTransitions` of type `U64` to Led.fpp. You will emit this telemetry channel in a further section. | `telemetry LedTransitions: U64` |
+
+Save all files and in the terminal, run the following to verify your component is building correctly.
+
+```bash
+# In led-blinker/Components/Led
+fprime-util build
+```
+
+> Resolve any `fprime-util build` errors before continuing
 
 ### Adding `Led` Channels To the Packet Specification
 

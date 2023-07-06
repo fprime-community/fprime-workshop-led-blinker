@@ -294,9 +294,9 @@ fprime-util build
 
 ## Try it yourself
 
-Below is a table with tasks you should complete. These tasks require you to go back into the component's code and add the missing function calls.
+Below is a table with tasks you should complete. These tasks require you to go back into the component's files and add the missing lines.
 
-| Task | Missing function calls |
+| Task | Missing lines |
 |-------|-------------|
 | 1. Add an event inside the `BLINKING_ON_OFF` command handler that indicates we received an invalid argument. | `this->log_WARNING_LO_InvalidBlinkArgument(on_off);` |
 | 2. Add an event inside the `BLINKING_ON_OFF` command handler that reports the state we set to blinking. | `this->log_ACTIVITY_HI_SetBlinkingState(on_off);` |
