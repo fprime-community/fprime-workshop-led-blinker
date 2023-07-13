@@ -18,8 +18,7 @@ fprime-util new --deployment
 This will ask for some input, respond with the following answers:
 ```shell
 [INFO] Cookiecutter: using builtin template for new deployment
-deployment_name [MyDeployment]: LedBlinker
-path_to_fprime [./fprime]:
+Deployment name [MyDeployment]: LedBlinker
 ```
 > Use the default response for any other questions asked.
 

@@ -51,27 +51,27 @@ You will be prompted for information regarding your component. Fill out the prom
 
 ```bash
 [INFO] Cookiecutter source: using builtin
-component_name [MyComponent]: Led
-component_short_description [Example Component for F Prime FSW framework.]: Component to blink an LED driven by a rate group
-component_namespace [Led]: Components
-Select component_kind:
+Component name [MyComponent]: Led
+Component short description [Example Component for F Prime FSW framework.]: Component to blink an LED driven by a rate group
+Component namespace [Led]: Components
+Select component kind:
 1 - active
 2 - passive
 3 - queued
 Choose from 1, 2, 3 [1]: 1
-Select enable_commands:
+Enable Commands?:
 1 - yes
 2 - no
 Choose from 1, 2 [1]: 1  
-Select enable_telemetry:
+Enable Telemetry?:
 1 - yes
 2 - no
 Choose from 1, 2 [1]: 1
-Select enable_events:
+Enable Events?:
 1 - yes
 2 - no
 Choose from 1, 2 [1]: 1
-Select enable_parameters:
+Enable Parameters?:
 1 - yes
 2 - no
 Choose from 1, 2 [1]: 1
