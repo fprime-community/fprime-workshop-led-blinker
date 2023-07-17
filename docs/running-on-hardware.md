@@ -2,26 +2,11 @@
 
 In order to run on hardware, the deployment needs to be built for the given hardware target (a process called cross-compiling). Then the executable needs to be uploaded to the hardware, and the executable needs to be run connecting back to the host running the F´ GDS. This section will walk the user through cross-compiling, uploading, and running on hardware.
 
-## Acquiring Cross-Compilers
+## Cross-Compiling for Embedded Arm Linux
 
-In the [environment setup](./prerequisites.md) for this tutorial the Arm Linux cross-compilers were installed. However, the F´ CMake system still needs the appropriate integration files to build. These files are called "CMake Toolchain". There is an F´ package that provides cross-compiler integration for standard ARM Linux cross-compilers (i.e. those provided as binary downloads from ARM).
+In the [environment setup](./prerequisites.md) for this tutorial, the ARM Linux cross-compilers were installed. In this section, we will use these compilers to cross-compile for ARM Linux by utilizing integration files called "CMake Toolchain". F´ provides cross-compiler integration for standard ARM Linux cross-compilers (i.e. those provided as binary downloads from ARM).
 
-To install the F´ ARM package, add it as a submodule via `git`:
-```shell
-# In `led-blinker`
-git submodule add https://github.com/fprime-community/fprime-arm-linux.git
-git submodule update --init --recursive
-```
-
-Next add the package to the `LedBlinker` deployment's `settings.ini` file. In `led-blinker/LedBlinker/settings.ini` add the following to the `[fprime]` section of the file:
-
-```
-[fprime]
-...
-library_locations: ../fprime-arm-linux
-```
-
-> Now is a good time to ensure that the ARM toolchains were installed properly. To test run the following command:
+> Now is a good time to ensure that the ARM toolchains were installed properly. To test, run the following command:
 > ```shell
 > # For in-person workhops and 64-bit ARM hardware
 > /opt/toolchains/bin/aarch64-none-linux-gnu-gcc -v
@@ -33,8 +18,6 @@ library_locations: ../fprime-arm-linux
 > Any output other than "file/command not found" is good.
 > 
 > macOS users must run these commands from within the Docker container described in [Appendix I](./appendix-1.md). Ensure this [script](https://github.com/fprime-community/fprime-workshop-led-blinker/main/bin/macos-docker) was downloaded to `led-blinker/bin/macos-docker` and run it in the terminal.
-
-## Cross-Compiling for Embedded Arm Linux
 
 Now cross-compiling is as easy as building the deployment for a specific platform. For users running on 64-bit arm the platform is called `aarch64-linux`, and for users on 32-bit linux use `arm-hf-linux`. This package expects the environment variable `ARM_TOOLS_PATH` to point to the installation directory of the ARM cross-compilers.
 
