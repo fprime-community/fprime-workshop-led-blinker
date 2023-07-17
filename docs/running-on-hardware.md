@@ -2,9 +2,6 @@
 
 In order to run on hardware, the deployment needs to be built for the given hardware target (a process called cross-compiling). Then the executable needs to be uploaded to the hardware, and the executable needs to be run connecting back to the host running the F´ GDS. This section will walk the user through cross-compiling, uploading, and running on hardware.
 
-## Acquiring Cross-Compilers
-
-
 ## Cross-Compiling for Embedded Arm Linux
 
 In the [environment setup](./prerequisites.md) for this tutorial, the ARM Linux cross-compilers were installed. In this section, we will use these compilers to cross-compile for ARM Linux by utilizing integration files called "CMake Toolchain". F´ provides cross-compiler integration for standard ARM Linux cross-compilers (i.e. those provided as binary downloads from ARM).
