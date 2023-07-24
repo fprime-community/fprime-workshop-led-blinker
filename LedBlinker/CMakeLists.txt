@@ -1,33 +1,21 @@
 #####
 # 'LedBlinker' Deployment:
 #
-# This sets up the build for the 'LedBlinker' Application, including custom
-# components. In addition, it imports FPrime.cmake, which includes the core F Prime components.
+# This registers the 'LedBlinker' deployment to the build system. 
+# Custom components that have not been added at the project-level should be added to 
+# the list below.
 #
 #####
 
 ###
-# Basic Project Setup
+# Topology and Components
 ###
-cmake_minimum_required(VERSION 3.13)
-cmake_policy(SET CMP0048 NEW)
-project(LedBlinker VERSION 1.0.0 LANGUAGES C CXX)
-
-###
-# F' Core Setup
-# This includes all of the F prime core components, and imports the make-system.
-###
-include("${CMAKE_CURRENT_LIST_DIR}/../fprime/cmake/FPrime.cmake")
-# NOTE: register custom targets between these two lines
-include("${FPRIME_FRAMEWORK_PATH}/cmake/FPrime-Code.cmake")
-
-###
-# Components and Topology
-###
-add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/../Components")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Top")
+# Add custom components to this specific deployment here
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/../Components")
+
 
 set(SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/Main.cpp")
-set(MOD_DEPS ${PROJECT_NAME}/Top)
+set(MOD_DEPS ${FPRIME_CURRENT_MODULE}/Top)
 
 register_fprime_deployment()
