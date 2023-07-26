@@ -8,4 +8,5 @@ project(LedBlinkerBase C CXX)
 include("${CMAKE_CURRENT_LIST_DIR}/fprime/cmake/FPrime.cmake")
 include("${FPRIME_FRAMEWORK_PATH}/cmake/FPrime-Code.cmake")
 
-add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Components")
+# This includes project-wide objects
+include("${CMAKE_CURRENT_LIST_DIR}/project.cmake")
