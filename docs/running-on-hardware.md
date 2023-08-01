@@ -4,81 +4,15 @@ In order to run on hardware, the deployment needs to be built for the given hard
 
 ## Cross-Compiling for Embedded Arm Linux
 
-In the [environment setup](./prerequisites.md) for this tutorial, the ARM Linux cross-compilers were installed. In this section, we will use these compilers to cross-compile for ARM Linux by utilizing integration files called "CMake Toolchain". F´ provides cross-compiler integration for standard ARM Linux cross-compilers (i.e. those provided as binary downloads from ARM).
+In the [environment setup](./prerequisites.md) for this tutorial, the ARM Linux cross-compilers were installed. In this section, we will use these compilers to cross-compile for ARM Linux by utilizing integration files called "CMake Toolchain". Follow the steps in [Section 2](https://github.com/nasa/fprime/blob/devel/docs/Tutorials/CrossCompilationSetup/CrossCompilationTutorial.md#2-compiling-for-arm) of the Cross Compilation Tutorial for steps on how to compile for ARM.
 
-> Now is a good time to ensure that the ARM toolchains were installed properly. To test, run the following command:
-> ```shell
-> # For in-person workhops and 64-bit ARM hardware
-> /opt/toolchains/bin/aarch64-none-linux-gnu-gcc -v
-> 
-> # For 32-bit ARM hardware
-> /opt/toolchains/bin/arm-none-linux-gnueabihf-gcc -v
-> ```
->
-> Any output other than "file/command not found" is good.
-> 
-> macOS users must run these commands from within the Docker container described in [Appendix I](./appendix-1.md). Ensure this [script](https://github.com/fprime-community/fprime-workshop-led-blinker/main/bin/macos-docker) was downloaded to `led-blinker/bin/macos-docker` and run it in the terminal.
-
-Now cross-compiling is as easy as building the deployment for a specific platform. For users running on 64-bit arm the platform is called `aarch64-linux`, and for users on 32-bit linux use `arm-hf-linux`. This package expects the environment variable `ARM_TOOLS_PATH` to point to the installation directory of the ARM cross-compilers.
-
-> Users need to generate for each platform they wish to run on.  We previously generated for our host machine.
-
-Here is how to build for the 64-bit Arm Linux platform:
-
-```shell
-# In led-blinker/LedBlinker
-export ARM_TOOLS_PATH=/opt/toolchains
-
-# For in-person workshops and ARM 64-bit hardware
-fprime-util generate aarch64-linux
-fprime-util build aarch64-linux
-
-# For ARM 32-bit hardware
-fprime-util generate arm-hf-linux
-fprime-util build arm-hf-linux
-```
-> macOS users must run from within the Docker container in the directory `/project/LedBlinker`
+> During the step for running the `fprime-util generate` and `fprime-util build` commands, macOS users must run from within the Docker container in the directory `/project/LedBlinker`
 
 ## Running on Hardware
 
-Now it is time to run on hardware. For this tutorial, the assumption is that the Arm Linux machine is available on the network, is running SSH, and the username, password, device address, and host address are known to the student. Without this configuration, users should skip to the next section of the tutorial.
+Now it is time to run on hardware. For this tutorial, the assumption is that the Arm Linux machine is available on the network, is running SSH, and the username, password, device address, and host address are known to the student. Without this configuration, users should skip to the next section of the tutorial. 
 
-First, in a terminal upload the software to hardware platform. This is done with:
-
-```shell
-# In led-blinker/LedBlinker
-
-# For in-person workshops and ARM 64-bit hardware
-scp -r build-artifacts/aarch64-linux <username>@<device-address>:LedBlinker
-
-# For ARM 32-bit hardware
-scp -r build-artifacts/arm-hf-linux <username>@<device-address>:LedBlinker
-```
-> Users must fill in the username and device address above.
-
-
-Next run the F´ GDS without launching the native compilation (`-n`) and with the dictionary from the build above (`--dictionary ./build-artifacts/<platform name>/LedBlinkerAppDictionary.xml`).
-
-```
-# In led-blinker/LedBlinker
-
-# For in-person workshops and ARM 64-bit hardware
-fprime-gds -n --dictionary build-artifacts/aarch64-linux/LedBlinker/dict/LedBlinkerTopologyAppDictionary.xml 
-
-# For ARM 32-bit hardware
-fprime-gds --dictionary build-artifacts/arm-hf-linux/LedBlinker/dict/LedBlinkerTopologyAppDictionary.xml 
-```
-
->  The green circle will not appear until the software is run in the next step.
-
-In another terminal SSH into the device and run the uploaded software:
-```shell
-ssh <username>@<device-address>
-sudo LedBlinker/bin/LedBlinker -a <host-address> -p 50000
-```
-> User should fill in the username and device address above and ensure the execution of `LedBlinker` is supplied the address of the host computer (that ran the GDS).
-
-> If the device does not connect, ensure that the firewall port `50000` is open on the host computer.
+Follow the [F´ Running on ARM Linux Tutorial](https://github.com/nasa/fprime/blob/devel/docs/Tutorials/CrossCompilationSetup/ArmLinuxTutorial.md) for step-by-step instructions on how to upload the software to the hardware platform, launching F´ GDS, and for running the uploaded software.
 
 # Conclusion
 
