@@ -22,12 +22,13 @@ Deployment name [MyDeployment]: LedBlinker
 ```
 > Use the default response for any other questions asked.
 
-In order to check that the deployment was created successfully, the user can generate a build cache and build the deployment. This will generate and build the code for the current host system, not the remote embedded hardware allowing a local test during development. 
+In order to check that the deployment was created successfully, the user can build the deployment. This will build the code for the current host system, not the remote embedded hardware allowing local testing during development. 
+
+> This will reuse the build chache created during the project creation.
 
 ```shell
 # In led-blinker
 cd LedBlinker
-fprime-util generate
 fprime-util build
 ```
 
@@ -56,13 +57,6 @@ Next, the topology needs to use the above definition. This is done by adding the
 ```
 
 > No port connections need to be added because thus far the component only defines standard ports and those are connected automatically.
-
-Finally, add the following line to the `led-blinker/LedBlinker/CMakeLists.txt` file.
-
-```cmake
-include("${CMAKE_CURRENT_LIST_DIR}/../project.cmake")
-```
-> This includes the large project (e.g. `Components`) in this deployment's build.
 
 ## Testing the Topology
 
