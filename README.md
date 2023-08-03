@@ -9,10 +9,10 @@ ARM processor (e.g. RaspberryPI, Odroid, etc).
 
 In order to run through this tutorial, users should first do the following:
 
-1. Follow the [Hello World Tutorial](https://nasa.github.io/fprime/Tutorials/HelloWorld/Tutorial.html)
-2. Ensure F´ tools have been [bootstrapped](https://nasa.github.io/fprime/Tutorials/HelloWorld/NewProject.html#bootstrapping-f)
-3. Acquire and set up the appropriate [hardware](docs/hardware.md) for this tutorial
-4. Set up a [cross-compiling environment](docs/prerequisites.md) for their ARM processor
+1. Follow the [Hello World Tutorial](https://fprime-community.github.io/fprime-tutorial-hello-world/)
+3. Ensure F´ tools have been [bootstrapped](https://fprime-community.github.io/fprime-tutorial-hello-world/docs/NewProject.html#bootstrapping-f)
+4. Acquire and set up the appropriate [hardware](docs/hardware.md) for this tutorial
+5. Set up a [cross-compiling environment](docs/prerequisites.md) for their ARM processor
 
 > Attendees to an in-person F´ workshop will have access to 64-bit ARM hardware and should set up the 64-bit cross compiling environment.
 
