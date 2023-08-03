@@ -10,10 +10,18 @@ Install virtual environment?:
 1 - yes
 2 - no
 Choose from 1, 2 [1]: 1
+Virtual environment install path [./venv]: 
+```
+>  If you bootstrapped the F´ tools in a virtual environment `deactivate` that environment before activating the new one below.
+
+Next, activate the new virtual environment and generate a build cache using the following commands:
+
+```
+cd MyProject
+. ./venv/bin/activate
+fprime-util generate
 ```
 
-> Complete instructions on setting-up a new project are available in the [hello world tutorial](https://nasa.github.io/fprime/Tutorials/HelloWorld/NewProject.html).
-
-> Remember to source the virtual environment after creating the project.
+> Remember to source the virtual environment in any new terminal you open.
 
 ### Next Step: [Component Design and Initial Implementation](./component-implementation-1.md).
