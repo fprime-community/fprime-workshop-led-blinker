@@ -53,7 +53,7 @@ You will be prompted for information regarding your component. Fill out the prom
 [INFO] Cookiecutter source: using builtin
 Component name [MyComponent]: Led
 Component short description [Example Component for F Prime FSW framework.]: Component to blink an LED driven by a rate group
-Component namespace [Led]: Components
+Component namespace [Components]: Components
 Select component kind:
 1 - active
 2 - passive
@@ -85,7 +85,7 @@ Your new component is located in the directory `led-blinker/Components/Led`.
 
 Many of the behaviors of the component discussed in the [Component Design](#component-design) section require the tracking of some state. Before diving into the implementation of the behavior let us set up and initialize that state.
 
-Open `Led.hpp` in `led-blinker/Components/Led`, and add the following private member variables to the end of the file.
+Open `Led.hpp` in `led-blinker/Components/Led`, and add the following private member variables to the end of the file just before the two closing `}` of the class defintion and namespace.
 
 ```cpp
     Os::Mutex lock; //! Protects our data from thread race conditions
