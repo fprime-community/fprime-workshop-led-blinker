@@ -4,7 +4,7 @@ In order to run on hardware, the deployment needs to be built for the given hard
 
 ## Cross-Compiling for Embedded Arm Linux
 
-In the [environment setup](./prerequisites.md) for this tutorial, the ARM Linux cross-compilers were installed. In this section, we will use these compilers to cross-compile for ARM Linux by utilizing integration files called "CMake Toolchain". Follow the steps in [Section 2](https://github.com/nasa/fprime/blob/devel/docs/Tutorials/CrossCompilationSetup/CrossCompilationTutorial.md#2-compiling-for-arm) of the Cross Compilation Tutorial for steps on how to compile for ARM.
+In the prerequisites for this tutorial, the ARM Linux cross-compilers were installed. In this section, we will use these compilers to cross-compile for ARM Linux by utilizing integration files called "CMake Toolchain". Follow the steps in the [ARM cross compilation tutorial](https://github.com/nasa/fprime/blob/devel/docs/Tutorials/CrossCompilationSetup/CrossCompilationTutorial.md) on how to compile for ARM.
 
 > During the step for running the `fprime-util generate` and `fprime-util build` commands, macOS users must run from within the Docker container in the directory `/project/LedBlinker`
 
