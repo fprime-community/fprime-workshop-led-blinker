@@ -74,7 +74,7 @@ Add the following to `led-blinker/LedBlinker/Top/LedBlinkerPackets.xml`:
         <channel name="led.BlinkingState"/>
     </packet>
 ```
-> Add this after the opening `<packet>` tag and before the closing `</packet>` tag as a separate block.
+> Add this after the opening `<packets>` tag and before the closing `</packets>` tag as a separate block.
 
 Now that this has been added, build the topology:
 

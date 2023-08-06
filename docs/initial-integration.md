@@ -24,7 +24,7 @@ Deployment name [MyDeployment]: LedBlinker
 
 In order to check that the deployment was created successfully, the user can build the deployment. This will build the code for the current host system, not the remote embedded hardware allowing local testing during development. 
 
-> This will reuse the build chache created during the project creation.
+> This will reuse the build cache created during the project creation.
 
 ```shell
 # In led-blinker
