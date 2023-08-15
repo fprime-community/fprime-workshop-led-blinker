@@ -258,40 +258,6 @@ fprime-util build
 ```
 > Resolve any errors before continuing.
 
-Now open `Led.cpp` in your `led-blinker/Components/Led` directory and navigate to the `BLINKING_ON_OFF` command. Report via our new event when there is an error in the input argument. 
-
-To do so, replace: 
-```cpp
-        // TODO: Add an event that indicates we received an invalid argument.
-        // NOTE: Add this event after going through the "Events" exercise.
-```
-
-with:
-```cpp
-        this->log_WARNING_LO_InvalidBlinkArgument(on_off);
-```
-
-Similarly, use an event to report the blinking state has been set.
-
-Replace the following:
-```cpp
-      // TODO: Add an event that reports the state we set to blinking.
-      // NOTE: This event will be added during the "Events" exercise.
-```
-
-with:
-```cpp
-      this->log_ACTIVITY_HI_SetBlinkingState(on_off);
-```
-
-Save the file and in the terminal, run the following to verify your component is building correctly.
-
-```bash
-fprime-util build
-```
-
-> Resolve any `fprime-util build` errors before continuing 
-
 ## Try it yourself
 
 Below is a table with tasks you should complete. These tasks require you to go back into the component's files and add the missing lines.
