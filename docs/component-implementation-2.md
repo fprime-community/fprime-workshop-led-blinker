@@ -242,7 +242,7 @@ In your `led-blinker/Components/Led` directory, open `Led.cpp`, copy in the foll
             if (this->state != new_state)
             {
                 this->transitions = this->transitions + 1;
-                // TODO: Add an event to report the number of LED transitions (this->transitions)
+                // TODO: Add an channel to report the number of LED transitions (this->transitions)
 
                 // Port may not be connected, so check before sending output
                 if (this->isConnected_gpioSet_OutputPort(0))
