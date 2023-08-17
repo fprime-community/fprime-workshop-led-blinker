@@ -277,7 +277,7 @@ Below is a table with tasks you should complete. These tasks require you to go b
 | Inside the `BLINKING_ON_OFF` command handler, report the blinking state via a telemetry channel. | `this->tlmWrite_BlinkingState(on_off);`|
 | Inside the `parameterUpdated` function, add a severity activity high event named `BlinkIntervalSet` that takes in an argument of type `U32` to report the blink interval. | Left as an exercise for the reader. |
 | Inside the `run_handler` port handler, get the `BLINK_INTERVAL` parameter value. | Left as an exercise for the reader. |
-| Inside the `run_handler` port handler, add an event to report the number of LED transitions. | Left as an exercise for the reader. |
+| Inside the `run_handler` port handler, add a telemetry channel to report the number of LED transitions. | Left as an exercise for the reader. |
 | Inside the `run_handler` port handler, add an event to report the new LED state. | Left as an exercise for the reader. |
 
 ## Conclusion
