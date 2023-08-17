@@ -19,6 +19,13 @@ This will ask for some input, respond with the following answers:
 ```shell
 [INFO] Cookiecutter: using builtin template for new deployment
 Deployment name [MyDeployment]: LedBlinker
+Select communication driver type:
+1 - TcpClient
+2 - TcpServer
+3 - UART
+Choose from 1, 2, 3 [1]: 2
+[INFO] Found CMake file at 'led-blinker/project.cmake'
+Add component LedBlinker to led-blinker/project.cmake at end of file? (yes/no) [yes]: 
 ```
 > Use the default response for any other questions asked.
 
@@ -65,7 +72,7 @@ The topology may now be run. This can be done with the `fprime-gds` command. Sin
 > Make sure to build the deployment first with `fprime-util build`
 
 ```shell
-fprime-gds
+fprime-gds --ip-client
 ```
 This will likely open up your browser and show the running flight software.  If it does not open a browser, navigate to `http://localhost:5000`.
 
@@ -85,7 +92,7 @@ Return to the `led-blinker/LedBlinker` and run the following commands to test wh
 ```
 #In led-blinker/LedBlinker
 fprime-util build
-fprime-gds
+fprime-gds  --ip-client
 
 # CTRL-C to exit
 ```
