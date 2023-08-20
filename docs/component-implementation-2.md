@@ -265,7 +265,7 @@ In your `led-blinker/Components/Led` directory, open `Led.cpp`, copy in the foll
           }
 
           this->state = Fw::On::OFF;
-          this->log_ACTIVITY_LO_LedState(this->state);
+          // TODO: Add an event to report the LED state (this->state).
         }
     }
 ```
