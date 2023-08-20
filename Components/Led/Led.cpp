@@ -75,6 +75,15 @@ void Led ::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) 
 
         this->count = ((this->count + 1) >= interval) ? 0 : (this->count + 1);
     }
+    else {
+        // Port may not be connected, so check before sending output
+        if (this->isConnected_gpioSet_OutputPort(0)) {
+            this->gpioSet_out(0, Fw::Logic::LOW);
+        }
+
+        this->state = Fw::On::OFF;
+        this->log_ACTIVITY_LO_LedState(this->state);
+    }
 }
 
 // ----------------------------------------------------------------------
