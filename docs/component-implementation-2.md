@@ -256,6 +256,17 @@ In your `led-blinker/Components/Led` directory, open `Led.cpp`, copy in the foll
 
             this->count = ((this->count + 1) >= interval) ? 0 : (this->count + 1);
         }
+        else
+        {
+          // Port may not be connected, so check before sending output
+          if (this->isConnected_gpioSet_OutputPort(0))
+          {
+            this->gpioSet_out(0, Fw::Logic::LOW);
+          }
+
+          this->state = Fw::On::OFF;
+          // TODO: Add an event to report the LED state (this->state).
+        }
     }
 ```
 > Notice we use `lock` to lock the mutex while reading the `blinking` member variable.
