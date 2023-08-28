@@ -258,14 +258,17 @@ In your `led-blinker/Components/Led` directory, open `Led.cpp`, copy in the foll
         }
         else
         {
-          // Port may not be connected, so check before sending output
-          if (this->isConnected_gpioSet_OutputPort(0))
+          if(this->state == Fw::On::ON)
           {
-            this->gpioSet_out(0, Fw::Logic::LOW);
-          }
+            // Port may not be connected, so check before sending output
+            if (this->isConnected_gpioSet_OutputPort(0))
+            {
+              this->gpioSet_out(0, Fw::Logic::LOW);
+            }
 
-          this->state = Fw::On::OFF;
-          // TODO: Add an event to report the LED state (this->state).
+            this->state = Fw::On::OFF;
+            // TODO: Add an event to report the LED state (this->state).
+          }
         }
     }
 ```
