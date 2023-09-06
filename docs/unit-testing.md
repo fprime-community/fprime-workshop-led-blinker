@@ -45,7 +45,6 @@ mv Test* test/ut/
 Next, update the `CMakeLists.txt` file in your `led-blinker/Components/Led` directory to add those files to the list of unit-test source files. Include a module dependency of `Os` for the mutex we used. That section should look like this:
 
 ```cmake
-```
 set(UT_SOURCE_FILES
     "${CMAKE_CURRENT_LIST_DIR}/Led.fpp"
     "${CMAKE_CURRENT_LIST_DIR}/test/ut/TestMain.cpp"
@@ -56,7 +55,6 @@ set(UT_MOD_DEPS
 )
 set(UT_AUTO_HELPERS ON) # Additional Unit-Test autocoding
 register_fprime_ut()
-```
 ```
 
 Finally, test the skeleton unit tests with the following command:
@@ -71,15 +69,13 @@ fprime-util check
 
 Now that unit tests have been written, we can add our first unit test case. First, remove the default `ToDo` test and add a new test case called `testBlinking`. 
 
-In `led-blinker/Components/Led/test-ut/Tester.hpp` remove the definition for `testToDo` and add:
+In `led-blinker/Components/Led/test-ut/Tester.hpp` rename the declaration for `testToDo` to be `testBlinking` instead:
 
 ```c++
-public:
-    ...
     void testBlinking();
 ```
 
-In `led-blinker/Components/Led/test-ut/Tester.cpp` remove the definition for `testToDo` and add:
+In `led-blinker/Components/Led/test-ut/Tester.cpp` rename the definition for `testToDo` to be `testBlinking`:
 
 ```c++
   void Tester ::
@@ -98,7 +94,7 @@ TEST(Nominal, TestBlinking) {
 }
 ```
 
-Use `fprime-util check` to make sure the new check builds and passes.
+Use `fprime-util check` to make sure the new check builds and passes. 
 
 > Ensure all errors are resolved before continuing.
 
