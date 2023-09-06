@@ -54,12 +54,13 @@ Add the following to `led-blinker/LedBlinker/Top/instances.fpp`.  Typically, thi
 
 This defines an instance of the `Led` component called `led`. Since the component is active it needs a queue size, stack size, and priority for the thread of the component and the queue that thread serves. We have chosen the topology specified defaults and a priority of 95.
 
-Next, the topology needs to use the above definition. This is done by adding the following to the list of instances defined in `led-blinker/LedBlinker/Top/topology.fpp`.
+Next, the topology needs to use the above definition. This is done by adding the `led` instance to the list of instances defined in `led-blinker/LedBlinker/Top/topology.fpp`:
 
 ```
-  topology LedBlinker {
-    ...
-    instance ...
+    # ----------------------------------------------------------------------
+    # Instances used in the topology
+    # ----------------------------------------------------------------------
+
     instance led
 ```
 
