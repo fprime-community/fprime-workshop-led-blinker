@@ -104,7 +104,7 @@ Save the file. In the terminal, run the following to verify your component is bu
 fprime-util build
 ```
 
-In your `led-blinker/Components/Led` directory, open the file `Led.hpp` and add the following function signature:
+In your `led-blinker/Components/Led` directory, open the file `Led.hpp` and add the following function signature in the `public:` scope:
 
 ```cpp
     //! Emit parameter updated EVR
