@@ -139,7 +139,7 @@ Replace that block with the following:
         )
 ```
 
-Exit the text editor, and run the following in the `led-blinker/Components/Led` directory:
+Save the file, exit the text editor, and run the following in the `led-blinker/Components/Led` directory:
 
 ```bash
 # In led-blinker/Components/Led
