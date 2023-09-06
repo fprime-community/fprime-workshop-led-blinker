@@ -85,7 +85,13 @@ Your new component is located in the directory `led-blinker/Components/Led`.
 
 Many of the behaviors of the component discussed in the [Component Design](#component-design) section require the tracking of some state. Before diving into the implementation of the behavior let us set up and initialize that state.
 
-Open `Led.hpp` in `led-blinker/Components/Led`, and add the following private member variables to the end of the file just before the two closing `}` of the class defintion and namespace.
+Open `Led.hpp` in `led-blinker/Components/Led`. Add the following to the top of the `Led.hpp`:
+
+```c++
+#include <Os/Mutex.hpp>
+```
+
+Next, add the following private member variables to the end of the file just before the two closing `}` of the class defintion and namespace.
 
 ```cpp
     Os::Mutex lock; //! Protects our data from thread race conditions
@@ -93,12 +99,6 @@ Open `Led.hpp` in `led-blinker/Components/Led`, and add the following private me
     U64 transitions; //! The number of on/off transitions that have occurred from FSW boot up
     U32 count; //! Keeps track of how many ticks the LED has been on for
     bool blinking; //! Flag: if true then LED blinking will occur else no blinking will happen
-```
-
-Add the following to the top of the `Led.hpp`:
-
-```c++
-#include <Os/Mutex.hpp>
 ```
 
 Open `Led.cpp` in `led-blinker/Components/Led`, and initialize your member variables in the constructor:
