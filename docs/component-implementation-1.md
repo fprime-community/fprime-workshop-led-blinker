@@ -42,7 +42,6 @@ It is time to create the basic component. In a terminal, navigate to the project
 
 ```bash
 # In led-blinker
-mkdir -p Components
 cd Components
 
 fprime-util new --component
@@ -75,8 +74,8 @@ Enable Parameters?:
 1 - yes
 2 - no
 Choose from 1, 2 [1]: 1
-[INFO] Found CMake file at 'LedBLinker/project.cmake'
-Add component Led to led-blinker/project.cmake at end of file (yes/no)? yes
+[INFO] Found CMake file at 'led-blinker/Components/CMakeLists.txt'
+Add component Led to led-blinker/Components/CMakeLists.txt at end of file (yes/no)? yes
 Generate implementation files (yes/no)? yes
 ```
 Your new component is located in the directory `led-blinker/Components/Led`.
