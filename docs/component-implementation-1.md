@@ -311,8 +311,6 @@ fprime-util build
 
 ## Conclusion
 
-Congratulations!  You have now implemented some basic functionality in a new F´ component. Before finishing the implementation, let's take a break and try running the above command through the ground system. This will require integrating the component into the system topology.
-
-> When running in the ground system try running `led.BLINKING_ON_OFF` with a value of `ON` and ensure that the event `SetBlinkingState` is emitted indicating the blinking switched to on!
+Congratulations!  You have now implemented some basic functionality in a new F´ component. Before finishing the implementation, let's take a break and try running the above command through the ground system. This will require integrating the component into the system topology, which we will get into in the next section.
 
 ### Next Step: [Initial Component Integration](./initial-integration.md).
