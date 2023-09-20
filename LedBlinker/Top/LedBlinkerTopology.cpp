@@ -83,7 +83,7 @@ void configureTopology() {
     cmdSeq.allocateBuffer(0, mallocator, CMD_SEQ_BUFFER_SIZE);
 
     // Rate group driver needs a divisor list
-    rateGroupDriverComp.configure(rateGroupDivisorsSet, FW_NUM_ARRAY_ELEMENTS(rateGroupDivisorsSet.dividers));
+    rateGroupDriver.configure(rateGroupDivisorsSet, FW_NUM_ARRAY_ELEMENTS(rateGroupDivisorsSet.dividers));
 
     // Rate groups require context arrays. Empty for LedBlinkererence example.
     rateGroup1.configure(rateGroup1Context, FW_NUM_ARRAY_ELEMENTS(rateGroup1Context));
