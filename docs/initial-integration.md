@@ -1,6 +1,6 @@
 # LED Blinker: Initial Component Integration
 
-In this section, users will create a deployment and perform the initial integration the LED component into that deployment. This deployment will automatically include the basic command and data handling setup needed to interact with the component. Wiring the `Led` component to the GPIO driver component will be covered in a later section after the component implementation has finished.
+In this section, users will create a deployment and perform the initial integration of the LED component into that deployment. This deployment will automatically include the basic command and data handling setup needed to interact with the component. Wiring the `Led` component to the GPIO driver component will be covered in a later section after the component implementation has finished.
 
 > Users must have created the [initial Led component implementation](./component-implementation-1.md) in order to run through this section. Users may continue to define commands, events, telemetry, and ports after this initial integration.
 
@@ -31,13 +31,13 @@ Add component LedBlinker to led-blinker/project.cmake at end of file? (yes/no) [
 
 In order to check that the deployment was created successfully, the user can build the deployment. This will build the code for the current host system, not the remote embedded hardware allowing local testing during development. 
 
-> This will reuse the build cache created during the project creation.
-
 ```shell
 # In led-blinker
 cd LedBlinker
 fprime-util build
 ```
+
+> This will reuse the build cache created during the project creation. CMake warnings may appear to indicate that the build cache is refreshing. The build should start shortly thereafter.
 
 ## Adding `Led` Component To The Deployment
 
@@ -54,12 +54,13 @@ Add the following to `led-blinker/LedBlinker/Top/instances.fpp`.  Typically, thi
 
 This defines an instance of the `Led` component called `led`. Since the component is active it needs a queue size, stack size, and priority for the thread of the component and the queue that thread serves. We have chosen the topology specified defaults and a priority of 95.
 
-Next, the topology needs to use the above definition. This is done by adding the following to the list of instances defined in `led-blinker/LedBlinker/Top/topology.fpp`.
+Next, the topology needs to use the above definition. This is done by adding the `led` instance to the list of instances defined in `led-blinker/LedBlinker/Top/topology.fpp`:
 
 ```
-  topology LedBlinker {
-    ...
-    instance ...
+    # ----------------------------------------------------------------------
+    # Instances used in the topology
+    # ----------------------------------------------------------------------
+
     instance led
 ```
 
