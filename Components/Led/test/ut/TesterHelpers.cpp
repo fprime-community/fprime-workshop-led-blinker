@@ -6,14 +6,14 @@
 // NOTE: this file was automatically generated
 //
 // ======================================================================
-#include "Tester.hpp"
+#include "LedTester.hpp"
 
 namespace Components {
 // ----------------------------------------------------------------------
 // Helper methods
 // ----------------------------------------------------------------------
 
-void Tester ::connectPorts() {
+void LedTester ::connectPorts() {
     // cmdIn
     this->connect_to_cmdIn(0, this->component.get_cmdIn_InputPort(0));
 
@@ -48,9 +48,9 @@ void Tester ::connectPorts() {
     this->component.set_tlmOut_OutputPort(0, this->get_from_tlmOut(0));
 }
 
-void Tester ::initComponents() {
+void LedTester ::initComponents() {
     this->init();
-    this->component.init(Tester::TEST_INSTANCE_QUEUE_DEPTH, Tester::TEST_INSTANCE_ID);
+    this->component.init(LedTester::TEST_INSTANCE_QUEUE_DEPTH, LedTester::TEST_INSTANCE_ID);
 }
 
 }  // end namespace Components
