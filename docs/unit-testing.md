@@ -69,13 +69,13 @@ fprime-util check
 
 Now that unit tests have been written, we can add our first unit test case. First, remove the default `ToDo` test and add a new test case called `testBlinking`. 
 
-In `led-blinker/Components/Led/test-ut/Tester.hpp` rename the declaration for `testToDo` to be `testBlinking` instead:
+In `led-blinker/Components/Led/test/ut/Tester.hpp` rename the declaration for `testToDo` to be `testBlinking` instead:
 
 ```c++
     void testBlinking();
 ```
 
-In `led-blinker/Components/Led/test-ut/Tester.cpp` rename the definition for `testToDo` to be `testBlinking`:
+In `led-blinker/Components/Led/test/ut/Tester.cpp` rename the definition for `testToDo` to be `testBlinking`:
 
 ```c++
   void Tester ::
@@ -85,7 +85,7 @@ In `led-blinker/Components/Led/test-ut/Tester.cpp` rename the definition for `te
   }
 ```
 
-In `led-blinker/Components/Led/test-ut/TestMain.cpp`:
+In `led-blinker/Components/Led/test/ut/TestMain.cpp`:
 
 ```c++
 TEST(Nominal, TestBlinking) {
@@ -103,7 +103,7 @@ Use `fprime-util check` to make sure the new check builds and passes.
 
 The first test we will write is to test that the LED doesn't blink when blinking is disabled.
 
-Add the following code to the `testBlinking` method in `led-blinker/Components/Led/test-ut/Tester.cpp`:
+Add the following code to the `testBlinking` method in `led-blinker/Components/Led/test/ut/Tester.cpp`:
 
 ```c++
 // Ensure LED stays off when blinking is disabled
