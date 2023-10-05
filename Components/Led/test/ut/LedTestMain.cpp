@@ -2,15 +2,15 @@
 // TestMain.cpp
 // ----------------------------------------------------------------------
 
-#include "Tester.hpp"
+#include "LedTester.hpp"
 
 TEST(Nominal, TestBlinking) {
-    Components::Tester tester;
+    Components::LedTester tester;
     tester.testBlinking();
 }
 
 TEST(Nominal, TestBlinkInterval) {
-    Components::Tester tester;
+    Components::LedTester tester;
     tester.testBlinkInterval();
 }
 

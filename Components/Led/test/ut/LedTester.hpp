@@ -8,11 +8,11 @@
 #define TESTER_HPP
 
 #include "Components/Led/Led.hpp"
-#include "GTestBase.hpp"
+#include "LedGTestBase.hpp"
 
 namespace Components {
 
-class Tester : public LedGTestBase {
+class LedTester : public LedGTestBase {
     // ----------------------------------------------------------------------
     // Construction and destruction
     // ----------------------------------------------------------------------
@@ -25,13 +25,13 @@ class Tester : public LedGTestBase {
     // Queue depth supplied to component instance under test
     static const NATIVE_INT_TYPE TEST_INSTANCE_QUEUE_DEPTH = 10;
 
-    //! Construct object Tester
+    //! Construct object LedTester
     //!
-    Tester();
+    LedTester();
 
-    //! Destroy object Tester
+    //! Destroy object LedTester
     //!
-    ~Tester();
+    ~LedTester();
 
   public:
     // ----------------------------------------------------------------------

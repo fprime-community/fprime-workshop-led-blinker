@@ -26,6 +26,7 @@ class Led : public LedComponentBase {
     //!
     ~Led();
 
+  PRIVATE:
     //! Emit parameter updated EVR
     //!
     void parameterUpdated(FwPrmIdType id /*!< The parameter ID*/

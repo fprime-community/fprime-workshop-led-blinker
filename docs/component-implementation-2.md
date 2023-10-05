@@ -104,7 +104,7 @@ Save the file. In the terminal, run the following to verify your component is bu
 fprime-util build
 ```
 
-In your `led-blinker/Components/Led` directory, open the file `Led.hpp` and add the following function signature:
+In your `led-blinker/Components/Led` directory, open the file `Led.hpp` and add the following function signature in the `PRIVATE:` scope:
 
 ```cpp
     //! Emit parameter updated EVR
@@ -258,14 +258,17 @@ In your `led-blinker/Components/Led` directory, open `Led.cpp`, copy in the foll
         }
         else
         {
-          // Port may not be connected, so check before sending output
-          if (this->isConnected_gpioSet_OutputPort(0))
+          if(this->state == Fw::On::ON)
           {
-            this->gpioSet_out(0, Fw::Logic::LOW);
-          }
+            // Port may not be connected, so check before sending output
+            if (this->isConnected_gpioSet_OutputPort(0))
+            {
+              this->gpioSet_out(0, Fw::Logic::LOW);
+            }
 
-          this->state = Fw::On::OFF;
-          // TODO: Add an event to report the LED state (this->state).
+            this->state = Fw::On::OFF;
+            // TODO: Add an event to report the LED state (this->state).
+          }
         }
     }
 ```
@@ -285,7 +288,6 @@ Below is a table with tasks you should complete. These tasks require you to go b
 
 | Task | Missing function calls |
 |-------|-------------|
-| Inside the `BLINKING_ON_OFF` command handler, report the blinking state via a telemetry channel. | `this->tlmWrite_BlinkingState(on_off);`|
 | Inside the `parameterUpdated` function, add a severity activity high event named `BlinkIntervalSet` that takes in an argument of type `U32` to report the blink interval. | Left as an exercise for the reader. |
 | Inside the `run_handler` port handler, get the `BLINK_INTERVAL` parameter value. | Left as an exercise for the reader. |
 | Inside the `run_handler` port handler, add a telemetry channel to report the number of LED transitions. | Left as an exercise for the reader. |

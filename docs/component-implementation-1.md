@@ -42,7 +42,6 @@ It is time to create the basic component. In a terminal, navigate to the project
 
 ```bash
 # In led-blinker
-mkdir -p Components
 cd Components
 
 fprime-util new --component
@@ -75,8 +74,8 @@ Enable Parameters?:
 1 - yes
 2 - no
 Choose from 1, 2 [1]: 1
-[INFO] Found CMake file at 'LedBLinker/project.cmake'
-Add component Led to led-blinker/project.cmake at end of file (yes/no)? yes
+[INFO] Found CMake file at 'led-blinker/Components/CMakeLists.txt'
+Add component Led to led-blinker/Components/CMakeLists.txt at end of file (yes/no)? yes
 Generate implementation files (yes/no)? yes
 ```
 Your new component is located in the directory `led-blinker/Components/Led`.
@@ -85,7 +84,13 @@ Your new component is located in the directory `led-blinker/Components/Led`.
 
 Many of the behaviors of the component discussed in the [Component Design](#component-design) section require the tracking of some state. Before diving into the implementation of the behavior let us set up and initialize that state.
 
-Open `Led.hpp` in `led-blinker/Components/Led`, and add the following private member variables to the end of the file just before the two closing `}` of the class defintion and namespace.
+Open `Led.hpp` in `led-blinker/Components/Led`. Add the following to the top of the `Led.hpp`:
+
+```c++
+#include <Os/Mutex.hpp>
+```
+
+Next, add the following private member variables to the end of the file just before the two closing `}` of the class defintion and namespace.
 
 ```cpp
     Os::Mutex lock; //! Protects our data from thread race conditions
@@ -93,12 +98,6 @@ Open `Led.hpp` in `led-blinker/Components/Led`, and add the following private me
     U64 transitions; //! The number of on/off transitions that have occurred from FSW boot up
     U32 count; //! Keeps track of how many ticks the LED has been on for
     bool blinking; //! Flag: if true then LED blinking will occur else no blinking will happen
-```
-
-Add the following to the top of the `Led.hpp`:
-
-```c++
-#include <Os/Mutex.hpp>
 ```
 
 Open `Led.cpp` in `led-blinker/Components/Led`, and initialize your member variables in the constructor:
@@ -139,7 +138,7 @@ Replace that block with the following:
         )
 ```
 
-Exit the text editor, and run the following in the `led-blinker/Components/Led` directory:
+Save the file, exit the text editor, and run the following in the `led-blinker/Components/Led` directory:
 
 ```bash
 # In led-blinker/Components/Led
@@ -312,8 +311,6 @@ fprime-util build
 
 ## Conclusion
 
-Congratulations!  You have now implemented some basic functionality in a new F´ component. Before finishing the implementation, let's take a break and try running the above command through the ground system. This will require integrating the component into the system topology.
-
-> When running in the ground system try running `led.BLINKING_ON_OFF` with a value of `ON` and ensure that the event `SetBlinkingState` is emitted indicating the blinking switched to on!
+Congratulations!  You have now implemented some basic functionality in a new F´ component. Before finishing the implementation, let's take a break and try running the above command through the ground system. This will require integrating the component into the system topology, which we will get into in the next section.
 
 ### Next Step: [Initial Component Integration](./initial-integration.md).

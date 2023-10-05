@@ -4,7 +4,7 @@
 // \brief  cpp file for Led test harness implementation class
 // ======================================================================
 
-#include "Tester.hpp"
+#include "LedTester.hpp"
 
 namespace Components {
 
@@ -12,18 +12,18 @@ namespace Components {
 // Construction and destruction
 // ----------------------------------------------------------------------
 
-Tester ::Tester() : LedGTestBase("Tester", Tester::MAX_HISTORY_SIZE), component("Led") {
+LedTester ::LedTester() : LedGTestBase("Tester", LedTester::MAX_HISTORY_SIZE), component("Led") {
     this->initComponents();
     this->connectPorts();
 }
 
-Tester ::~Tester() {}
+LedTester ::~LedTester() {}
 
 // ----------------------------------------------------------------------
 // Tests
 // ----------------------------------------------------------------------
 
-void Tester ::testBlinking() {
+void LedTester ::testBlinking() {
     // Ensure LED stays off when blinking is disabled
     // The Led component defaults to blinking off
     this->invoke_to_run(0, 0);          // invoke the 'run' port to simulate running one cycle
@@ -66,7 +66,7 @@ void Tester ::testBlinking() {
     ASSERT_TLM_LedTransitions(2, 3);
 }
 
-void Tester ::testBlinkInterval() {
+void LedTester ::testBlinkInterval() {
     // Enable LED Blinking
     this->sendCmd_BLINKING_ON_OFF(0, 0, Fw::On::ON);
     this->component.doDispatch();  // Trigger execution of async command
@@ -91,7 +91,7 @@ void Tester ::testBlinkInterval() {
 // Handlers for typed from ports
 // ----------------------------------------------------------------------
 
-void Tester ::from_gpioSet_handler(const NATIVE_INT_TYPE portNum, const Fw::Logic& state) {
+void LedTester ::from_gpioSet_handler(const NATIVE_INT_TYPE portNum, const Fw::Logic& state) {
     this->pushFromPortEntry_gpioSet(state);
 }
 
