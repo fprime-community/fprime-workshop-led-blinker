@@ -3,14 +3,14 @@
   <ul>
     <!-- empty list for consistent spacing between items -->
   </ul>
-<h4><a href="https://fprime-community.github.io/fprime-workshop-led-blinker/">LedBlinker Tutorial</a></h4>
+<h4><a href="/">LedBlinker Tutorial</a></h4>
     <ol>
-      <li><a href="https://fprime-community.github.io/fprime-workshop-led-blinker/docs/project-setup.html">Project Setup</a></li>
-      <li><a href="https://fprime-community.github.io/fprime-workshop-led-blinker/docs/component-implementation-1.html">Component Design and Initial Implementation</a></li>
-      <li><a href="https://fprime-community.github.io/fprime-workshop-led-blinker/docs/initial-integration.html">Initial Component Integration</a></li>
-      <li><a href="https://fprime-community.github.io/fprime-workshop-led-blinker/docs/component-implementation-2.html">Continuing Component Implementation</a></li>
-      <li><a href="https://fprime-community.github.io/fprime-workshop-led-blinker/docs/full-integration.html">Full System Integration</a></li>
-      <li><a href="https://fprime-community.github.io/fprime-workshop-led-blinker/docs/running-on-hardware.html">Running on Hardware</a></li>
-      <li><a href="https://fprime-community.github.io/fprime-workshop-led-blinker/docs/unit-testing.html">Unit-Testing</a></li>
-      <li><a href="https://fprime-community.github.io/fprime-workshop-led-blinker/docs/system-testing.html">System Testing</a></li>
+      <li><a href="/docs/project-setup.html">Project Setup</a></li>
+      <li><a href="/docs/component-implementation-1.html">Component Design and Initial Implementation</a></li>
+      <li><a href="/docs/initial-integration.html">Initial Component Integration</a></li>
+      <li><a href="/docs/component-implementation-2.html">Continuing Component Implementation</a></li>
+      <li><a href="/docs/full-integration.html">Full System Integration</a></li>
+      <li><a href="/docs/running-on-hardware.html">Running on Hardware</a></li>
+      <li><a href="/docs/unit-testing.html">Unit-Testing</a></li>
+      <li><a href="/docs/system-testing.html">System Testing</a></li>
     </ol>
