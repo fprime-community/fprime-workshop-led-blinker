@@ -5,12 +5,12 @@
   </ul>
 <h4><a href="/">LedBlinker Tutorial</a></h4>
     <ol>
-      <li><a href="/docs/project-setup.html">Project Setup</a></li>
-      <li><a href="/docs/component-implementation-1.html">Component Design and Initial Implementation</a></li>
-      <li><a href="/docs/initial-integration.html">Initial Component Integration</a></li>
-      <li><a href="/docs/component-implementation-2.html">Continuing Component Implementation</a></li>
-      <li><a href="/docs/full-integration.html">Full System Integration</a></li>
-      <li><a href="/docs/running-on-hardware.html">Running on Hardware</a></li>
-      <li><a href="/docs/unit-testing.html">Unit-Testing</a></li>
-      <li><a href="/docs/system-testing.html">System Testing</a></li>
+      <li><a href="../project-setup.md">Project Setup</a></li>
+      <li><a href="../component-implementation-1.md">Component Design and Initial Implementation</a></li>
+      <li><a href="../initial-integration.md">Initial Component Integration</a></li>
+      <li><a href="../component-implementation-2.md">Continuing Component Implementation</a></li>
+      <li><a href="../full-integration.md">Full System Integration</a></li>
+      <li><a href="../running-on-hardware.md">Running on Hardware</a></li>
+      <li><a href="../unit-testing.md">Unit-Testing</a></li>
+      <li><a href="../system-testing.md">System Testing</a></li>
     </ol>
