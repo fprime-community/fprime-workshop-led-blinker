@@ -5,12 +5,12 @@
   </ul>
 <h4><a href="/">LedBlinker Tutorial</a></h4>
     <ol>
-      <li><a href="../project-setup.md">Project Setup</a></li>
-      <li><a href="../component-implementation-1.md">Component Design and Initial Implementation</a></li>
-      <li><a href="../initial-integration.md">Initial Component Integration</a></li>
-      <li><a href="../component-implementation-2.md">Continuing Component Implementation</a></li>
-      <li><a href="../full-integration.md">Full System Integration</a></li>
-      <li><a href="../running-on-hardware.md">Running on Hardware</a></li>
-      <li><a href="../unit-testing.md">Unit-Testing</a></li>
-      <li><a href="../system-testing.md">System Testing</a></li>
+      <li><a href="/fprime-workshop-led-blinker/docs/project-setup.md">Project Setup</a></li>
+      <li><a href="/fprime-workshop-led-blinker/docs/component-implementation-1.md">Component Design and Initial Implementation</a></li>
+      <li><a href="/fprime-workshop-led-blinker/docs/initial-integration.md">Initial Component Integration</a></li>
+      <li><a href="/fprime-workshop-led-blinker/docs/component-implementation-2.md">Continuing Component Implementation</a></li>
+      <li><a href="/fprime-workshop-led-blinker/docs/full-integration.md">Full System Integration</a></li>
+      <li><a href="/fprime-workshop-led-blinker/docs/running-on-hardware.md">Running on Hardware</a></li>
+      <li><a href="/fprime-workshop-led-blinker/docs/unit-testing.md">Unit-Testing</a></li>
+      <li><a href="/fprime-workshop-led-blinker/docs/system-testing.md">System Testing</a></li>
     </ol>
