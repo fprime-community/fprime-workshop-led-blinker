@@ -37,3 +37,5 @@ Here we list a number of requirements for our led software to implement.
 | LED-BLINKER-006 | The software shall blink the LED using GPIO pin 13              | Electrical ICD  | Unit Test    |
 
 > Notice how the software also includes a requirement that derived from the Electrical Interface Control Document. This captures the details of the software/hardware interface and is captured here as a requirement.
+
+### Next Step: [Component Design and Initial Implementation](./component-implementation-1.md).
