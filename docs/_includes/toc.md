@@ -6,6 +6,7 @@
 <h4><a href="/fprime-workshop-led-blinker">LedBlinker Tutorial</a></h4>
     <ol>
       <li><a href="/fprime-workshop-led-blinker/docs/project-setup.html">Project Setup</a></li>
+      <li><a href="/fprime-workshop-led-blinker/docs/requirements.html">Requirements Specification</a></li>
       <li><a href="/fprime-workshop-led-blinker/docs/component-implementation-1.html">Component Design and Initial Implementation</a></li>
       <li><a href="/fprime-workshop-led-blinker/docs/initial-integration.html">Initial Component Integration</a></li>
       <li><a href="/fprime-workshop-led-blinker/docs/component-implementation-2.html">Continuing Component Implementation</a></li>

@@ -16,4 +16,4 @@ cd led-blinker
 fprime-util generate
 ```
 
-### Next Step: [Component Design and Initial Implementation](./component-implementation-1.md).
+### Next Step: [Requirements Specification](./requirements.md).
