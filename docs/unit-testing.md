@@ -6,7 +6,7 @@ This exercise will walk through development of basic unit tests for the `Led` co
 
 To start off, use `fprime-util` to generate a unit test outline for the `Led` component.
 
-First, register unit tests for the `Led` component with the build system by adding these lines to the component `CMakeLists.txt` file in your `led-blinker/Components/Led` directory.
+First, register unit tests for the `Led` component with the build system by adding these lines at the very end of the component `CMakeLists.txt` file in your `led-blinker/Components/Led` directory, **after** the `register_fprime_module()` call.
 
 ```
 set(UT_SOURCE_FILES
