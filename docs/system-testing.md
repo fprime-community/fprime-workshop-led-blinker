@@ -1,11 +1,12 @@
 # System Testing
 
-In this section, we will walk through the creation of system tests, also known as integration tests, for the LED component creation in prior steps.
+In this section, we will walk through the creation of system tests, also known as integration tests, for the LED component created in prior steps.
 
 Fprime system tests use a python api to dispatch commands to a deployment using the fprime GDS, verifying components behave as expected as part of deployment running on actual hardware.
 
 Before starting this guide, users should have the LedBlinking deployment running on their hardware and connected to the fprime GDS running on a development machine. If hardware is not available, this guide can be followed by running the LedBlinking deployment locally on a development machine instead.
 
+> Note: If running the LedBlinker deployment locally instead of on the intended hardware, make sure to rebuild fprime with stubbed GPIO drivers so the LedBlinker deployment doesn't attempt to write to physical GPIO ports. Regenerate the native deployment with `fprime-util generate -DFPRIME_USE_STUBBED_DRIVERS=ON`. MacOS defaults to stubbed drivers and does not require explicitly setting this option.
 
 ## Intro to Fprime System Testing
 

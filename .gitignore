@@ -12,3 +12,4 @@ build-fprime-*
 .DS_Store
 *.gcov
 
+__pycache__
