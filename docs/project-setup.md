@@ -7,10 +7,6 @@ First, make sure to read the tutorial's [readme](../README.md) and follow the [p
 ```
 $ fprime-util new --project
   [1/2] Project name (MyProject): led-blinker
-  [2/2] Install F´ development tools in current virtual environment?
-    1 - yes
-    2 - no
-    Choose from [1/2] (1): 1
 ```
 
 Next, generate a build cache using the following commands:
@@ -20,4 +16,4 @@ cd led-blinker
 fprime-util generate
 ```
 
-### Next Step: [Component Design and Initial Implementation](./component-implementation-1.md).
+### Next Step: [Requirements Specification](./requirements.md).
