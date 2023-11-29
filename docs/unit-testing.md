@@ -33,13 +33,13 @@ To do so, run the implementation command in the terminal within your `led-blinke
 fprime-util impl --ut
 ```
 
-This step should create the files `Tester.cpp`, `Tester.hpp`, and `TestMain.cpp` in your current directory. Move them to a new subdirectory called `test/ut`.
+This step should create the files `LedTester.cpp`, `LedTester.hpp`, and `LedTestMain.cpp` in your current directory. Move them to a new subdirectory called `test/ut`.
 
 This is done with:
 ```shell
 #In led-blinker/Components/Led
 mkdir -p test/ut
-mv Test* test/ut/
+mv LedTest* test/ut/
 ```
 
 Next, update the `CMakeLists.txt` file in your `led-blinker/Components/Led` directory to add those files to the list of unit-test source files. Include a module dependency of `Os` for the mutex we used. That section should look like this:
@@ -47,8 +47,8 @@ Next, update the `CMakeLists.txt` file in your `led-blinker/Components/Led` dire
 ```cmake
 set(UT_SOURCE_FILES
     "${CMAKE_CURRENT_LIST_DIR}/Led.fpp"
-    "${CMAKE_CURRENT_LIST_DIR}/test/ut/TestMain.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Tester.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/LedTestMain.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/LedTester.cpp"
 )
 set(UT_MOD_DEPS
     Os
@@ -68,28 +68,27 @@ fprime-util check
 ## Add a New Test Case
 
 Now that unit tests have been written, we can add our first unit test case. First, remove the default `ToDo` test and add a new test case called `testBlinking`. 
-
-In `led-blinker/Components/Led/test/ut/Tester.hpp` rename the declaration for `testToDo` to be `testBlinking` instead:
+In `led-blinker/Components/Led/test/ut/LedTester.hpp` rename the declaration for `testToDo` to be `testBlinking` instead:
 
 ```c++
     void testBlinking();
 ```
 
-In `led-blinker/Components/Led/test/ut/Tester.cpp` rename the definition for `testToDo` to be `testBlinking`:
+In `led-blinker/Components/Led/test/ut/LedTester.cpp` rename the definition for `testToDo` to be `testBlinking`:
 
 ```c++
-  void Tester ::
+  void LedTester ::
     testBlinking()
   {
 
   }
 ```
 
-In `led-blinker/Components/Led/test/ut/TestMain.cpp`:
+In `led-blinker/Components/Led/test/ut/LedTestMain.cpp`:
 
 ```c++
 TEST(Nominal, TestBlinking) {
-    Components::Tester tester;
+    Components::LedTester tester;
     tester.testBlinking();
 }
 ```
@@ -103,7 +102,7 @@ Use `fprime-util check` to make sure the new check builds and passes.
 
 The first test we will write is to test that the LED doesn't blink when blinking is disabled.
 
-Add the following code to the `testBlinking` method in `led-blinker/Components/Led/test/ut/Tester.cpp`:
+Add the following code to the `testBlinking` method in `led-blinker/Components/Led/test/ut/LedTester.cpp`:
 
 ```c++
 // Ensure LED stays off when blinking is disabled
@@ -169,7 +168,7 @@ This second test will test that adjusting `BLINK_INTERVAL` will impact the blink
 Add a new test case called `testBlinkInterval` and use the following code as a starting point:
 
 ```c++
-  void Tester ::
+  void LedTester ::
     testBlinkInterval()
   {
     // Enable LED Blinking
@@ -185,7 +184,7 @@ Add a new test case called `testBlinkInterval` and use the following code as a s
     // TODO: Add logic to test adjusted blink interval
   }
 ```
-> Don't forget to add `testBlinkInterval()` to `Tester.hpp` as well. Run `fprime-util check and resolve any issues before continuing.
+> Don't forget to add `testBlinkInterval()` to `LedTester.hpp` as well. Run `fprime-util check and resolve any issues before continuing.
 
 ## Checking Coverage
 
