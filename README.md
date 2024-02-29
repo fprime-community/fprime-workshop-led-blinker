@@ -10,9 +10,8 @@ ARM processor (e.g. RaspberryPI, Odroid, etc).
 In order to run through this tutorial, you must first do the following:
 
 1. Meet the [F´ System Requirements](https://nasa.github.io/fprime/INSTALL.html#requirements)
-2. Install an IDE or text editor supporting copy-paste. [VSCode](https://code.visualstudio.com/) has [plugins](https://marketplace.visualstudio.com/items?itemName=unlv-team5.fpptools) to work with FPP.  
-3. [Set up the F´ Development Environment](https://nasa.github.io/fprime/INSTALL.html#setting-up-the-development-environment)
-4. Attempt the [Hello World Tutorial](https://fprime-community.github.io/fprime-tutorial-hello-world/)
+2. Install an IDE or text editor supporting copy-paste. [VSCode](https://code.visualstudio.com/) has [plugins](https://marketplace.visualstudio.com/items?itemName=unlv-team5.fpptools) to work with FPP.
+3. Attempt the [Hello World Tutorial](https://fprime-community.github.io/fprime-tutorial-hello-world/)
 
 To run on hardware with cross-compiling, you must also:
 1. Acquire and set up the appropriate [hardware](docs/hardware.md) for this tutorial
