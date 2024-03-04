@@ -8,9 +8,9 @@ this project and install the correct version of tools, you should perform a boot
 To do this you should follow the following steps from the [F´ installation guide](https://nasa.github.io/fprime/INSTALL.html):
 
 1. Ensure you meet the [F´ System Requirements](https://nasa.github.io/fprime/INSTALL.html#requirements)
-2. [Bootstrap your F´ project](https://nasa.github.io/fprime/INSTALL.html#creating-a-new-f-project) with the name `MathProject`
+2. [Bootstrap your F´ project](https://nasa.github.io/fprime/INSTALL.html#creating-a-new-f-project) with the name `led-blinker`
 
-Bootstrapping your F´ project created a folder called `MathProject` (or any name you chose) containing the standard F´ project structure as well as the virtual environment up containing the tools to work with F´.
+Bootstrapping your F´ project created a folder called `led-blinker` (or any name you chose) containing the standard F´ project structure as well as the virtual environment up containing the tools to work with F´.
 
 Next, generate a build cache using the following commands:
 
