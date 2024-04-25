@@ -110,7 +110,7 @@ In your `led-blinker/Components/Led` directory, open the file `Led.hpp` and add 
     //! Emit parameter updated EVR
     //!
     void parameterUpdated(FwPrmIdType id /*!< The parameter ID*/
-    );
+    ) override;
 ```
 
 > This function is called when a parameter is updated via the generated SET command. Although the value is updated automatically, this function gives developers a chance to respond to changing parameters. This tutorial uses it to emit an updated Event.
