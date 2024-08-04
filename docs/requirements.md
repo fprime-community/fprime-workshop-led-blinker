@@ -4,7 +4,7 @@ In this addendum to the tutorial, you will learn a bit about specifying requirem
 
 ## System Requirements
 
-For this tutorial we have severl higher-level system requirements. These requirements would be defined by requirements specified by the electronics subsystem which are themselves derived by requirements defined at the full system level.
+For this tutorial we have several higher-level system requirements. These requirements would be defined by requirements specified by the electronics subsystem which are themselves derived by requirements defined at the full system level.
 
 | Requirement     | Description                                              |
 |-----------------|----------------------------------------------------------|
@@ -13,7 +13,7 @@ For this tutorial we have severl higher-level system requirements. These require
 
 ## Software Requirements
 
-These are the requirements that the software team cares about. These dictate how the software should operate and trace to the higher-level system requirements. These also come with a verification method to ensure the softare meets these requirements.
+These are the requirements that the software team cares about. These dictate how the software should operate and trace to the higher-level system requirements. These also come with a verification method to ensure the software meets these requirements.
 
 Ideally, the software engineer would be handed these requirements, however; in-practice this is often a discussion between the software engineer and their system engineers. A sample requirement is provided below.
 
@@ -25,7 +25,7 @@ Ideally, the software engineer would be handed these requirements, however; in-p
 
 ## LED Blinker
 
-Here we list a number of requirements for our led software to implement.
+Here we list a number of requirements for our LED software to implement.
 
 | Requirement     | Description                                                     | Derived From    | Verification |
 |-----------------|-----------------------------------------------------------------|-----------------|--------------|
