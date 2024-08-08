@@ -145,9 +145,9 @@ Save the file, exit the text editor, and run the following in the `led-blinker/C
 fprime-util impl
 ```
 
-This command will auto generate two files: Led.hpp-template and Led.cpp-template. These files contain the stub implementation for the component. These should now include stubs for this newly added command.
+This command will auto generate two files: Led.template.hpp and Led.template.cpp. These files contain the stub implementation for the component. These should now include stubs for this newly added command.
 
-Inside your `led-blinker/Components/Led` directory, open `Led.hpp-template` and copy the following block of code. Paste it in replacement of the `TODO_cmdHandler` block in `Led.hpp`.
+Inside your `led-blinker/Components/Led` directory, open `Led.template.hpp` and copy the following block of code. Paste it in replacement of the `TODO_cmdHandler` block in `Led.hpp`.
 
 ```cpp
       //! Implementation for BLINKING_ON_OFF command handler
@@ -161,7 +161,7 @@ Inside your `led-blinker/Components/Led` directory, open `Led.hpp-template` and 
       );
 ```
 
-Inside your `led-blinker/Components/Led` directory, open `Led.cpp-template` and copy the following block of code and paste it into `Led.cpp` replacing the `TODO_cmdHandler` block.
+Inside your `led-blinker/Components/Led` directory, open `Led.template.cpp` and copy the following block of code and paste it into `Led.cpp` replacing the `TODO_cmdHandler` block.
 
 ```cpp
   void Led ::
