@@ -7,6 +7,7 @@
 // Provides access to autocoded functions
 #include <LedBlinker/Top/LedBlinkerPacketsAc.hpp>
 #include <LedBlinker/Top/LedBlinkerTopologyAc.hpp>
+#include <Fw/Logger/Logger.hpp>
 
 // Necessary project-specified types
 #include <Fw/Types/MallocAllocator.hpp>
