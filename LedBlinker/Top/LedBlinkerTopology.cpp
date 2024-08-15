@@ -10,7 +10,6 @@
 
 // Necessary project-specified types
 #include <Fw/Types/MallocAllocator.hpp>
-#include <Os/Log.hpp>
 #include <Svc/FramingProtocol/FprimeProtocol.hpp>
 
 // Used for 1Hz synthetic cycling
@@ -18,9 +17,6 @@
 
 // Allows easy reference to objects in FPP/autocoder required namespaces
 using namespace LedBlinker;
-
-// Instantiate a system logger that will handle Fw::Logger::logMsg calls
-Os::Log logger;
 
 // The reference topology uses a malloc-based allocator for components that need to allocate memory during the
 // initialization phase.
@@ -116,7 +112,7 @@ void configureTopology() {
     // tlmSend.setPacketList(LedBlinkerPacketsPkts, LedBlinkerPacketsIgnore, 1);
     bool gpio_success = gpioDriver.open(13, Drv::LinuxGpioDriver::GpioDirection::GPIO_OUT);
     if (!gpio_success) {
-        Fw::Logger::logMsg("[ERROR] Failed to open GPIO pin\n");
+        Fw::Logger::log("[ERROR] Failed to open GPIO pin\n");
     }
 }
 
