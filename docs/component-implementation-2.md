@@ -164,7 +164,7 @@ In your `led-blinker/Components/Led` directory, run the following to autogenerat
 fprime-util impl
 ```
 
-In your `led-blinker/Components/Led` directory, open `Led.hpp-template` file and copy this block over to `Led.hpp` as we did before
+In your `led-blinker/Components/Led` directory, open `Led.template.hpp` file and copy this block over to `Led.hpp` as we did before
 
 ```cpp
     PRIVATE:
@@ -183,7 +183,7 @@ In your `led-blinker/Components/Led` directory, open `Led.hpp-template` file and
       );
 ```
 
-In your `led-blinker/Components/Led` directory, open `Led.cpp-template` file and copy this block over to `Led.cpp`.
+In your `led-blinker/Components/Led` directory, open `Led.template.cpp` file and copy this block over to `Led.cpp`.
 ```cpp
   // ----------------------------------------------------------------------
   // Handler implementations for user-defined typed input ports
