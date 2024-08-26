@@ -222,25 +222,25 @@ In your `led-blinker/Components/Led` directory, open `Led.cpp`, copy in the foll
         interval = ((Fw::ParamValid::INVALID == isValid) || (Fw::ParamValid::UNINIT == isValid)) ? 0 : interval;
 
         // Only perform actions when set to blinking
-        bool is_blinking = this->blinking;
+        bool is_blinking = this->m_blinking;
         if (is_blinking)
         {
-            Fw::On new_state = this->state;
+            Fw::On new_state = this->m_state;
             // Check for transitions
-            if ((0 == this->count) && (this->state == Fw::On::OFF))
+            if ((0 == this->m_count) && (this->m_state == Fw::On::OFF))
             {
                 new_state = Fw::On::ON;
             }
-            else if (((interval / 2) == this->count) && (this->state == Fw::On::ON))
+            else if (((interval / 2) == this->m_count) && (this->m_state == Fw::On::ON))
             {
                 new_state = Fw::On::OFF;
             }
 
             // A transition has occurred
-            if (this->state != new_state)
+            if (this->m_state != new_state)
             {
-                this->transitions = this->transitions + 1;
-                // TODO: Add an channel to report the number of LED transitions (this->transitions)
+                this->m_transitions = this->m_transitions + 1;
+                // TODO: Add an channel to report the number of LED transitions (this->m_transitions)
 
                 // Port may not be connected, so check before sending output
                 if (this->isConnected_gpioSet_OutputPort(0))
@@ -249,14 +249,14 @@ In your `led-blinker/Components/Led` directory, open `Led.cpp`, copy in the foll
                 }
 
                 // TODO: Add an event to report the LED state (new_state).
-                this->state = new_state;
+                this->m_state = new_state;
             }
 
-            this->count = ((this->count + 1) >= interval) ? 0 : (this->count + 1);
+            this->m_count = ((this->m_count + 1) >= interval) ? 0 : (this->m_count + 1);
         }
         else
         {
-          if(this->state == Fw::On::ON)
+          if(this->m_state == Fw::On::ON)
           {
             // Port may not be connected, so check before sending output
             if (this->isConnected_gpioSet_OutputPort(0))
@@ -264,8 +264,8 @@ In your `led-blinker/Components/Led` directory, open `Led.cpp`, copy in the foll
               this->gpioSet_out(0, Fw::Logic::LOW);
             }
 
-            this->state = Fw::On::OFF;
-            // TODO: Add an event to report the LED state (this->state).
+            this->m_state = Fw::On::OFF;
+            // TODO: Add an event to report the LED state (this->m_state).
           }
         }
     }
