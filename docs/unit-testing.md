@@ -42,16 +42,13 @@ mkdir -p test/ut
 mv LedTest* test/ut/
 ```
 
-Next, update the `CMakeLists.txt` file in your `led-blinker/Components/Led` directory to add those files to the list of unit-test source files. Include a module dependency of `Os` for the mutex we used. That section should look like this:
+Next, update the `CMakeLists.txt` file in your `led-blinker/Components/Led` directory to add those files to the list of unit-test source files. That section should look like this:
 
 ```cmake
 set(UT_SOURCE_FILES
     "${CMAKE_CURRENT_LIST_DIR}/Led.fpp"
     "${CMAKE_CURRENT_LIST_DIR}/test/ut/LedTestMain.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/test/ut/LedTester.cpp"
-)
-set(UT_MOD_DEPS
-    Os
 )
 set(UT_AUTO_HELPERS ON) # Additional Unit-Test autocoding
 register_fprime_ut()

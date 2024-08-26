@@ -84,16 +84,9 @@ Your new component is located in the directory `led-blinker/Components/Led`.
 
 Many of the behaviors of the component discussed in the [Component Design](#component-design) section require the tracking of some state. Before diving into the implementation of the behavior let us set up and initialize that state.
 
-Open `Led.hpp` in `led-blinker/Components/Led`. Add the following to the top of the `Led.hpp`:
-
-```c++
-#include <Os/Mutex.hpp>
-```
-
-Next, add the following private member variables to the end of the file just before the two closing `}` of the class defintion and namespace.
+Open `Led.hpp` in `led-blinker/Components/Led`. Add the following private member variables to the end of the file just before the two closing `}` of the class defintion and namespace.
 
 ```cpp
-    Os::Mutex lock; //! Protects our data from thread race conditions
     Fw::On state; //! Keeps track if LED is on or off
     U64 transitions; //! The number of on/off transitions that have occurred from FSW boot up
     U32 count; //! Keeps track of how many ticks the LED has been on for
@@ -205,9 +198,7 @@ Now we will implement the behavior of the `BLINKING_ON_OFF` command. An initial 
     else
     {
       this->count = 0; // Reset count on any successful command
-      this->lock.lock();
       this->blinking = Fw::On::ON == on_off; // Update blinking state
-      this->lock.unlock();
 
       // TODO: Add an event that reports the state we set to blinking.
       // NOTE: This event will be added during the "Events" exercise.
@@ -220,8 +211,6 @@ Now we will implement the behavior of the `BLINKING_ON_OFF` command. An initial 
     this->cmdResponse_out(opCode,cmdSeq,cmdResp);
   }
 ```
-> `lock.lock()` locks the mutex used to protect the `blinking` member variable as it is set in `BLINKING_ON_OFF_cmdHandler` but will be read elsewhere.
-
 Save the file then run the following command in the terminal to verify your component is building correctly.
 
 ```bash
