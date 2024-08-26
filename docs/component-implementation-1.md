@@ -197,8 +197,8 @@ Now we will implement the behavior of the `BLINKING_ON_OFF` command. An initial 
     }
     else
     {
-      this->count = 0; // Reset count on any successful command
-      this->blinking = Fw::On::ON == on_off; // Update blinking state
+      this->m_count = 0; // Reset count on any successful command
+      this->m_blinking = Fw::On::ON == on_off; // Update blinking state
 
       // TODO: Add an event that reports the state we set to blinking.
       // NOTE: This event will be added during the "Events" exercise.
