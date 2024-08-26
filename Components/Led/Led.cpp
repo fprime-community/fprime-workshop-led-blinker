@@ -48,9 +48,7 @@ void Led ::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) 
     interval = ((Fw::ParamValid::INVALID == isValid) || (Fw::ParamValid::UNINIT == isValid)) ? 0 : interval;
 
     // Only perform actions when set to blinking
-    this->lock.lock();
     bool is_blinking = this->blinking;
-    this->lock.unlock();
     if (is_blinking) {
         Fw::On new_state = this->state;
         // Check for transitions
@@ -93,10 +91,8 @@ void Led ::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) 
 // ----------------------------------------------------------------------
 
 void Led ::BLINKING_ON_OFF_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Fw::On on_off) {
-    this->count = 0;  // Reset count on any successful command
-    this->lock.lock();
+    this->count = 0;                        // Reset count on any successful command
     this->blinking = Fw::On::ON == on_off;  // Update blinking state
-    this->lock.unlock();
     // NOTE: This event will be added during the "Events" exercise.
     this->log_ACTIVITY_HI_SetBlinkingState(on_off);
 

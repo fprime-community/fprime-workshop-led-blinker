@@ -6,7 +6,6 @@
 
 #ifndef Led_HPP
 #define Led_HPP
-#include <Os/Mutex.hpp>
 #include "Components/Led/LedComponentAc.hpp"
 
 namespace Components {
@@ -59,7 +58,6 @@ class Led : public LedComponentBase {
                        */
     );
 
-    Os::Mutex lock;   //! Protects our data from thread race conditions
     Fw::On state;     //! Keeps track if LED is on or off
     U64 transitions;  //! The number of on/off transitions that have occurred from FSW boot up
     U32 count;        //! Keeps track of how many ticks the LED has been on for
