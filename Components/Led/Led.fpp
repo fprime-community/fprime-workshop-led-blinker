@@ -13,11 +13,6 @@ module Components {
         @ Telemetry channel counting LED transitions
         telemetry LedTransitions: U64
 
-        @ Indicates we received an invalid argument.
-        event InvalidBlinkArgument(badArgument: Fw.On) \
-            severity warning low \
-            format "Invalid Blinking Argument: {}"
-
         @ Reports the state we set to blinking.
         event SetBlinkingState(state: Fw.On) \
             severity activity high \

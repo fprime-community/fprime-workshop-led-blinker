@@ -93,30 +93,17 @@ void Led ::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) 
 // ----------------------------------------------------------------------
 
 void Led ::BLINKING_ON_OFF_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Fw::On on_off) {
-    // Create a variable to represent the command response
-    auto cmdResp = Fw::CmdResponse::OK;
+    this->count = 0;  // Reset count on any successful command
+    this->lock.lock();
+    this->blinking = Fw::On::ON == on_off;  // Update blinking state
+    this->lock.unlock();
+    // NOTE: This event will be added during the "Events" exercise.
+    this->log_ACTIVITY_HI_SetBlinkingState(on_off);
 
-    // Verify if on_off is a valid argument.
-    // Note: isValid is an autogenerate helper function for enums defined in fpp.
-    if (!on_off.isValid()) {
-        // NOTE: Add this event after going through the "Events" exercise.
-        this->log_WARNING_LO_InvalidBlinkArgument(on_off);
-
-        // Update command response with a validation error
-        cmdResp = Fw::CmdResponse::VALIDATION_ERROR;
-    } else {
-        this->count = 0;  // Reset count on any successful command
-        this->lock.lock();
-        this->blinking = Fw::On::ON == on_off;  // Update blinking state
-        this->lock.unlock();
-        // NOTE: This event will be added during the "Events" exercise.
-        this->log_ACTIVITY_HI_SetBlinkingState(on_off);
-
-        this->tlmWrite_BlinkingState(on_off);
-    }
+    this->tlmWrite_BlinkingState(on_off);
 
     // Provide command response
-    this->cmdResponse_out(opCode, cmdSeq, cmdResp);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
 }
 
 }  // end namespace Components
