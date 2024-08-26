@@ -24,7 +24,7 @@ In this exercise, the `BLINKING_ON_OFF` command shall toggle the blinking state 
 1. `BLINKING_ON_OFF`: turn the LED blinking on/off
 
 **Events:**
-1. `InvalidBlinkArgument`: emitted when an invalid argument was supplied to the `BLINKING_ON_OFF` command
+1. ~~`InvalidBlinkArgument`: emitted when an invalid argument was supplied to the `BLINKING_ON_OFF` command~~
 2. `SetBlinkingState`: emitted when the component sets the blink state
 3. `BlinkIntervalSet`: emitted when the component blink interval parameter is set
 4. `LedState`: emitted when the LED is driven to a new state
@@ -238,10 +238,10 @@ Events represent a log of system activities. Events are typically emitted any ti
 Back inside your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the command you added in the previous section, add two events:
 
 ```
-        @ Indicates we received an invalid argument.
-        event InvalidBlinkArgument(badArgument: Fw.On) \
-            severity warning low \
-            format "Invalid Blinking Argument: {}"
+~~        @ Indicates we received an invalid argument. ~~
+~~        event InvalidBlinkArgument(badArgument: Fw.On) \ ~~
+~~            severity warning low \ ~~
+~~            format "Invalid Blinking Argument: {}" ~~
 
         @ Reports the state we set to blinking.
         event SetBlinkingState(state: Fw.On) \
@@ -267,7 +267,7 @@ To do so, replace:
 
 with:
 ```cpp
-        this->log_WARNING_LO_InvalidBlinkArgument(on_off);
+        ~~this->log_WARNING_LO_InvalidBlinkArgument(on_off);~~
 ```
 
 Similarly, use an event to report the blinking state has been set.
