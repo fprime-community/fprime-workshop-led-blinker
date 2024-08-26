@@ -16,7 +16,6 @@ Follow the [F´ Running on ARM Linux Tutorial](https://github.com/nasa/fprime/bl
 
 # Conclusion
 
-Congratulations you've now run on hardware. It is time to unit test!
+Congratulations you've now run on hardware. The final section of this tutorial is to test the component via some system tests!
 
-
-### Next Step: [Unit Testing](./unit-testing.md).
+### Next Step: [System Testing](./system-testing.md).

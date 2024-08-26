@@ -16,7 +16,9 @@ Next, generate a build cache using the following commands:
 
 ```
 cd led-blinker
+. fprime-venv/bin/activate
 fprime-util generate
 ```
+> Always remember to activate your project's virtual environment whenever you work with it.
 
 ### Next Step: [Requirements Specification](./requirements.md).
