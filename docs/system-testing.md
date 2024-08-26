@@ -55,7 +55,7 @@ There are several variants of these assertions, but this guide will use `fprime_
 Next, we will develop a test for the `SetBlinkingState` command.
 
 
-Add the following to your previously created system test ``Components/Led/test/int/led_integration_tests.py`:
+Add the following to your previously created system test `Components/Led/test/int/led_integration_tests.py`:
 
 
 ```python

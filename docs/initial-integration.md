@@ -66,6 +66,14 @@ Next, the topology needs to use the above definition. This is done by adding the
 
 > No port connections need to be added because thus far the component only defines standard ports and those are connected automatically.
 
+Build your deployment
+
+```shell
+# In led-blinker
+cd LedBlinker
+fprime-util build
+```
+
 ## Testing the Topology
 
 The topology may now be run. This can be done with the `fprime-gds` command. Since we are currently building for the host platform, that command will run the ground data system (GDS) and the deployment executable automatically in-tandem.
@@ -100,4 +108,4 @@ fprime-gds  --ip-client
 
 This tutorial will return to the component implementation before finishing the integration of the component and testing on hardware.
 
-### Next Step: [Continuing Component Implementation](./component-implementation-2.md).
+### Next Step: [Component Design and Implementation, Continued](./component-implementation-2.md).
