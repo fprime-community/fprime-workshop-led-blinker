@@ -14,7 +14,7 @@ namespace Components {
 // ----------------------------------------------------------------------
 
 Led ::Led(const char* const compName)
-    : LedComponentBase(compName), state(Fw::On::OFF), transitions(0), count(0), blinking(false) {}
+    : LedComponentBase(compName), m_state(Fw::On::OFF), m_transitions(0), m_count(0), m_blinking(false) {}
 
 Led ::~Led() {}
 
@@ -48,20 +48,20 @@ void Led ::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) 
     interval = ((Fw::ParamValid::INVALID == isValid) || (Fw::ParamValid::UNINIT == isValid)) ? 0 : interval;
 
     // Only perform actions when set to blinking
-    bool is_blinking = this->blinking;
+    bool is_blinking = this->m_blinking;
     if (is_blinking) {
-        Fw::On new_state = this->state;
+        Fw::On new_state = this->m_state;
         // Check for transitions
-        if ((0 == this->count) && (this->state == Fw::On::OFF)) {
+        if ((0 == this->m_count) && (this->m_state == Fw::On::OFF)) {
             new_state = Fw::On::ON;
-        } else if (((interval / 2) == this->count) && (this->state == Fw::On::ON)) {
+        } else if (((interval / 2) == this->m_count) && (this->m_state == Fw::On::ON)) {
             new_state = Fw::On::OFF;
         }
 
         // A transition has occurred
-        if (this->state != new_state) {
-            this->transitions = this->transitions + 1;
-            this->tlmWrite_LedTransitions(this->transitions);
+        if (this->m_state != new_state) {
+            this->m_transitions = this->m_transitions + 1;
+            this->tlmWrite_LedTransitions(this->m_transitions);
 
             // Port may not be connected, so check before sending output
             if (this->isConnected_gpioSet_OutputPort(0)) {
@@ -69,19 +69,19 @@ void Led ::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) 
             }
 
             this->log_ACTIVITY_LO_LedState(new_state);
-            this->state = new_state;
+            this->m_state = new_state;
         }
 
-        this->count = ((this->count + 1) >= interval) ? 0 : (this->count + 1);
+        this->m_count = ((this->m_count + 1) >= interval) ? 0 : (this->m_count + 1);
     } else {
-        if (this->state == Fw::On::ON) {
+        if (this->m_state == Fw::On::ON) {
             // Port may not be connected, so check before sending output
             if (this->isConnected_gpioSet_OutputPort(0)) {
                 this->gpioSet_out(0, Fw::Logic::LOW);
             }
 
-            this->state = Fw::On::OFF;
-            this->log_ACTIVITY_LO_LedState(this->state);
+            this->m_state = Fw::On::OFF;
+            this->log_ACTIVITY_LO_LedState(this->m_state);
         }
     }
 }
@@ -91,8 +91,8 @@ void Led ::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) 
 // ----------------------------------------------------------------------
 
 void Led ::BLINKING_ON_OFF_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Fw::On on_off) {
-    this->count = 0;                        // Reset count on any successful command
-    this->blinking = Fw::On::ON == on_off;  // Update blinking state
+    this->m_count = 0;                        // Reset count on any successful command
+    this->m_blinking = Fw::On::ON == on_off;  // Update blinking state
     // NOTE: This event will be added during the "Events" exercise.
     this->log_ACTIVITY_HI_SetBlinkingState(on_off);
 
