@@ -295,6 +295,6 @@ Below is a table with tasks you should complete. These tasks require you to go b
 
 ## Conclusion
 
-Congratulations! You just completed the implementation of your component. It is time to finish implementation and run on hardware!
+Congratulations! You just completed the implementation of your component. It is time to unit test!
 
-### Next Step: [Full System Integration](./full-integration.md).
+### Next Step: [Unit Testing](./unit-testing.md).

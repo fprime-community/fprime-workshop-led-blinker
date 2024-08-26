@@ -27,9 +27,9 @@ This tutorial is composed of the following steps:
 3. [Component Design and Initial Implementation](docs/component-implementation-1.md)
 4. [Initial Component Integration](docs/initial-integration.md)
 5. [Continuing Component Implementation](docs/component-implementation-2.md)
-6. [Full System Integration](docs/full-integration.md)
-7. [Running on Hardware](docs/running-on-hardware.md)
-8. [Unit-Testing](docs/unit-testing.md)
+6. [Unit-Testing](docs/unit-testing.md)
+7. [Full System Integration](docs/full-integration.md)
+8. [Running on Hardware](docs/running-on-hardware.md)
 9. [System Testing](docs/system-testing.md)
 
 ### First Step: [Project Setup](./docs/project-setup.md)

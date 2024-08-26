@@ -199,8 +199,6 @@ Now open the file `led-blinker/Components/Led/coverage/coverage.html` with your 
 
 ## Conclusion
 
-Congratulations!  You've tested the `Led` component with some unit-tests!
+Congratulations!  You've tested the `Led` component with some unit-tests. It is time to finish implementation and run on hardware!
 
-The final section of this tutorial is to test the component via some system tests!
-
-### Next Step: [System Testing](./system-testing.md).
+### Next Step: [Full System Integration](./full-integration.md).
