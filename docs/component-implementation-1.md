@@ -87,20 +87,20 @@ Many of the behaviors of the component discussed in the [Component Design](#comp
 Open `Led.hpp` in `led-blinker/Components/Led`. Add the following private member variables to the end of the file just before the two closing `}` of the class defintion and namespace.
 
 ```cpp
-    Fw::On state; //! Keeps track if LED is on or off
-    U64 transitions; //! The number of on/off transitions that have occurred from FSW boot up
-    U32 count; //! Keeps track of how many ticks the LED has been on for
-    bool blinking; //! Flag: if true then LED blinking will occur else no blinking will happen
+    Fw::On m_state; //! Keeps track if LED is on or off
+    U64 m_transitions; //! The number of on/off transitions that have occurred from FSW boot up
+    U32 m_count; //! Keeps track of how many ticks the LED has been on for
+    bool m_blinking; //! Flag: if true then LED blinking will occur else no blinking will happen
 ```
 
 Open `Led.cpp` in `led-blinker/Components/Led`, and initialize your member variables in the constructor:
 
 ```cpp
 Led ::Led(const char* const compName) : LedComponentBase(compName),
-    state(Fw::On::OFF),
-    transitions(0),
-    count(0),
-    blinking(false)
+    m_state(Fw::On::OFF),
+    m_transitions(0),
+    m_count(0),
+    m_blinking(false)
 {}
 ```
 
