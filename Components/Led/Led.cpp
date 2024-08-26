@@ -19,18 +19,19 @@ Led ::Led(const char* const compName)
 Led ::~Led() {}
 
 void Led ::parameterUpdated(FwPrmIdType id) {
-    // Read back the parameter value
     Fw::ParamValid isValid;
-    U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
-    // NOTE: isValid is always
-    FW_ASSERT(isValid == Fw::ParamValid::VALID, isValid);
-
-    // Check the parameter ID is expected
-    if (PARAMID_BLINK_INTERVAL == id) {
-        {
+    switch (id) {
+        case PARAMID_BLINK_INTERVAL: {
+            // Read back the parameter value
+            U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
+            // NOTE: isValid is always
+            FW_ASSERT(isValid == Fw::ParamValid::VALID, isValid);
             // Emit the blink set event
             this->log_ACTIVITY_HI_BlinkIntervalSet(interval);
+            break;
         }
+        default:
+            FW_ASSERT(0, id);
     }
 }
 
