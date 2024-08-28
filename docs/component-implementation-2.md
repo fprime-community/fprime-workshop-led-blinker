@@ -119,16 +119,20 @@ Save file and in your `led-blinker/Components/Led` directory, open `Led.cpp` and
 
 ```cpp
 void Led ::parameterUpdated(FwPrmIdType id) {
-    // Read back the parameter value
     Fw::ParamValid isValid;
-    U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
-    // NOTE: isValid is always VALID in parameterUpdated as it was just properly set
-    FW_ASSERT(isValid == Fw::ParamValid::VALID, isValid);
+    switch(id) {
+        case PARAMID_BLINK_INTERVAL: {
+            // Read back the parameter value
+            U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
+            // NOTE: isValid is always VALID in parameterUpdated as it was just properly set
+            FW_ASSERT(isValid == Fw::ParamValid::VALID, isValid);
 
-    // Check the parameter ID is expected
-    if (PARAMID_BLINK_INTERVAL == id) {
-        // Emit the blink interval set event
-        // TODO: Add an event with, severity activity high, named BlinkIntervalSet that takes in an argument of type U32 to report the blink interval.
+            // Emit the blink interval set event
+            // TODO: Add an event with, severity activity high, named BlinkIntervalSet that takes in an argument of type U32 to report the blink interval.
+            break;
+        }
+        default:
+            FW_ASSERT(0, id);
     }
 }
 ```
@@ -149,7 +153,7 @@ In your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After t
 
 ```
         @ Port receiving calls from the rate group
-        sync input port run: Svc.Sched
+        async input port run: Svc.Sched
 
         @ Port sending calls to the GPIO driver
         output port gpioSet: Drv.GpioWrite
