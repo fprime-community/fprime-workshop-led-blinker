@@ -155,7 +155,7 @@ fprime-util build
 
 Many of the behaviors of the component discussed in the [Component Design](#component-design) section require the tracking of some state. Before diving into the implementation of the behavior let us set up and initialize that state.
 
-Open `Led.hpp` in `led-blinker/Components/Led`. Add the following private member variables to the end of the file just before the two closing `}` of the class defintion and namespace.
+Open `Led.hpp` in `led-blinker/Components/Led`. Add the following private member variables to the end of the file just before the two closing `}` of the class definition and namespace.
 
 ```cpp
     Fw::On m_state; //! Keeps track if LED is on or off
