@@ -49,40 +49,40 @@ struct TopologyState {
  * ```
  */
 namespace PingEntries {
-namespace blockDrv {
+namespace LedBlinker_blockDrv {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace tlmSend {
+namespace LedBlinker_tlmSend {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace cmdDisp {
+namespace LedBlinker_cmdDisp {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace cmdSeq {
+namespace LedBlinker_cmdSeq {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace eventLogger {
+namespace LedBlinker_eventLogger {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace fileDownlink {
+namespace LedBlinker_fileDownlink {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace fileManager {
+namespace LedBlinker_fileManager {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace fileUplink {
+namespace LedBlinker_fileUplink {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace prmDb {
+namespace LedBlinker_prmDb {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace rateGroup1 {
+namespace LedBlinker_rateGroup1 {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace rateGroup2 {
+namespace LedBlinker_rateGroup2 {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace rateGroup3 {
+namespace LedBlinker_rateGroup3 {
 enum { WARN = 3, FATAL = 5 };
 }
 }  // namespace PingEntries
