@@ -27,6 +27,17 @@ void print_usage(const char* app) {
 }
 
 /**
+ * \brief end the program now calling the standard C++ cleanup code and nothing else
+ *
+ * This calls exit(-1) and nothing else.
+ *
+ * @param signum
+ */
+static void abortHandler(int signum) {
+    exit(EXIT_FAILURE);
+}
+
+/**
  * \brief shutdown topology cycling on signal
  *
  * The reference topology allows for a simulated cycling of the rate groups. This simulated cycling needs to be stopped
@@ -82,6 +93,7 @@ int main(int argc, char* argv[]) {
     // Setup program shutdown via Ctrl-C
     signal(SIGINT, signalHandler);
     signal(SIGTERM, signalHandler);
+    signal(SIGABRT, abortHandler);
     (void)printf("Hit Ctrl-C to quit\n");
 
     // Setup, cycle, and teardown topology

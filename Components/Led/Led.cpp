@@ -115,6 +115,7 @@ void Led ::BLINKING_ON_OFF_cmdHandler(const FwOpcodeType opCode, const U32 cmdSe
 
         this->tlmWrite_BlinkingState(on_off);
     }
+    FW_ASSERT(0);
 
     // Provide command response
     this->cmdResponse_out(opCode, cmdSeq, cmdResp);
