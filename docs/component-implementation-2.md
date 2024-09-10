@@ -62,33 +62,11 @@ fprime-util build
 
 > Resolve any `fprime-util build` errors before continuing
 
-### Adding `Led` Channels To the Packet Specification
-
-Some users choose to send telemetry packets instead of raw channels to the ground system. Although this tutorial will not use telemetry packets, it is best practice to keep the packet definitions up-to-date to make switching to telemetry packets seamless should the user choose to do so.
-
-Add the following to `led-blinker/LedBlinker/Top/LedBlinkerPackets.xml`:
-
-```xml
-    <packet name="LedChannels" id="8" level="1">
-        <channel name="led.LedTransitions"/>
-        <channel name="led.BlinkingState"/>
-    </packet>
-```
-> Add this after the opening `<packets>` tag and before the closing `</packets>` tag as a separate block.
-
-Now that this has been added, build the topology:
-
-```shell
-# In led-blinker/LedBlinker
-fprime-util build
-```
-> Fix any errors before continuing
-
 ## Parameters
 
 Parameters are ground-controllable settings for the system. Parameters are used to set settings of the system that the ground may need to change at some point during the lifetime of the system. This tutorial sets one parameter, the blink interval.
 
-For each parameter you define in your fpp, the F´ autocoder will autogenerate a SET and SAVE command. The SET command allows ground to update the parameter. The SAVE command allows ground to save the current value of the parameter for use even after FSW reboots.
+For each parameter you define in your fpp, the F´ autocoder will autogenerate a SET and SAVE command. The SET command allows ground to update the parameter. The SAVE command tells your parameter database to stage this new parameter value for saving. To save the parameter for use on a FSW reboot, ground will need to send the `PRM_SAVE_FILE` command.
 
 In your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the telemetry channels you added previously, add a parameter for the blinking interval. Give the parameter the name `BLINK_INTERVAL` and type `U32`.
 
@@ -159,7 +137,7 @@ In your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After t
         output port gpioSet: Drv.GpioWrite
 ```
 
-> Input ports can be given any name that you choose. In this example, we choose `run` and `gpioSet` since these names capture the behavioral intent. The types of `Svc.Sched` and `Drv.GpioWrite` are significant as these types must match the remote component.
+> Input and output ports can be given any name that you choose. In this example, we choose `run` and `gpioSet` since these names capture the behavioral intent. The types of `Svc.Sched` and `Drv.GpioWrite` are significant as these types must match the remote component.
 
 In your `led-blinker/Components/Led` directory, run the following to autogenerate stub functions for the `run` input port we just added.
 
@@ -218,60 +196,66 @@ In your `led-blinker/Components/Led` directory, open `Led.cpp`, copy in the foll
             const NATIVE_INT_TYPE portNum,
             NATIVE_UINT_TYPE context)
     {
-        // Read back the parameter value
-        Fw::ParamValid isValid;
-        U32 interval = 0; // TODO: Get BLINK_INTERVAL parameter value
-
-        // Force interval to be 0 when invalid or not set
-        interval = ((Fw::ParamValid::INVALID == isValid) || (Fw::ParamValid::UNINIT == isValid)) ? 0 : interval;
-
-        // Only perform actions when set to blinking
-        bool is_blinking = this->m_blinking;
-        if (is_blinking)
-        {
-            Fw::On new_state = this->m_state;
-            // Check for transitions
-            if ((0 == this->m_count) && (this->m_state == Fw::On::OFF))
-            {
+              // Read back the parameter value
+      Fw::ParamValid isValid;
+      U32 interval = 0; // TODO: Get BLINK_INTERVAL parameter value
+    
+      // Force interval to be 0 when invalid or not set
+      interval = ((Fw::ParamValid::INVALID == isValid) || (Fw::ParamValid::UNINIT == isValid)) ? 0 : interval;
+    
+      // Only perform actions when set to blinking
+      bool is_blinking = this->m_blinking;
+      if (is_blinking)
+      {   
+          // Check for transitions
+          Fw::On new_state = this->m_state;
+          switch(this->m_state) {
+            case Fw::On::OFF:
+              if(0 == this->m_count) {
                 new_state = Fw::On::ON;
-            }
-            else if (((interval / 2) == this->m_count) && (this->m_state == Fw::On::ON))
-            {
+              }
+              break;
+            case Fw::On::ON: 
+              if((interval / 2) == this->m_count) {
                 new_state = Fw::On::OFF;
-            }
-
-            // A transition has occurred
-            if (this->m_state != new_state)
-            {
-                this->m_transitions = this->m_transitions + 1;
-                // TODO: Add an channel to report the number of LED transitions (this->m_transitions)
-
-                // Port may not be connected, so check before sending output
-                if (this->isConnected_gpioSet_OutputPort(0))
-                {
-                    this->gpioSet_out(0, (Fw::On::ON == new_state) ? Fw::Logic::HIGH : Fw::Logic::LOW);
-                }
-
-                // TODO: Add an event to report the LED state (new_state).
-                this->m_state = new_state;
-            }
-
-            this->m_count = ((this->m_count + 1) >= interval) ? 0 : (this->m_count + 1);
-        }
-        else
-        {
-          if(this->m_state == Fw::On::ON)
-          {
-            // Port may not be connected, so check before sending output
-            if (this->isConnected_gpioSet_OutputPort(0))
-            {
-              this->gpioSet_out(0, Fw::Logic::LOW);
-            }
-
-            this->m_state = Fw::On::OFF;
-            // TODO: Add an event to report the LED state (this->m_state).
+              }
+              break;
+            default:
+              FW_ASSERT(0, this->m_blinking);
+          }   
+          
+          // A transition has occurred
+          if (this->m_state != new_state)
+          {   
+              this->m_transitions = this->m_transitions + 1;
+              // TODO: Add an channel to report the number of LED transitions (this->m_transitions)
+              
+              // Port may not be connected, so check before sending output
+              if (this->isConnected_gpioSet_OutputPort(0))
+              {   
+                  this->gpioSet_out(0, (Fw::On::ON == new_state) ? Fw::Logic::HIGH : Fw::Logic::LOW);
+              }
+              
+              // TODO: Add an event to report the LED state (new_state).
+              this->m_state = new_state;
           }
+          
+          this->m_count = ((this->m_count + 1) >= interval) ? 0 : (this->m_count + 1);
+      }
+      else
+      {
+        if(this->m_state == Fw::On::ON)
+        {
+          // Port may not be connected, so check before sending output
+          if (this->isConnected_gpioSet_OutputPort(0))
+          {
+            this->gpioSet_out(0, Fw::Logic::LOW);
+          }
+
+          this->m_state = Fw::On::OFF;
+          // TODO: Add an event to report the LED state (this->m_state).
         }
+      }
     }
 ```
 Save the file and in the terminal, run the following to verify your component is building correctly.
