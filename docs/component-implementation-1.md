@@ -158,7 +158,7 @@ Inside your `led-blinker/Components/Led` directory, open `Led.template.hpp` and 
           Fw::On on_off /*!< 
           Indicates whether the blinking should be on or off
           */
-      );
+      ) override;
 ```
 
 Inside your `led-blinker/Components/Led` directory, open `Led.template.cpp` and copy the following block of code and paste it into `Led.cpp` replacing the `TODO_cmdHandler` block.

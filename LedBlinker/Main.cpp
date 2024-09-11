@@ -12,6 +12,8 @@
 #include <getopt.h>
 // Used for printf functions
 #include <cstdlib>
+// Os Console
+#include <Os/Console.hpp>
 
 /**
  * \brief print commandline help message
@@ -50,7 +52,7 @@ int main(int argc, char* argv[]) {
     U32 port_number = 0;
     I32 option = 0;
     char* hostname = nullptr;
-
+    Os::Console::init();
     // Loop while reading the getopt supplied options
     while ((option = getopt(argc, argv, "hp:a:")) != -1) {
         switch (option) {
