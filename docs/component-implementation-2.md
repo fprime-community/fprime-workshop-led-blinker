@@ -198,7 +198,7 @@ In your `led-blinker/Components/Led` directory, open `Led.cpp`, copy in the foll
     {
               // Read back the parameter value
       Fw::ParamValid isValid;
-      U32 interval = 0; // TODO: Get BLINK_INTERVAL parameter value
+      U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
     
       // Force interval to be 0 when invalid or not set
       interval = ((Fw::ParamValid::INVALID == isValid) || (Fw::ParamValid::UNINIT == isValid)) ? 0 : interval;
@@ -272,7 +272,6 @@ Below is a table with tasks you should complete. These tasks require you to go b
 | Task | Missing function calls |
 |-------|-------------|
 | Inside the `parameterUpdated` function, add a severity activity high event named `BlinkIntervalSet` that takes in an argument of type `U32` to report the blink interval. | Left as an exercise for the reader. |
-| Inside the `run_handler` port handler, get the `BLINK_INTERVAL` parameter value. | Left as an exercise for the reader. |
 | Inside the `run_handler` port handler, add a telemetry channel to report the number of LED transitions. | Left as an exercise for the reader. |
 | Inside the `run_handler` port handler, add an event to report the new LED state. | Left as an exercise for the reader. |
 
