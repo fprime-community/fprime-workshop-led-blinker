@@ -105,14 +105,22 @@ Add the following code to the `testBlinking` method in `led-blinker/Components/L
 // Ensure LED stays off when blinking is disabled
 // The Led component defaults to blinking off
 this->invoke_to_run(0,0); // invoke the 'run' port to simulate running one cycle
-ASSERT_EVENTS_LedState_SIZE(0); // ensure no LedState change events we emitted
+this->component.doDispatch(); // Trigger execution of async port
+
+// TODO: Uncomment next line if you added an event in run handler for reporting the Led state.
+//ASSERT_EVENTS_LedState_SIZE(0); // ensure no LedState change events we emitted
+
 ASSERT_from_gpioSet_SIZE(0); // ensure gpio LED wasn't set
-ASSERT_TLM_LedTransitions_SIZE(0); // ensure no LedTransitions were recorded
+
+// TODO: Uncomment next line if you added and emitted LedTransitions telemetry.
+//ASSERT_TLM_LedTransitions_SIZE(0); // ensure no LedTransitions were recorded
 ```
 
-The `this->invoke_to_<port-name>()` methods are used to call input ports on the component under test acting like a port invocation in the system topology but driven by out test harness.
+The `this->invoke_to_<port-name>()` methods are used to call input ports on the component under test acting like a port invocation in the system topology but driven by our test harness. `gpioSet` is an `async` input port, it's not dispatched immediately, but instead added to an execution queue that would normally be driven off the component's thread.
 
-The F´ unit testing framework generates a series of history buffers to store a fixed amount of events, telemetry, and output ports emitted from the component.
+To dispatch a queued port message, unit tests must explicitly call the `doDispatch()` function to dispatch the first message on the queue.
+
+The F´ unit testing framework generates a series of history buffers to store a fixed amount of events, telemetry, command responses, and output ports emitted from the component.
 
 The `ASSERT_<>_SIZE(size)` (e.g. `ASSERT_EVENTS_LedState_SIZE(0)`) macros are used to assert the size of the history buffer matches your expectations. The `ASSERT_<>(index, <arg 1>, <arg 1>, <arg N>)` macros are used to check that items in the history buffer match expectations.
 
@@ -124,36 +132,43 @@ Next, enable blinking, then step through 3 cycles to verify the LED component bl
 // Send command to enable blinking
 this->sendCmd_BLINKING_ON_OFF(0, 0, Fw::On::ON);
 this->component.doDispatch(); // Trigger execution of async command
+ASSERT_CMD_RESPONSE_SIZE(1); // ensure a command response was emitted
+ASSERT_CMD_RESPONSE(0, Led::OPCODE_BLINKING_ON_OFF, 0, Fw::CmdResponse::OK); // ensure the expected command response was emitted
 ```
 
 The F´ unit test framework provides `this->sendCmd_COMMAND_NAME(args)` function that allows calling a command on the component under test. `BLINKING_ON_OFF` is an `async` command, it's not dispatched immediately, but instead added to an execution queue that would normally be driven off the component's thread. 
 
 To dispatch a queued command, unit tests must explicitly call the `doDispatch()` function to dispatch the first message on the queue.
 
+Once dispatched, the command is ran. In your unit tests, it's good practice to check the command responded and it responded with the expected results. In this case, we expect our command to succeed with an `Fw::CmdResponse::OK` response.
+
 Now, check that the state of the component matches expectations after each of three cycles. Write assertions to fill in the todo comments.
 
 ```c++
-// Step through 3 run cycles to observe LED turning on and off 3 times
-// Cycle 1: LED initalization->On
-this->invoke_to_run(0,0);
-ASSERT_EVENTS_LedState_SIZE(1);
-ASSERT_EVENTS_LedState(0, Fw::On::ON);
-ASSERT_from_gpioSet_SIZE(1);
-ASSERT_from_gpioSet(0, Fw::Logic::HIGH);
-ASSERT_TLM_LedTransitions_SIZE(1);
-ASSERT_TLM_LedTransitions(0, 1);
+ // Step through 3 run cycles to observe LED turning on and off 3 times
+ // Cycle 1: LED initalization->On
+ this->invoke_to_run(0,0);
+ this->component.doDispatch(); // Trigger execution of async port
+ //ASSERT_EVENTS_LedState_SIZE(1); // TODO: Uncomment if you added LedState event
+ //ASSERT_EVENTS_LedState(0, Fw::On::ON); // TODO: Uncomment if you added LedState event
+ ASSERT_from_gpioSet_SIZE(1);
+ ASSERT_from_gpioSet(0, Fw::Logic::HIGH);
+ //ASSERT_TLM_LedTransitions_SIZE(1); // TODO: Uncoment if you added LedTransitions telemetru
+ //ASSERT_TLM_LedTransitions(0, 1); // TODO: Uncoment if you added LedTransitions telemetru
 
-// Cycle 2: LED On->Off
-this->invoke_to_run(0,0);
-ASSERT_EVENTS_LedState_SIZE(2);
-ASSERT_EVENTS_LedState(1, Fw::On::OFF);
-ASSERT_from_gpioSet_SIZE(2);
-ASSERT_from_gpioSet(1, Fw::Logic::LOW);
-//TODO: Add assertions for LedTransitions telemetry
+ // Cycle 2: LED On->Off
+ this->invoke_to_run(0,0);
+ this->component.doDispatch(); // Trigger execution of async port
+ //ASSERT_EVENTS_LedState_SIZE(2); // TODO: Uncomment if you added LedState event
+ //ASSERT_EVENTS_LedState(1, Fw::On::OFF); // TODO: Uncomment if you added LedState event
+ ASSERT_from_gpioSet_SIZE(2);
+ ASSERT_from_gpioSet(1, Fw::Logic::LOW);
+ //TODO: Add assertions for LedTransitions telemetry
 
-// Cycle 3: LED Off->On
-this->invoke_to_run(0,0);
-//TODO: Write assertions for third cycle
+ // Cycle 3: LED Off->On
+ this->invoke_to_run(0,0);
+ this->component.doDispatch(); // Trigger execution of async port
+ //TODO: Write assertions for third cycle
 ```
 
 Run `fprime-util check` and make sure the new assertions pass.
