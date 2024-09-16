@@ -191,12 +191,12 @@ Add a new test case called `testBlinkInterval` and use the following code as a s
     U32 blinkInterval = 4;
     this->paramSet_BLINK_INTERVAL(blinkInterval, Fw::ParamValid::VALID);
     this->paramSend_BLINK_INTERVAL(0, 0);
-    ASSERT_EVENTS_BlinkIntervalSet_SIZE(1);
+    //ASSERT_EVENTS_BlinkIntervalSet_SIZE(1); //TODO: Uncomment if you added the BlinkIntervalSet event
 
     // TODO: Add logic to test adjusted blink interval
   }
 ```
-> Don't forget to add `testBlinkInterval()` to `LedTester.hpp` as well. Run `fprime-util check and resolve any issues before continuing.
+> Don't forget to add `testBlinkInterval()` to `LedTester.hpp` and `LedtestMain.cpp` as well. Run `fprime-util check and resolve any issues before continuing.
 
 ## Checking Coverage
 
