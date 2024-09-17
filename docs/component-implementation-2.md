@@ -87,7 +87,7 @@ In your `led-blinker/Components/Led` directory, open the file `Led.hpp` and add 
 ```cpp
     //! Emit parameter updated EVR
     //!
-    void parameterUpdated(FwPrmIdType id /*!< The parameter ID*/
+    void parameterUpdated(FwPrmIdType id //!< The parameter ID
     ) override;
 ```
 
@@ -158,11 +158,9 @@ In your `led-blinker/Components/Led` directory, open `Led.template.hpp` file and
       //! Handler implementation for run
       //!
       void run_handler(
-          const NATIVE_INT_TYPE portNum, /*!< The port number*/
-          NATIVE_UINT_TYPE context /*!< 
-      The call order
-      */
-      );
+          const NATIVE_INT_TYPE portNum, //!< The port number
+          NATIVE_UINT_TYPE context //!< The call order
+      ) override;
 ```
 
 In your `led-blinker/Components/Led` directory, open `Led.template.cpp` file and copy this block over to `Led.cpp`.

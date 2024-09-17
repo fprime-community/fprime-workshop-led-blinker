@@ -119,12 +119,10 @@ Inside your `led-blinker/Components/Led` directory, open `Led.template.hpp` and 
       //! Implementation for BLINKING_ON_OFF command handler
       //! Command to turn on or off the blinking LED
       void BLINKING_ON_OFF_cmdHandler(
-          const FwOpcodeType opCode, /*!< The opcode*/
-          const U32 cmdSeq, /*!< The command sequence number*/
-          Fw::On on_off /*!< 
-          Indicates whether the blinking should be on or off
-          */
-      );
+          const FwOpcodeType opCode, //!< The opcode
+          const U32 cmdSeq, //!< The command sequence number
+          Fw::On on_off //!< Indicates whether the blinking should be on or off
+      ) override;
 ```
 
 Inside your `led-blinker/Components/Led` directory, open `Led.template.cpp` and copy the following block of code and paste it into `Led.cpp` replacing the `TODO_cmdHandler` block.
