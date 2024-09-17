@@ -194,7 +194,7 @@ In your `led-blinker/Components/Led` directory, open `Led.cpp`, copy in the foll
             const NATIVE_INT_TYPE portNum,
             NATIVE_UINT_TYPE context)
     {
-              // Read back the parameter value
+      // Read back the parameter value
       Fw::ParamValid isValid;
       U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
     
