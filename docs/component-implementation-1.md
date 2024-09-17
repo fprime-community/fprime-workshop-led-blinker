@@ -142,7 +142,7 @@ Inside your `led-blinker/Components/Led` directory, open `Led.template.cpp` and 
   }
 ```
 
-> This pattern of copying implementations from *.template.* files into our cpp and hpp files will be repeated throughout the rest of this tutorial.
+> This pattern of copying implementations from \*.template.\* files into our cpp and hpp files will be repeated throughout the rest of this tutorial.
 
 Save the file, exit the text editor, and run the following in the `led-blinker/Components/Led` directory to verify your component is building correctly.
 
