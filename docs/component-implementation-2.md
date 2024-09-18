@@ -68,11 +68,11 @@ Parameters are ground-controllable settings for the system. Parameters are used 
 
 For each parameter you define in your fpp, the F´ autocoder will autogenerate a SET and SAVE command. The SET command allows ground to update the parameter. The SAVE command tells your parameter database to stage this new parameter value for saving. To save the parameter for use on a FSW reboot, ground will need to send the `PRM_SAVE_FILE` command.
 
-In your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the telemetry channels you added previously, add a parameter for the blinking interval. Give the parameter the name `BLINK_INTERVAL` and type `U32`.
+In your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the telemetry channels you added previously, add a parameter for the blinking interval. Give the parameter the name `BLINK_INTERVAL`, type `U32`, and a default value. It is good practice to assign parameters a valid default value.
 
 ```
         @ Blinking interval in rate group ticks
-        param BLINK_INTERVAL: U32
+        param BLINK_INTERVAL: U32 default 1
 ```
 
 Save the file. In the terminal, run the following to verify your component is building correctly.
