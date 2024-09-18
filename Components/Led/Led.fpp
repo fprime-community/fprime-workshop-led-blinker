@@ -29,7 +29,7 @@ module Components {
             format "LED blink interval set to {}"
 
         @ Blinking interval in rate group ticks
-        param BLINK_INTERVAL: U32
+        param BLINK_INTERVAL: U32 default 1
 
         @ Port receiving calls from the rate group
         async input port run: Svc.Sched
