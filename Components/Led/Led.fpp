@@ -19,7 +19,7 @@ module Components {
             format "Invalid Blinking Argument: {}"
 
         @ Reports the state we set to blinking.
-        event SetBlinkingState(state: Fw.On) \
+        event SetBlinkingState($state: Fw.On) \
             severity activity high \
             format "Set blinking state to {}."
 
