@@ -107,13 +107,11 @@ Add the following code to the `testBlinking` method in `led-blinker/Components/L
 this->invoke_to_run(0,0); // invoke the 'run' port to simulate running one cycle
 this->component.doDispatch(); // Trigger execution of async port
 
-// TODO: Uncomment next line if you added an event in run handler for reporting the Led state.
-//ASSERT_EVENTS_LedState_SIZE(0); // ensure no LedState change events we emitted
+ASSERT_EVENTS_LedState_SIZE(0); // ensure no LedState change events we emitted
 
 ASSERT_from_gpioSet_SIZE(0); // ensure gpio LED wasn't set
 
-// TODO: Uncomment next line if you added and emitted LedTransitions telemetry.
-//ASSERT_TLM_LedTransitions_SIZE(0); // ensure no LedTransitions were recorded
+ASSERT_TLM_LedTransitions_SIZE(0); // ensure no LedTransitions were recorded
 ```
 
 The `this->invoke_to_<port-name>()` methods are used to call input ports on the component under test acting like a port invocation in the system topology but driven by our test harness. `gpioSet` is an `async` input port, it's not dispatched immediately, but instead added to an execution queue that would normally be driven off the component's thread.
@@ -149,18 +147,18 @@ Now, check that the state of the component matches expectations after each of th
  // Cycle 1: LED initalization->On
  this->invoke_to_run(0,0);
  this->component.doDispatch(); // Trigger execution of async port
- //ASSERT_EVENTS_LedState_SIZE(1); // TODO: Uncomment if you added LedState event
- //ASSERT_EVENTS_LedState(0, Fw::On::ON); // TODO: Uncomment if you added LedState event
+ ASSERT_EVENTS_LedState_SIZE(1);
+ ASSERT_EVENTS_LedState(0, Fw::On::ON);
  ASSERT_from_gpioSet_SIZE(1);
  ASSERT_from_gpioSet(0, Fw::Logic::HIGH);
- //ASSERT_TLM_LedTransitions_SIZE(1); // TODO: Uncoment if you added LedTransitions telemetru
- //ASSERT_TLM_LedTransitions(0, 1); // TODO: Uncoment if you added LedTransitions telemetru
+ ASSERT_TLM_LedTransitions_SIZE(1);
+ ASSERT_TLM_LedTransitions(0, 1);
 
  // Cycle 2: LED On->Off
  this->invoke_to_run(0,0);
  this->component.doDispatch(); // Trigger execution of async port
- //ASSERT_EVENTS_LedState_SIZE(2); // TODO: Uncomment if you added LedState event
- //ASSERT_EVENTS_LedState(1, Fw::On::OFF); // TODO: Uncomment if you added LedState event
+ ASSERT_EVENTS_LedState_SIZE(2);
+ ASSERT_EVENTS_LedState(1, Fw::On::OFF);
  ASSERT_from_gpioSet_SIZE(2);
  ASSERT_from_gpioSet(1, Fw::Logic::LOW);
  //TODO: Add assertions for LedTransitions telemetry
@@ -191,7 +189,7 @@ Add a new test case called `testBlinkInterval` and use the following code as a s
     U32 blinkInterval = 4;
     this->paramSet_BLINK_INTERVAL(blinkInterval, Fw::ParamValid::VALID);
     this->paramSend_BLINK_INTERVAL(0, 0);
-    //ASSERT_EVENTS_BlinkIntervalSet_SIZE(1); //TODO: Uncomment if you added the BlinkIntervalSet event
+    ASSERT_EVENTS_BlinkIntervalSet_SIZE(1);
 
     // TODO: Add logic to test adjusted blink interval
   }
