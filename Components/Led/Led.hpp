@@ -25,41 +25,38 @@ class Led : public LedComponentBase {
     //!
     ~Led();
 
-    PRIVATE :
-        //! Emit parameter updated EVR
-        //!
-        void
-        parameterUpdated(FwPrmIdType id /*!< The parameter ID*/
-        );
+  PRIVATE:
+    //! Emit parameter updated EVR
+    //!
+    void parameterUpdated(FwPrmIdType id /*!< The parameter ID*/
+    );
 
-    PRIVATE :
-        // ----------------------------------------------------------------------
-        // Command handler implementations
-        // ----------------------------------------------------------------------
+  PRIVATE:
+    // ----------------------------------------------------------------------
+    // Command handler implementations
+    // ----------------------------------------------------------------------
 
-        //! Implementation for BLINKING_ON_OFF command handler
-        //! Command to turn on or off the blinking LED
-        void
-        BLINKING_ON_OFF_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
-                                   const U32 cmdSeq,          /*!< The command sequence number*/
-                                   Fw::On on_off              /*!<
-                                                Indicates whether the blinking should be on or off
-                                                */
-        );
+    //! Implementation for BLINKING_ON_OFF command handler
+    //! Command to turn on or off the blinking LED
+    void BLINKING_ON_OFF_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
+                                    const U32 cmdSeq,          /*!< The command sequence number*/
+                                    Fw::On on_off              /*!<
+                                                 Indicates whether the blinking should be on or off
+                                                 */
+    );
 
-    PRIVATE :
-        // ----------------------------------------------------------------------
-        // Handler implementations for user-defined typed input ports
-        // ----------------------------------------------------------------------
+  PRIVATE:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
 
-        //! Handler implementation for run
-        //!
-        void
-        run_handler(const NATIVE_INT_TYPE portNum, /*!< The port number*/
-                    NATIVE_UINT_TYPE context       /*!<
-                      The call order
-                      */
-        );
+    //! Handler implementation for run
+    //!
+    void run_handler(const NATIVE_INT_TYPE portNum, /*!< The port number*/
+                     NATIVE_UINT_TYPE context       /*!<
+                       The call order
+                       */
+    );
 
     Fw::On m_state;     //! Keeps track if LED is on or off
     U64 m_transitions;  //! The number of on/off transitions that have occurred from FSW boot up

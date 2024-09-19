@@ -48,32 +48,25 @@ void Led ::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) 
     interval = ((Fw::ParamValid::INVALID == isValid) || (Fw::ParamValid::UNINIT == isValid)) ? 0 : interval;
 
     // Only perform actions when set to blinking
-    bool is_blinking = this->m_blinking;
-    if (is_blinking) {
-        Fw::On new_state = this->m_state;
-        // Check for transitions
-        if ((0 == this->m_count) && (this->m_state == Fw::On::OFF)) {
-            new_state = Fw::On::ON;
-        } else if (((interval / 2) == this->m_count) && (this->m_state == Fw::On::ON)) {
-            new_state = Fw::On::OFF;
-        }
-
-        // A transition has occurred
-        if (this->m_state != new_state) {
+    if (this->m_blinking && (interval != 0)) {
+        // If toggling state
+        if (this->m_count == 0) {
+            this->m_state = (this->m_state == Fw::On::ON) ? Fw::On::OFF : Fw::On::ON;
             this->m_transitions = this->m_transitions + 1;
             this->tlmWrite_LedTransitions(this->m_transitions);
 
             // Port may not be connected, so check before sending output
             if (this->isConnected_gpioSet_OutputPort(0)) {
-                this->gpioSet_out(0, (Fw::On::ON == new_state) ? Fw::Logic::HIGH : Fw::Logic::LOW);
+                this->gpioSet_out(0, (Fw::On::ON == this->m_state) ? Fw::Logic::HIGH : Fw::Logic::LOW);
             }
 
-            this->log_ACTIVITY_LO_LedState(new_state);
-            this->m_state = new_state;
+            this->log_ACTIVITY_LO_LedState(this->m_state);
         }
 
-        this->m_count = ((this->m_count + 1) >= interval) ? 0 : (this->m_count + 1);
-    } else {
+        this->m_count = (this->m_count + 1) % interval;
+    }
+    // We are not blinking
+    else {
         if (this->m_state == Fw::On::ON) {
             // Port may not be connected, so check before sending output
             if (this->isConnected_gpioSet_OutputPort(0)) {
