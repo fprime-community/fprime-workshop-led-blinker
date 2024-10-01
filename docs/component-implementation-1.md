@@ -1,6 +1,6 @@
-# LED Blinker: Component Design and Initial Implementation
+# LED Blinker: Initial Component Design and Implementation
 
-The purpose of this exercise is to walk you through the creation and initial implementation of an F´ component to control the blinking of an LED. This section will discuss the design of the full component, the implementation of a command to start/stop the LED blinking, and the sending of events.  Users will then proceed to the initial ground testing before finishing the implementation in a later section.
+The purpose of this exercise is to walk you through the creation and initial design and implementation of an F´ component to control the blinking of an LED. This section will discuss the design of the component, the implementation of a command to start/stop the LED blinking, and the sending of events.  Users will then proceed to the initial ground testing before finishing the implementation in a later section.
 
 ## Component Design
 
@@ -35,7 +35,7 @@ In this exercise, the `BLINKING_ON_OFF` command shall toggle the blinking state 
 **Parameters:**
 1. `BLINK_INTERVAL`: LED blink period in number of rate group calls
 
-## Create the component
+### Create the component
 
 It is time to create the basic component. In a terminal, navigate to the project's root directory and run the following:
 
@@ -104,54 +104,62 @@ Replace that block with the following:
         )
 ```
 
-Save the file, exit the text editor, and run the following in the `led-blinker/Components/Led` directory:
+### Events
+
+Events represent a log of system activities. Events are typically emitted any time the system takes an action. Events are also emitted to report off-nominal conditions.
+
+Inside your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the command you added in the previous section, add this event:
+
+```
+        @ Reports the state we set to blinking.
+        event SetBlinkingState(state: Fw.On) \
+            severity activity high \
+            format "Set blinking state to {}."
+```
+
+### Try it yourself
+
+Below is a table with tasks you shall complete before moving on to the next section. These tasks require you to update the component's fpp file.
+
+| Task | Solution |
+|-------|-------------|
+| 1. Add an activity high event named `BlinkIntervalSet` to the fpp. The event takes an argument of `U32` type to indicate the set interval. | `event BlinkIntervalSet(interval: U32) severity activity high format "LED blink interval set to {}"` |
+| 2. Add an activity low event named `LedState` to the fpp. The event takes an argument of `Fw.On` type to indicate the LED has been driven to a different state. | `event LedState(on_off: Fw.On) severity activity low format "LED is {}"` |
+
+
+Save the file, exit the text editor. You have completed the Command and Event design phase. We'll move on to the Command and Event implementation phase.
+
+## Component Implementation
+
+In the `led-blinker/Components/Led` directory, run the following:
 
 ```bash
 # In led-blinker/Components/Led
 fprime-util impl
 ```
 
-This command will auto generate two files: `Led.template.hpp` and `Led.template.cpp`. These files contain the stub implementation for the component. These should now include stubs for this newly added command.
+This command will auto generate two files: `Led.template.hpp` and `Led.template.cpp`. These files contain the stub implementation for the component's newly added command.
 
-Inside your `led-blinker/Components/Led` directory, open `Led.template.hpp` and copy the following block of code. Paste it in replacement of the `TODO_cmdHandler` block in `Led.hpp`.
+Since this is the start of the component's implementation, we can use the generated template files for our initial component implementation. Inside your `led-blinker/Components/Led` directory, rename `Led.template.hpp` to `Led.hpp` and rename `Led.template.cpp` to `Led.cpp`. You can rename the files through the terminal using the two commands below:
 
-```cpp
-      //! Implementation for BLINKING_ON_OFF command handler
-      //! Command to turn on or off the blinking LED
-      void BLINKING_ON_OFF_cmdHandler(
-          const FwOpcodeType opCode, //!< The opcode
-          const U32 cmdSeq, //!< The command sequence number
-          Fw::On on_off //!< Indicates whether the blinking should be on or off
-      ) override;
+```bash
+# In led-blinker/Components/Led
+mv Led.template.hpp Led.hpp
+mv Led.template.cpp Led.cpp
 ```
 
-Inside your `led-blinker/Components/Led` directory, open `Led.template.cpp` and copy the following block of code and paste it into `Led.cpp` replacing the `TODO_cmdHandler` block.
-
-```cpp
-  void Led ::
-    BLINKING_ON_OFF_cmdHandler(
-        const FwOpcodeType opCode,
-        const U32 cmdSeq,
-        Fw::On on_off
-    )
-  {
-    // TODO
-    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
-  }
-```
-
-> This pattern of copying implementations from \*.template.\* files into our cpp and hpp files will be repeated throughout the rest of this tutorial.
-
-Save the file, exit the text editor, and run the following in the `led-blinker/Components/Led` directory to verify your component is building correctly.
+Verify your component is building correctly by running the following command in the `led-blinker/Components/Led` directory.
 
 ```bash
 # In led-blinker/Components/Led
 fprime-util build
 ```
 
+Fix any errors that occur before proceeding with the rest of the tutorial.
+
 ## Component State
 
-Many of the behaviors of the component discussed in the [Component Design](#component-design) section require the tracking of some state. Before diving into the implementation of the behavior let us set up and initialize that state.
+Many of the behaviors of the component discussed in the [Component Design](#component-design) section require the tracking of some state. Let us set up and initialize that state.
 
 Open `Led.hpp` in `led-blinker/Components/Led`. Add the following private member variables to the end of the file just before the two closing `}` of the class definition and namespace.
 
@@ -184,7 +192,7 @@ Now that the member variables are set up, we can continue into the component imp
 
 ## Command Implementation
 
-Now we will implement the behavior of the `BLINKING_ON_OFF` command. An initial implementation is shown below and may be copied into `Led.cpp` in-place of the stub we just copied in.
+Now we will implement the behavior of the `BLINKING_ON_OFF` command. An initial implementation is shown below and may be copied into `Led.cpp` in-place of the BLINKING_ON_OFF command stub.
 
 ```cpp
   void Led ::
@@ -218,26 +226,7 @@ fprime-util build
 
 ## Events
 
-Events represent a log of system activities. Events are typically emitted any time the system takes an action. Events are also emitted to report off-nominal conditions. Our component has three events, one that this section will show and two are left to the student.
-
-Back inside your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the command you added in the previous section, add this event:
-
-```
-        @ Reports the state we set to blinking.
-        event SetBlinkingState(state: Fw.On) \
-            severity activity high \
-            format "Set blinking state to {}."
-```
-
-Save the file and in the terminal, run the following to verify your component is building correctly.
-
-```bash
-# In led-blinker/Components/Led
-fprime-util build
-```
-> Resolve any errors before continuing.
-
-Now open `Led.cpp` in your `led-blinker/Components/Led` directory and navigate to the `BLINKING_ON_OFF` command. Report, via our new event, the blinking state has been set.
+Open `Led.cpp` in your `led-blinker/Components/Led` directory and navigate to the `BLINKING_ON_OFF` command. Report, via an event, the blinking state has been set.
 
 To do so, replace:
 ```cpp
@@ -253,24 +242,6 @@ with:
 Save the file and in the terminal, run the following to verify your component is building correctly.
 
 ```bash
-fprime-util build
-```
-
-> Resolve any `fprime-util build` errors before continuing
-
-## Try it yourself
-
-Below is a table with tasks you should complete. These tasks require you to go back into the component's files and add the missing lines.
-
-| Task | Missing lines |
-|-------|-------------|
-| 1. Add an event named `BlinkIntervalSet` to the fpp. The event takes an argument of `U32` type to indicate the set interval. | `event BlinkIntervalSet(interval: U32) severity activity high format "LED blink interval set to {}"` |
-| 2. Add an event named `LedState` to the fpp. The event takes an argument of `Fw.On` type to indicate the LED has been driven to a different state. | `event LedState(on_off: Fw.On) severity activity low format "LED is {}"` |
-
-Save all files and in the terminal, run the following to verify your component is building correctly.
-
-```bash
-# In led-blinker/Components/Led
 fprime-util build
 ```
 
