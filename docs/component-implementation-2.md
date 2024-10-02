@@ -1,4 +1,4 @@
-# LED Blinker: Continuing Component Design and Implementation
+# LED Blinker: Component Design and Continued Implementation
 
 In this section, we will complete the component design and implementation by adding telemetry, parameters, and ports; and implementing the behavior of the `run` port, which is called by the rate-group.
 
