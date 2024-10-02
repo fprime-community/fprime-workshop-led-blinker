@@ -1,68 +1,30 @@
-# LED Blinker: Continuing Component Implementation
+# LED Blinker: Continuing Component Design and Implementation
 
-In this section, we will complete the component implementation by transmitting a telemetry channel, and implementing the behavior of the `run` port, which is called by the rate-group.
+In this section, we will complete the component design and implementation by adding telemetry, parameters, and ports; and implementing the behavior of the `run` port, which is called by the rate-group.
 
 > Refer back to the [component design](./component-implementation-1.md#component-design) for explanations of what each of these items is intended to do.
 
-## Telemetry Channels
+## Continued Component Design
+### Telemetry
 
-Telemetry channels represent the state of the system. Typically, telemetry channels are defined for any states that give crucial insight into the component's behavior. This tutorial defines two channels: one will be shown, and the other is left up to the student.
+Telemetry channels represent the state of the system. Typically, telemetry channels are defined for any states that give crucial insight into the component's behavior.
 
-Inside your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the events you added in the previous implementation section, add a telemetry channel of type `Fw.On` to report the blinking state.
+Inside your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the events you added in the previous section, add a telemetry channel of type `Fw.On` to report the blinking state.
 
 ```
         @ Telemetry channel to report blinking state.
         telemetry BlinkingState: Fw.On
 ```
 
-Save the file. In the terminal, run the following to verify your component is building correctly.
+### Do it Yourself
 
-```bash
-# In led-blinker/Components/Led
-fprime-util build
-```
+Below is a table with a task you must complete before moving on to the next section. This task require you to update the component's fpp file.
 
-> Fix any errors that occur before proceeding with the rest of the tutorial.
-
-Inside your `led-blinker/Components/Led` directory, open `Led.cpp`, and navigate to the `BLINKING_ON_OFF` command. Report the blinking state via the telemetry channel we just added. To do so, replace the following:
-
-```cpp
-      // TODO: Report the blinking state via a telemetry channel.
-      // NOTE: This telemetry channel will be added during the "Telemetry" exercise.
-```
-
-with the command to send the telemetry channel:
-
-```cpp
-this->tlmWrite_BlinkingState(on_off);
-```
-
-Save the file. In the terminal, run the following to verify your component is building correctly.
-
-```bash
-# In led-blinker/Components/Led
-fprime-util build
-```
-> Fix any errors that occur before proceeding with the rest of the tutorial.
-
-## Try it yourself
-
-Below is a table with tasks you should complete. These tasks require you to go back into the component's files and add the missing lines.
-
-| Task | Missing lines |
+| Task | Solution |
 |-------|-------------|
-| 1. Add a telemetry channel `LedTransitions` of type `U64` to Led.fpp. You will emit this telemetry channel in a further section. | `telemetry LedTransitions: U64` |
+| 1. Add a telemetry channel `LedTransitions` of type `U64` to Led.fpp. | `telemetry LedTransitions: U64` |
 
-Save all files and in the terminal, run the following to verify your component is building correctly.
-
-```bash
-# In led-blinker/Components/Led
-fprime-util build
-```
-
-> Resolve any `fprime-util build` errors before continuing
-
-## Parameters
+### Parameters
 
 Parameters are ground-controllable settings for the system. Parameters are used to set settings of the system that the ground may need to change at some point during the lifetime of the system. This tutorial sets one parameter, the blink interval.
 
@@ -75,55 +37,7 @@ In your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After t
         param BLINK_INTERVAL: U32 default 1
 ```
 
-Save the file. In the terminal, run the following to verify your component is building correctly.
-
-```bash
-# In led-blinker/Components/Led
-fprime-util build
-```
-
-In your `led-blinker/Components/Led` directory, open the file `Led.hpp` and add the following function signature in the `PRIVATE:` scope:
-
-```cpp
-    //! Emit parameter updated EVR
-    //!
-    void parameterUpdated(FwPrmIdType id //!< The parameter ID
-    ) override;
-```
-
-> This function is called when a parameter is updated via the generated SET command. Although the value is updated automatically, this function gives developers a chance to respond to changing parameters. This tutorial uses it to emit an updated Event.
-
-Save file and in your `led-blinker/Components/Led` directory, open `Led.cpp` and add the implementation for `parameterUpdated`:
-
-```cpp
-void Led ::parameterUpdated(FwPrmIdType id) {
-    Fw::ParamValid isValid;
-    switch(id) {
-        case PARAMID_BLINK_INTERVAL: {
-            // Read back the parameter value
-            U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
-            // NOTE: isValid is always VALID in parameterUpdated as it was just properly set
-            FW_ASSERT(isValid == Fw::ParamValid::VALID, isValid);
-
-            // Emit the blink interval set event
-            // TODO: Add an event with, severity activity high, named BlinkIntervalSet that takes in an argument of type U32 to report the blink interval.
-            break;
-        }
-        default:
-            FW_ASSERT(0, id);
-    }
-}
-```
-
-When you are done, save the file. In the terminal, run the following to verify your component is building correctly.
-
-```bash
-# In led-blinker/Components/Led
-fprime-util build
-```
-> Resolve any errors before continuing
-
-## Additional Ports
+### Additional Ports
 
 Any communication between components should be accomplished through F´ ports. Thus far we have been using a set of standard ports for handling Commands, Telemetry, Events, and Parameters. This section will add two specific ports to our component: input `run` to be called from the rate group, and output `gpioSet` to drive the GPIO driver.
 
@@ -139,6 +53,10 @@ In your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After t
 
 > Input and output ports can be given any name that you choose. In this example, we choose `run` and `gpioSet` since these names capture the behavioral intent. The types of `Svc.Sched` and `Drv.GpioWrite` are significant as these types must match the remote component.
 
+## Continued Component Implementation
+
+### Input Port Implementation
+
 In your `led-blinker/Components/Led` directory, run the following to autogenerate stub functions for the `run` input port we just added.
 
 ```bash
@@ -146,7 +64,7 @@ In your `led-blinker/Components/Led` directory, run the following to autogenerat
 fprime-util impl
 ```
 
-In your `led-blinker/Components/Led` directory, open `Led.template.hpp` file and copy this block over to `Led.hpp` as we did before
+In your `led-blinker/Components/Led` directory, open `Led.template.hpp` file and copy this block over to `Led.hpp`.
 
 ```cpp
     PRIVATE:
@@ -179,12 +97,13 @@ In your `led-blinker/Components/Led` directory, open `Led.template.cpp` file and
   }
 ```
 
+> Copying from the template file and pasting into your implementation file is a pattern in F Prime that is often used when adding new input ports or commands.
+
 The `run` port will be invoked repeatedly on each cycle of the rate group. Each invocation will call into the `run_handler` function such that the component may perform behavior on each cycle.
 
 Here we want to turn the LED on or OFF based on a cycle count to implement the "blinking" behavior we desire.
 
-
-In your `led-blinker/Components/Led` directory, open `Led.cpp`, copy in the following block of code, and try filling-in the TODOs based on what you learned and defined in previous sections.
+Copy the run_handler implementation below into your run_handler. Try filling in the TODOs based on what you learned and defined in previous sections.
 
 >Don't forget to read the code and comments to understand more about how to use F´.
 
@@ -257,19 +176,90 @@ In your `led-blinker/Components/Led` directory, open `Led.cpp`, copy in the foll
     }
 ```
 Save the file and in the terminal, run the following to verify your component is building correctly.
+
 ```bash
 # In led-blinker/Components/Led
 fprime-util build
 ```
-> Resolve any errors and finish any TODOs before continuing.
 
-## Try it yourself
+> Fix any errors that occur before proceeding with the rest of the tutorial.
 
-Below is a table with tasks you should complete. These tasks require you to go back into the component's code and add the missing function calls.
+### Command Implementation Continued
 
-| Task | Missing function calls |
+Inside your `led-blinker/Components/Led` directory, open `Led.cpp`, and navigate to the `BLINKING_ON_OFF` command. Report the blinking state via the telemetry channel we just added. To do so, replace the following:
+
+```cpp
+      // TODO: Report the blinking state via a telemetry channel.
+      // NOTE: This telemetry channel will be added during the "Telemetry" exercise.
+```
+
+with the function to send the telemetry channel:
+
+```cpp
+this->tlmWrite_BlinkingState(on_off);
+```
+
+Save the file. In the terminal, run the following to verify your component is building correctly.
+
+```bash
+# In led-blinker/Components/Led
+fprime-util build
+```
+
+> Fix any errors that occur before proceeding with the rest of the tutorial.
+
+### Parameter Implementation
+
+When ground updates a component's parameter, the user may want the component to react to the parameter update. F Prime provides a function called `parameterUpdated` where your component can react to each parameter update. Implementing `parameterUpdated` for a component is optional but we'll implement it for this tutorial.
+
+In your `led-blinker/Components/Led` directory, open the file `Led.hpp` and add the following function signature in the `PRIVATE:` scope:
+
+```cpp
+    //! Emit parameter updated EVR
+    //!
+    void parameterUpdated(FwPrmIdType id //!< The parameter ID
+    ) override;
+```
+
+> This function is called when a parameter is updated via the auto generated SET command. Although the value is updated automatically, this function gives developers a chance to respond to changing parameters. This tutorial uses it to emit an event.
+
+Save file and in your `led-blinker/Components/Led` directory, open `Led.cpp` and add the implementation for `parameterUpdated`:
+
+```cpp
+void Led ::parameterUpdated(FwPrmIdType id) {
+    Fw::ParamValid isValid;
+    switch(id) {
+        case PARAMID_BLINK_INTERVAL: {
+            // Read back the parameter value
+            U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
+            // NOTE: isValid is always VALID in parameterUpdated as it was just properly set
+            FW_ASSERT(isValid == Fw::ParamValid::VALID, isValid);
+
+            // Emit the blink interval set event
+            // TODO: Add an event with, severity activity high, named BlinkIntervalSet that takes in an argument of type U32 to report the blink interval.
+            break;
+        }
+        default:
+            FW_ASSERT(0, id);
+    }
+}
+```
+
+When you are done, save the file. In the terminal, run the following to verify your component is building correctly.
+
+```bash
+# In led-blinker/Components/Led
+fprime-util build
+```
+> Resolve any errors before continuing
+
+## Do it yourself
+
+Below is a table with tasks you must complete. These tasks require you to go back into the component's code and add the missing function calls.
+
+| Task | Solution |
 |-------|-------------|
-| Inside the `parameterUpdated` function, add a severity activity high event named `BlinkIntervalSet` that takes in an argument of type `U32` to report the blink interval. | Left as an exercise for the reader. |
+| Inside the `parameterUpdated` function, add an activity high event named `BlinkIntervalSet` that takes in an argument of type `U32` to report the blink interval. | Left as an exercise for the reader. |
 | Inside the `run_handler` port handler, get the `BLINK_INTERVAL` parameter value. | Left as an exercise for the reader. |
 | Inside the `run_handler` port handler, add a telemetry channel to report the number of LED transitions. | Left as an exercise for the reader. |
 | Inside the `run_handler` port handler, add an event to report the new LED state. There are two places to add this EVR. | Left as an exercise for the reader. |
