@@ -253,7 +253,7 @@ fprime-util build
 ```
 > Resolve any errors before continuing
 
-## Do it yourself
+### Do it Yourself
 
 Below is a table with tasks you must complete. These tasks require you to go back into the component's code and add the missing function calls.
 
