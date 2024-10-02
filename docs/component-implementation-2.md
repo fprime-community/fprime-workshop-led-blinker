@@ -262,7 +262,7 @@ Below is a table with tasks you must complete. These tasks require you to go bac
 | Inside the `parameterUpdated` function, add an activity high event named `BlinkIntervalSet` that takes in an argument of type `U32` to report the blink interval. | Left as an exercise for the reader. |
 | Inside the `run_handler` port handler, get the `BLINK_INTERVAL` parameter value. | Left as an exercise for the reader. |
 | Inside the `run_handler` port handler, add a telemetry channel to report the number of LED transitions. | Left as an exercise for the reader. |
-| Inside the `run_handler` port handler, add an event to report the new LED state. There are two places to add this EVR. | Left as an exercise for the reader. |
+| Inside the `run_handler` port handler, add an event to report the new LED state. There are two places to add this event. | Left as an exercise for the reader. |
 
 ## Conclusion
 
