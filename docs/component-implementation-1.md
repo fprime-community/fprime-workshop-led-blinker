@@ -166,7 +166,7 @@ Open `Led.hpp` in `led-blinker/Components/Led`. Add the following private member
 ```cpp
     Fw::On m_state; //! Keeps track if LED is on or off
     U64 m_transitions; //! The number of on/off transitions that have occurred from FSW boot up
-    U32 m_count; //! Keeps track of how many ticks the LED has been on for
+    U32 m_toggleCounter; //! Keeps track of how many ticks the LED has been on for
     bool m_blinking; //! Flag: if true then LED blinking will occur else no blinking will happen
 ```
 
@@ -176,7 +176,7 @@ Open `Led.cpp` in `led-blinker/Components/Led`, and initialize your member varia
 Led ::Led(const char* const compName) : LedComponentBase(compName),
     m_state(Fw::On::OFF),
     m_transitions(0),
-    m_count(0),
+    m_toggleCounter(0),
     m_blinking(false)
 {}
 ```
@@ -202,7 +202,7 @@ Now we will implement the behavior of the `BLINKING_ON_OFF` command. An initial 
         Fw::On on_off
     )
   {
-    this->m_count = 0; // Reset count on any successful command
+    this->m_toggleCounter = 0; // Reset count on any successful command
     this->m_blinking = Fw::On::ON == on_off; // Update blinking state
 
     // TODO: Add an event that reports the state we set to blinking.

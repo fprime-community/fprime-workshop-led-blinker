@@ -108,72 +108,45 @@ Copy the run_handler implementation below into your run_handler. Try filling in 
 >Don't forget to read the code and comments to understand more about how to use F´.
 
 ```cpp
-    void Led ::
-        run_handler(
-            const NATIVE_INT_TYPE portNum,
-            NATIVE_UINT_TYPE context)
-    {
-      // Read back the parameter value
-      Fw::ParamValid isValid;
-      U32 interval = 0; // TODO: Get BLINK_INTERVAL parameter value
-    
-      // Force interval to be 0 when invalid or not set
-      interval = ((Fw::ParamValid::INVALID == isValid) || (Fw::ParamValid::UNINIT == isValid)) ? 0 : interval;
-    
-      // Only perform actions when set to blinking
-      bool is_blinking = this->m_blinking;
-      if (is_blinking)
-      {   
-          // Check for transitions
-          Fw::On new_state = this->m_state;
-          switch(this->m_state) {
-            case Fw::On::OFF:
-              if(0 == this->m_count) {
-                new_state = Fw::On::ON;
-              }
-              break;
-            case Fw::On::ON: 
-              if((interval / 2) == this->m_count) {
-                new_state = Fw::On::OFF;
-              }
-              break;
-            default:
-              FW_ASSERT(0, this->m_blinking);
-          }   
-          
-          // A transition has occurred
-          if (this->m_state != new_state)
-          {   
-              this->m_transitions = this->m_transitions + 1;
-              // TODO: Add an channel to report the number of LED transitions (this->m_transitions)
-              
-              // Port may not be connected, so check before sending output
-              if (this->isConnected_gpioSet_OutputPort(0))
-              {   
-                  this->gpioSet_out(0, (Fw::On::ON == new_state) ? Fw::Logic::HIGH : Fw::Logic::LOW);
-              }
-              
-              // TODO: Add an event to report the LED state (new_state).
-              this->m_state = new_state;
-          }
-          
-          this->m_count = ((this->m_count + 1) >= interval) ? 0 : (this->m_count + 1);
-      }
-      else
-      {
-        if(this->m_state == Fw::On::ON)
-        {
-          // Port may not be connected, so check before sending output
-          if (this->isConnected_gpioSet_OutputPort(0))
-          {
-            this->gpioSet_out(0, Fw::Logic::LOW);
-          }
+void Led ::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
+    // Read back the parameter value
+    Fw::ParamValid isValid;
+    U32 interval = 0; // TODO: Get BLINK_INTERVAL parameter value
 
-          this->m_state = Fw::On::OFF;
-          // TODO: Add an event to report the LED state (this->m_state).
+    // Force interval to be 0 when invalid or not set
+    interval = ((Fw::ParamValid::INVALID == isValid) || (Fw::ParamValid::UNINIT == isValid)) ? 0 : interval;
+
+    // Only perform actions when set to blinking
+    if (this->m_blinking && (interval != 0)) {
+        // If toggling state
+        if (this->m_toggleCounter == 0) {
+            this->m_state = (this->m_state == Fw::On::ON) ? Fw::On::OFF : Fw::On::ON;
+            this->m_transitions = this->m_transitions + 1;
+            // TODO: Add an channel to report the number of LED transitions (this->m_transitions)
+
+            // Port may not be connected, so check before sending output
+            if (this->isConnected_gpioSet_OutputPort(0)) {
+                this->gpioSet_out(0, (Fw::On::ON == this->m_state) ? Fw::Logic::HIGH : Fw::Logic::LOW);
+            }
+
+            // TODO: Add an event to report the LED state (this->m_state).
         }
-      }
+
+        this->m_toggleCounter = (this->m_toggleCounter + 1) % interval;
     }
+    // We are not blinking
+    else {
+        if (this->m_state == Fw::On::ON) {
+            // Port may not be connected, so check before sending output
+            if (this->isConnected_gpioSet_OutputPort(0)) {
+                this->gpioSet_out(0, Fw::Logic::LOW);
+            }
+
+            this->m_state = Fw::On::OFF;
+            // TODO: Add an event to report the LED state (this->m_state).
+        }
+    }
+}
 ```
 Save the file and in the terminal, run the following to verify your component is building correctly.
 

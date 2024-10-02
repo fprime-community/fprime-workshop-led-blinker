@@ -14,7 +14,7 @@ namespace Components {
 // ----------------------------------------------------------------------
 
 Led ::Led(const char* const compName)
-    : LedComponentBase(compName), m_state(Fw::On::OFF), m_transitions(0), m_count(0), m_blinking(false) {}
+    : LedComponentBase(compName), m_state(Fw::On::OFF), m_transitions(0), m_toggleCounter(0), m_blinking(false) {}
 
 Led ::~Led() {}
 
@@ -50,7 +50,7 @@ void Led ::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) 
     // Only perform actions when set to blinking
     if (this->m_blinking && (interval != 0)) {
         // If toggling state
-        if (this->m_count == 0) {
+        if (this->m_toggleCounter == 0) {
             this->m_state = (this->m_state == Fw::On::ON) ? Fw::On::OFF : Fw::On::ON;
             this->m_transitions = this->m_transitions + 1;
             this->tlmWrite_LedTransitions(this->m_transitions);
@@ -63,7 +63,7 @@ void Led ::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) 
             this->log_ACTIVITY_LO_LedState(this->m_state);
         }
 
-        this->m_count = (this->m_count + 1) % interval;
+        this->m_toggleCounter = (this->m_toggleCounter + 1) % interval;
     }
     // We are not blinking
     else {
@@ -84,7 +84,7 @@ void Led ::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) 
 // ----------------------------------------------------------------------
 
 void Led ::BLINKING_ON_OFF_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Fw::On on_off) {
-    this->m_count = 0;                        // Reset count on any successful command
+    this->m_toggleCounter = 0;                // Reset count on any successful command
     this->m_blinking = Fw::On::ON == on_off;  // Update blinking state
     // NOTE: This event will be added during the "Events" exercise.
     this->log_ACTIVITY_HI_SetBlinkingState(on_off);
