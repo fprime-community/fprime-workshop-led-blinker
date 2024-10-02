@@ -117,7 +117,7 @@ Inside your `led-blinker/Components/Led` directory, open the `Led.fpp` file. Aft
             format "Set blinking state to {}."
 ```
 
-### Do it yourself
+### Do it Yourself
 
 Below is a table with tasks you must complete before moving on to the next section. These tasks require you to update the component's fpp file.
 
