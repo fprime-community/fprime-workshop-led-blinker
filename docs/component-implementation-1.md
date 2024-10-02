@@ -157,7 +157,7 @@ fprime-util build
 
 Fix any errors that occur before proceeding with the rest of the tutorial.
 
-## Component State
+### Component State
 
 Many of the behaviors of the component discussed in the [Component Design](#component-design) section require the tracking of some state. Let us set up and initialize that state.
 
@@ -190,7 +190,7 @@ fprime-util build
 
 Now that the member variables are set up, we can continue into the component implementation.
 
-## Command Implementation
+### Command
 
 Now we will implement the behavior of the `BLINKING_ON_OFF` command. An initial implementation is shown below and may be copied into `Led.cpp` in-place of the BLINKING_ON_OFF command stub.
 
@@ -224,7 +224,7 @@ fprime-util build
 
 > Fix any errors that occur before proceeding with the rest of the tutorial.
 
-## Events
+### Events
 
 Open `Led.cpp` in your `led-blinker/Components/Led` directory and navigate to the `BLINKING_ON_OFF` command. Report, via an event, the blinking state has been set.
 
