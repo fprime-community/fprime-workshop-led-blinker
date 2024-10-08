@@ -108,4 +108,4 @@ fprime-gds  --ip-client
 
 This tutorial will return to the component implementation before finishing the integration of the component and testing on hardware.
 
-### Next Step: [Component Design and Continued Implementation](./component-implementation-2.md).
+### Next Step: [Component Design and Implementation, Continued](./component-implementation-2.md).

@@ -102,6 +102,9 @@ The first test we will write is to test that the LED doesn't blink when blinking
 Add the following code to the `testBlinking` method in `led-blinker/Components/Led/test/ut/LedTester.cpp`:
 
 ```c++
+// This test will make use of parameters. So need to load them.
+this->component.loadParameters();
+
 // Ensure LED stays off when blinking is disabled
 // The Led component defaults to blinking off
 this->invoke_to_run(0,0); // invoke the 'run' port to simulate running one cycle

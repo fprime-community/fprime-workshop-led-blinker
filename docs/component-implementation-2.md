@@ -1,4 +1,4 @@
-# LED Blinker: Component Design and Continued Implementation
+# LED Blinker: Component Design and Implementation, Continued
 
 In this section, we will complete the component design and implementation by adding telemetry, parameters, and ports; and implementing the behavior of the `run` port, which is called by the rate-group.
 
@@ -110,26 +110,27 @@ Copy the run_handler implementation below into your run_handler. Try filling in 
 ```cpp
 void Led ::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
     // Read back the parameter value
-    Fw::ParamValid isValid;
-    U32 interval = 0; // TODO: Get BLINK_INTERVAL parameter value
+    Fw::ParamValid isValid = Fw::ParamValid::INVALID;
+    U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
 
     // Force interval to be 0 when invalid or not set
-    interval = ((Fw::ParamValid::INVALID == isValid) || (Fw::ParamValid::UNINIT == isValid)) ? 0 : interval;
+    interval = ((isValid == Fw::ParamValid::INVALID) || (isValid == Fw::ParamValid::UNINIT)) ? 0 : interval;
 
     // Only perform actions when set to blinking
     if (this->m_blinking && (interval != 0)) {
         // If toggling state
         if (this->m_toggleCounter == 0) {
+            // Toggle state
             this->m_state = (this->m_state == Fw::On::ON) ? Fw::On::OFF : Fw::On::ON;
-            this->m_transitions = this->m_transitions + 1;
-            // TODO: Add an channel to report the number of LED transitions (this->m_transitions)
+            this->m_transitions++;
+            // TODO: Report the number of LED transitions (this->m_transitions) on channel LedTransitions
 
             // Port may not be connected, so check before sending output
             if (this->isConnected_gpioSet_OutputPort(0)) {
                 this->gpioSet_out(0, (Fw::On::ON == this->m_state) ? Fw::Logic::HIGH : Fw::Logic::LOW);
             }
 
-            // TODO: Add an event to report the LED state (this->m_state).
+            // TODO: Emit an event LedState to report the LED state (this->m_state).
         }
 
         this->m_toggleCounter = (this->m_toggleCounter + 1) % interval;
@@ -143,12 +144,12 @@ void Led ::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) 
             }
 
             this->m_state = Fw::On::OFF;
-            // TODO: Add an event to report the LED state (this->m_state).
+            // TODO: Emit an event LedState to report the LED state (this->m_state).
         }
     }
 }
 ```
-Save the file and in the terminal, run the following to verify your component is building correctly.
+In the terminal, run the following to verify your component is building correctly.
 
 ```bash
 # In led-blinker/Components/Led
@@ -172,7 +173,7 @@ with the function to send the telemetry channel:
 this->tlmWrite_BlinkingState(on_off);
 ```
 
-Save the file. In the terminal, run the following to verify your component is building correctly.
+In the terminal, run the following to verify your component is building correctly.
 
 ```bash
 # In led-blinker/Components/Led
@@ -204,21 +205,22 @@ void Led ::parameterUpdated(FwPrmIdType id) {
     switch(id) {
         case PARAMID_BLINK_INTERVAL: {
             // Read back the parameter value
-            U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
+            const U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
             // NOTE: isValid is always VALID in parameterUpdated as it was just properly set
             FW_ASSERT(isValid == Fw::ParamValid::VALID, isValid);
 
             // Emit the blink interval set event
-            // TODO: Add an event with, severity activity high, named BlinkIntervalSet that takes in an argument of type U32 to report the blink interval.
+            // TODO: Emit an event with, severity activity high, named BlinkIntervalSet that takes in an argument of type U32 to report the blink interval.
             break;
         }
         default:
-            FW_ASSERT(0, id);
+            FW_ASSERT(0, static_cast<FwAssertArgType>(id));
+            break;
     }
 }
 ```
 
-When you are done, save the file. In the terminal, run the following to verify your component is building correctly.
+In the terminal, run the following to verify your component is building correctly.
 
 ```bash
 # In led-blinker/Components/Led
@@ -230,12 +232,11 @@ fprime-util build
 
 Below is a table with tasks you must complete. These tasks require you to go back into the component's code and add the missing function calls.
 
-| Task | Solution |
-|-------|-------------|
-| Inside the `parameterUpdated` function, add an activity high event named `BlinkIntervalSet` that takes in an argument of type `U32` to report the blink interval. | Left as an exercise for the reader. |
-| Inside the `run_handler` port handler, get the `BLINK_INTERVAL` parameter value. | Left as an exercise for the reader. |
-| Inside the `run_handler` port handler, add a telemetry channel to report the number of LED transitions. | Left as an exercise for the reader. |
-| Inside the `run_handler` port handler, add an event to report the new LED state. There are two places to add this event. | Left as an exercise for the reader. |
+| Task |
+|------|
+| Inside the `parameterUpdated` function, emit an activity high event named `BlinkIntervalSet` that takes in an argument of type `U32` to report the blink interval. |
+| Inside the `run_handler` port handler, report the number of LED transitions (this->m_transitions) on channel LedTransitions. |
+| Inside the `run_handler` port handler, emit an event LedState to report the LED state (this->m_state). There are two places to add this event. |
 
 ## Conclusion
 
