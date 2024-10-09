@@ -22,7 +22,7 @@ Below is a table with a task you must complete before moving on to the next sect
 
 | Task | Solution |
 |-------|-------------|
-| 1. Add a telemetry channel `LedTransitions` of type `U64` to Led.fpp. | `telemetry LedTransitions: U64` |
+| 1. Add a telemetry channel `LedTransitions` of type `U64` to Led.fpp. | <details><summary>Answer</summary>`telemetry LedTransitions: U64`</details> |
 
 ### Parameters
 

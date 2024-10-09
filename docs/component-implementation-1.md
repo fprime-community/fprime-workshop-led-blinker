@@ -123,8 +123,8 @@ Below is a table with tasks you must complete before moving on to the next secti
 
 | Task | Solution |
 |-------|-------------|
-| 1. Add an activity high event named `BlinkIntervalSet` to the fpp. The event takes an argument of `U32` type to indicate the set interval. | `event BlinkIntervalSet(interval: U32) severity activity high format "LED blink interval set to {}"` |
-| 2. Add an activity low event named `LedState` to the fpp. The event takes an argument of `Fw.On` type to indicate the LED has been driven to a different state. | `event LedState(on_off: Fw.On) severity activity low format "LED is {}"` |
+| 1. Add an activity high event named `BlinkIntervalSet` to the fpp. The event takes an argument of `U32` type to indicate the set interval. | <details><summary>Answer</summary>`event BlinkIntervalSet(interval: U32) severity activity high format "LED blink interval set to {}"`</details> |
+| 2. Add an activity low event named `LedState` to the fpp. The event takes an argument of `Fw.On` type to indicate the LED has been driven to a different state. | <details><summary>Answer</summary>`event LedState(on_off: Fw.On) severity activity low format "LED is {}"`</details> |
 
 
 You have completed the Command and Event design phase. We'll move on to the Command and Event implementation phase.
