@@ -184,15 +184,9 @@ Now that the member variables are set up, we can continue into the component imp
 Now we will implement the behavior of the `BLINKING_ON_OFF` command. An initial implementation is shown below and may be copied into `Led.cpp` in-place of the BLINKING_ON_OFF command stub.
 
 ```cpp
-  void Led ::
-    BLINKING_ON_OFF_cmdHandler(
-        const FwOpcodeType opCode,
-        const U32 cmdSeq,
-        Fw::On onOff
-    )
-  {
-    this->m_toggleCounter = 0; // Reset count on any successful command
-    this->m_blinking = Fw::On::ON == onOff; // Update blinking state
+void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, Fw::On onOff) {
+    this->m_toggleCounter = 0;               // Reset count on any successful command
+    this->m_blinking = Fw::On::ON == onOff;  // Update blinking state
 
     // TODO: Emit an event SetBlinkingState to report the blinking state (onOff).
     // NOTE: This event will be added during the "Events" exercise.
@@ -201,8 +195,8 @@ Now we will implement the behavior of the `BLINKING_ON_OFF` command. An initial 
     // NOTE: This telemetry channel will be added during the "Telemetry" exercise.
 
     // Provide command response
-    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
-  }
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
 ```
 Run the following command in the terminal to verify your component is building correctly.
 
@@ -225,7 +219,7 @@ To do so, replace:
 
 with:
 ```cpp
-      this->log_ACTIVITY_HI_SetBlinkingState(onOff);
+    this->log_ACTIVITY_HI_SetBlinkingState(onOff);
 ```
 
 Run the following to verify your component is building correctly.
@@ -238,6 +232,24 @@ fprime-util build
 
 ## Conclusion
 
-Congratulations!  You have now implemented some basic functionality in a new F´ component. Before finishing the implementation, let's take a break and try running the above command through the ground system. This will require integrating the component into the system topology, which we will get into in the next section.
+Congratulations!  You have now implemented some basic functionality in a new F´ component. Your command should look like this
+```cpp
+void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, Fw::On onOff) {
+    this->m_toggleCounter = 0;               // Reset count on any successful command
+    this->m_blinking = Fw::On::ON == onOff;  // Update blinking state
+
+    this->log_ACTIVITY_HI_SetBlinkingState(onOff);
+
+    // TODO: Report the blinking state (onOff) on channel BlinkingState.
+    // NOTE: This telemetry channel will be added during the "Telemetry" exercise.
+
+    // Provide command response
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+```
+
+Before finishing the implementation, let's take a break and try running the above command through the ground system. This will require integrating the component into the system topology, which we will get into in the next section.
+
+> NOTE: The last TODO in the `BLINKING_ON_OFF` command handler will be addressed in a future section. 
 
 ### Next Step: [Initial Component Integration](./initial-integration.md).

@@ -67,34 +67,28 @@ fprime-util impl
 In your `led-blinker/Components/Led` directory, open `Led.template.hpp` file and copy this block over to `Led.hpp`.
 
 ```cpp
-    PRIVATE:
+  PRIVATE:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
 
-      // ----------------------------------------------------------------------
-      // Handler implementations for user-defined typed input ports
-      // ----------------------------------------------------------------------
-
-      //! Handler implementation for run
-      //!
-      void run_handler(
-          const NATIVE_INT_TYPE portNum, //!< The port number
-          NATIVE_UINT_TYPE context //!< The call order
-      ) override;
+    //! Handler implementation for run
+    //!
+    //! Port receiving calls from the rate group
+    void run_handler(NATIVE_INT_TYPE portNum,  //!< The port number
+                     NATIVE_UINT_TYPE context  //!< The call order
+                     ) override;
 ```
 
 In your `led-blinker/Components/Led` directory, open `Led.template.cpp` file and copy this block over to `Led.cpp`.
 ```cpp
-  // ----------------------------------------------------------------------
-  // Handler implementations for user-defined typed input ports
-  // ----------------------------------------------------------------------
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
 
-  void Led ::
-    run_handler(
-        const NATIVE_INT_TYPE portNum,
-        NATIVE_UINT_TYPE context
-    )
-  {
+void Led ::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
     // TODO
-  }
+}
 ```
 
 > Copying from the template file and pasting into your implementation file is a pattern in F Prime that is often used when adding new input ports or commands.
@@ -108,7 +102,7 @@ Copy the run_handler implementation below into your run_handler. Try filling in 
 >Don't forget to read the code and comments to understand more about how to use F´.
 
 ```cpp
-void Led ::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
+void Led ::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
     // Read back the parameter value
     Fw::ParamValid isValid = Fw::ParamValid::INVALID;
     U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
@@ -170,7 +164,7 @@ Inside your `led-blinker/Components/Led` directory, open `Led.cpp`, and navigate
 with the function to send the telemetry channel:
 
 ```cpp
-this->tlmWrite_BlinkingState(onOff);
+    this->tlmWrite_BlinkingState(onOff);
 ```
 
 In the terminal, run the following to verify your component is building correctly.
@@ -191,8 +185,8 @@ In your `led-blinker/Components/Led` directory, open the file `Led.hpp` and add 
 ```cpp
     //! Emit parameter updated EVR
     //!
-    void parameterUpdated(FwPrmIdType id //!< The parameter ID
-    ) override;
+    void parameterUpdated(FwPrmIdType id  //!< The parameter ID
+                          ) override;
 ```
 
 > This function is called when a parameter is updated via the auto generated SET command. Although the value is updated automatically, this function gives developers a chance to respond to changing parameters. This tutorial uses it to emit an event.
@@ -202,7 +196,7 @@ Save file and in your `led-blinker/Components/Led` directory, open `Led.cpp` and
 ```cpp
 void Led ::parameterUpdated(FwPrmIdType id) {
     Fw::ParamValid isValid;
-    switch(id) {
+    switch (id) {
         case PARAMID_BLINK_INTERVAL: {
             // Read back the parameter value
             const U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
@@ -210,7 +204,8 @@ void Led ::parameterUpdated(FwPrmIdType id) {
             FW_ASSERT(isValid == Fw::ParamValid::VALID, isValid);
 
             // Emit the blink interval set event
-            // TODO: Emit an event with, severity activity high, named BlinkIntervalSet that takes in an argument of type U32 to report the blink interval.
+            // TODO: Emit an event with, severity activity high, named BlinkIntervalSet that takes in an argument of
+            // type U32 to report the blink interval.
             break;
         }
         default:
