@@ -4,7 +4,7 @@ module Components {
 
         @ Command to turn on or off the blinking LED
         async command BLINKING_ON_OFF(
-                on_off: Fw.On @< Indicates whether the blinking should be on or off
+                onOff: Fw.On @< Indicates whether the blinking should be on or off
         )
 
         @ Telemetry channel to report blinking state.
@@ -19,7 +19,7 @@ module Components {
             format "Set blinking state to {}."
 
         @ Event logged when the LED turns on or off
-        event LedState(on_off: Fw.On) \
+        event LedState(onOff: Fw.On) \
             severity activity low \
             format "LED is {}"
 
