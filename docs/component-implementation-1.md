@@ -83,7 +83,7 @@ Your new component is located in the directory `led-blinker/Components/Led`.
 
 ### Commands
 
-Commands are used to command the component from the ground system or a command sequencer. We will add a command named `BLINKING_ON_OFF` to turn on or off the blinking LED. This command will take in an argument named `on_off` of type `Fw.On`.
+Commands are used to command the component from the ground system or a command sequencer. We will add a command named `BLINKING_ON_OFF` to turn on or off the blinking LED. This command will take in an argument named `onOff` of type `Fw.On`.
 
 
 Inside your `led-blinker/Components/Led` directory, open the file `Led.fpp` and search for the following:
@@ -100,7 +100,7 @@ Replace that block with the following:
 ```
         @ Command to turn on or off the blinking LED
         async command BLINKING_ON_OFF(
-            on_off: Fw.On @< Indicates whether the blinking should be on or off
+            onOff: Fw.On @< Indicates whether the blinking should be on or off
         )
 ```
 
@@ -124,7 +124,7 @@ Below is a table with tasks you must complete before moving on to the next secti
 | Task | Solution |
 |-------|-------------|
 | 1. Add an activity high event named `BlinkIntervalSet` to the fpp. The event takes an argument of `U32` type to indicate the set interval. | <details><summary>Answer</summary>`event BlinkIntervalSet(interval: U32) severity activity high format "LED blink interval set to {}"`</details> |
-| 2. Add an activity low event named `LedState` to the fpp. The event takes an argument of `Fw.On` type to indicate the LED has been driven to a different state. | <details><summary>Answer</summary>`event LedState(on_off: Fw.On) severity activity low format "LED is {}"`</details> |
+| 2. Add an activity low event named `LedState` to the fpp. The event takes an argument of `Fw.On` type to indicate the LED has been driven to a different state. | <details><summary>Answer</summary>`event LedState(onOff: Fw.On) severity activity low format "LED is {}"`</details> |
 
 
 You have completed the Command and Event design phase. We'll move on to the Command and Event implementation phase.
@@ -188,16 +188,16 @@ Now we will implement the behavior of the `BLINKING_ON_OFF` command. An initial 
     BLINKING_ON_OFF_cmdHandler(
         const FwOpcodeType opCode,
         const U32 cmdSeq,
-        Fw::On on_off
+        Fw::On onOff
     )
   {
     this->m_toggleCounter = 0; // Reset count on any successful command
-    this->m_blinking = Fw::On::ON == on_off; // Update blinking state
+    this->m_blinking = Fw::On::ON == onOff; // Update blinking state
 
-    // TODO: Add an event that reports the state we set to blinking.
+    // TODO: Emit an event SetBlinkingState to report the blinking state (onOff).
     // NOTE: This event will be added during the "Events" exercise.
 
-    // TODO: Report the blinking state via a telemetry channel.
+    // TODO: Report the blinking state (onOff) on channel BlinkingState.
     // NOTE: This telemetry channel will be added during the "Telemetry" exercise.
 
     // Provide command response
@@ -219,13 +219,13 @@ Open `Led.cpp` in your `led-blinker/Components/Led` directory and navigate to th
 
 To do so, replace:
 ```cpp
-      // TODO: Add an event that reports the state we set to blinking.
+      // TODO: Emit an event SetBlinkingState to report the blinking state (onOff).
       // NOTE: This event will be added during the "Events" exercise.
 ```
 
 with:
 ```cpp
-      this->log_ACTIVITY_HI_SetBlinkingState(on_off);
+      this->log_ACTIVITY_HI_SetBlinkingState(onOff);
 ```
 
 Run the following to verify your component is building correctly.

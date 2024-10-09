@@ -163,14 +163,14 @@ fprime-util build
 Inside your `led-blinker/Components/Led` directory, open `Led.cpp`, and navigate to the `BLINKING_ON_OFF` command. Report the blinking state via the telemetry channel we just added. To do so, replace the following:
 
 ```cpp
-      // TODO: Report the blinking state via a telemetry channel.
+      // TODO: Report the blinking state (onOff) on channel BlinkingState.
       // NOTE: This telemetry channel will be added during the "Telemetry" exercise.
 ```
 
 with the function to send the telemetry channel:
 
 ```cpp
-this->tlmWrite_BlinkingState(on_off);
+this->tlmWrite_BlinkingState(onOff);
 ```
 
 In the terminal, run the following to verify your component is building correctly.
