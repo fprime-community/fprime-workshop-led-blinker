@@ -72,22 +72,22 @@ First, we will turn blinking on, verify that we receive a `SetBlinkingState` eve
 Add the following to the `test_blinking()` method:
 
 ```python
-# Send command to enable blinking, then assert expected events are emitted
-blink_start_evr = fprime_test_api.get_event_pred("led.SetBlinkingState", ["ON"])
-led_on_evr = fprime_test_api.get_event_pred("led.LedState", ["ON"])
-led_off_evr = fprime_test_api.get_event_pred("led.LedState", ["OFF"])
+    # Send command to enable blinking, then assert expected events are emitted
+    blink_start_evr = fprime_test_api.get_event_pred("led.SetBlinkingState", ["ON"])
+    led_on_evr = fprime_test_api.get_event_pred("led.LedState", ["ON"])
+    led_off_evr = fprime_test_api.get_event_pred("led.LedState", ["OFF"])
 
-fprime_test_api.send_and_assert_event(
-    "led.BLINKING_ON_OFF",
-    args=["ON"],
-    events=[blink_start_evr, led_on_evr, led_off_evr, led_on_evr],
-)
+    fprime_test_api.send_and_assert_event(
+        "led.BLINKING_ON_OFF",
+        args=["ON"],
+        events=[blink_start_evr, led_on_evr, led_off_evr, led_on_evr],
+    )
 
-# Send command to stop blinking, then assert blinking stops
-#TODO: Define blink_stop_evr
-fprime_test_api.send_and_assert_event(
-    "led.BLINKING_ON_OFF", args=["OFF"], events=[blink_stop_evr]
-)
+    # Send command to stop blinking, then assert blinking stops
+    #TODO: Define blink_stop_evr
+    fprime_test_api.send_and_assert_event(
+        "led.BLINKING_ON_OFF", args=["OFF"], events=[blink_stop_evr]
+    )
 ```
 
 Now, run `pytest` and verify the new test passes. Open the fprime GDS webpage and see if the expected events from the test appear in the event viewer.
@@ -101,9 +101,9 @@ Next, we will check that the BlinkingState telemetry channel is set ON and OFF w
 In `test_blinking()`, after turning blinking on, add the following the check that BlinkingState is set ON.
 
 ```python
-# Assert that blink command sets blinking state on
-blink_state_on_tlm = fprime_test_api.get_telemetry_pred("led.BlinkingState", "ON")
-fprime_test_api.assert_telemetry(blink_state_on_tlm)
+    # Assert that blink command sets blinking state on
+    blink_state_on_tlm = fprime_test_api.get_telemetry_pred("led.BlinkingState", "ON")
+    fprime_test_api.assert_telemetry(blink_state_on_tlm)
 ```
 
 Run `pytest` and make sure the new assertion passes.
@@ -133,14 +133,14 @@ To check that blinking stops after turning blinking off, we can check that the `
 Add the following assertion after disabling blinking:
 
 ```python
-time.sleep(1)  # Wait one second to let any in-progress telemetry be sent
-# Save reference to current telemetry history so we can search against future telemetry
-telem_after_blink_off = fprime_test_api.telemetry_history.size()
-time.sleep(2)  # Wait to receive telemetry after stopping blinking
-# Assert that blinking has stopped and that LedTransitions is no longer updating
-fprime_test_api.assert_telemetry_count(
-    0, "led.LedTransitions", start=telem_after_blink_off
-)
+    time.sleep(1)  # Wait one second to let any in-progress telemetry be sent
+    # Save reference to current telemetry history so we can search against future telemetry
+    telem_after_blink_off = fprime_test_api.telemetry_history.size()
+    time.sleep(2)  # Wait to receive telemetry after stopping blinking
+    # Assert that blinking has stopped and that LedTransitions is no longer updating
+    fprime_test_api.assert_telemetry_count(
+        0, "led.LedTransitions", start=telem_after_blink_off
+    )
 ```
 
 Because telemetry is sent once per second, some outdated telemetry may be sent after disabling blinking.
@@ -151,23 +151,23 @@ Finally, while blinking is enabled, verify that LedTransitions increments over t
 To verify this, `fprime_test_api.assert_telemetry_count` can be used to wait for and collect a number of LedTransitions values.
 
 ```python
-# Assert that the LedTransitions channel increments
-results = fprime_test_api.assert_telemetry_count(
-    predicates.greater_than(2), "led.LedTransitions", timeout=4
-)
-ascending = True
-prev = None
-for res in results:
-    if prev is not None:
-        if not res.get_val() > prev.get_val():
-            ascending = False
-            fprime_test_api.log(
-                f"led.LedTransitions not in ascending order: First ({prev.get_val()}) Second ({res.get_val()})"
-            )
-    prev = res
-assert fprime_test_api.test_assert(
-    ascending, "Expected all led.LedTransitions updates to ascend.", True
-)
+    # Assert that the LedTransitions channel increments
+    results = fprime_test_api.assert_telemetry_count(
+        predicates.greater_than(2), "led.LedTransitions", timeout=4
+    )
+    ascending = True
+    prev = None
+    for res in results:
+        if prev is not None:
+            if not res.get_val() > prev.get_val():
+                ascending = False
+                fprime_test_api.log(
+                    f"led.LedTransitions not in ascending order: First ({prev.get_val()}) Second ({res.get_val()})"
+                )
+        prev = res
+    assert fprime_test_api.test_assert(
+        ascending, "Expected all led.LedTransitions updates to ascend.", True
+    )
 ```
 
 ### Next Step: [Conclusion](./conclusion.md).
