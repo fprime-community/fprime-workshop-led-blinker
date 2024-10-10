@@ -5,9 +5,9 @@
 //
 // ======================================================================
 // Provides access to autocoded functions
-#include <LedBlinker/Top/LedBlinkerPacketsAc.hpp>
-#include <LedBlinker/Top/LedBlinkerTopologyAc.hpp>
+// #include <LedBlinker/Top/LedBlinkerPacketsAc.hpp>
 #include <Fw/Logger/Logger.hpp>
+#include <LedBlinker/Top/LedBlinkerTopologyAc.hpp>
 
 // Necessary project-specified types
 #include <Fw/Types/MallocAllocator.hpp>
@@ -131,7 +131,7 @@ void setupTopology(const TopologyState& state) {
     // Project-specific component configuration. Function provided above. May be inlined, if desired.
     configureTopology();
     // Autocoded parameter loading. Function provided by autocoder.
-    // loadParameters();
+    loadParameters();
     // Autocoded task kick-off (active components). Function provided by autocoder.
     startTasks(state);
     // Initialize socket client communication if and only if there is a valid specification
@@ -155,7 +155,7 @@ void startSimulatedCycle(U32 milliseconds) {
     // Main loop
     while (cycling) {
         LedBlinker::blockDrv.callIsr();
-        Os::Task::delay(Fw::Time(milliseconds/1000, milliseconds % 1000));
+        Os::Task::delay(Fw::Time(milliseconds / 1000, milliseconds % 1000));
 
         cycleLock.lock();
         cycling = cycleFlag;
