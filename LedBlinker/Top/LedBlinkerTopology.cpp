@@ -111,9 +111,9 @@ void configureTopology() {
 
     // Note: Uncomment when using Svc:TlmPacketizer
     // tlmSend.setPacketList(LedBlinkerPacketsPkts, LedBlinkerPacketsIgnore, 1);
-    bool gpio_success = gpioDriver.open(13, Drv::LinuxGpioDriver::GpioDirection::GPIO_OUT);
-    if (!gpio_success) {
-        Fw::Logger::log("[ERROR] Failed to open GPIO pin\n");
+    Os::File::Status gpio_success = gpioDriver.open("/dev/gpiochip0", 13, Drv::LinuxGpioDriver::GpioConfiguration::GPIO_OUTPUT);
+    if (gpio_success != Os::File::Status::OP_OK) {
+        Fw::Logger::log("[ERROR] Failed to open GPIO pin: %d\n", gpio_success);
     }
 }
 
