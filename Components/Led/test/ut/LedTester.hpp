@@ -50,8 +50,8 @@ class LedTester : public LedGTestBase {
 
     //! Handler for from_gpioSet
     //!
-    void from_gpioSet_handler(const NATIVE_INT_TYPE portNum, /*!< The port number*/
-                              const Fw::Logic& state);
+    Drv::GpioStatus from_gpioSet_handler(const NATIVE_INT_TYPE portNum, /*!< The port number*/
+                                         const Fw::Logic& state);
 
   private:
     // ----------------------------------------------------------------------
