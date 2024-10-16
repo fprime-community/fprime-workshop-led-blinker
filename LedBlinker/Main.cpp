@@ -14,7 +14,6 @@
 // Used for printf functions
 #include <cstdlib>
 
-
 /**
  * \brief print command line help message
  *
