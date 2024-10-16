@@ -13,6 +13,8 @@
 #include <getopt.h>
 // Used for printf functions
 #include <cstdlib>
+// Os Console
+#include <Os/Console.hpp>
 
 /**
  * \brief print command line help message
