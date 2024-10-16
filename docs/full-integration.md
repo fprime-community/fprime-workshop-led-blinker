@@ -43,11 +43,19 @@ So far the GPIO driver has been instantiated and wired, but has not been told wh
 
 This is done by adding the following at the end of the `configureTopology` function defined in `led-blinker/LedBlinker/Top/LedBlinkerTopology.cpp`:
 
-```
-    bool gpio_success = gpioDriver.open(13, Drv::LinuxGpioDriver::GpioDirection::GPIO_OUT);
-    if (!gpio_success) {
-        Fw::Logger::logMsg("[ERROR] Failed to open GPIO pin\n");
+```c++
+    Os::File::Status status =
+        gpioDriver.open("/dev/gpiochip4", 13, Drv::LinuxGpioDriver::GpioConfiguration::GPIO_OUTPUT);
+    if (status != Os::File::Status::OP_OK) {
+        Fw::Logger::log("[ERROR] Failed to open GPIO pin\n");
     }
+}
+```
+
+And since this code uses `Fw::Logger`, you will need to add the following line near the top of the `Led.cpp` file.
+
+```c++
+#include <Fw/Logger/Logger.hpp>
 ```
 
 This code tells the GPIO driver to open pin 13 as an output pin. If this fails, an error is printed to the console, but the system continues to start.
