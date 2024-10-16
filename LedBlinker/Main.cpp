@@ -1,11 +1,12 @@
 // ======================================================================
 // \title  Main.cpp
-// \author mstarch
 // \brief main program for the F' application. Intended for CLI-based systems (Linux, macOS)
 //
 // ======================================================================
 // Used to access topology functions
 #include <LedBlinker/Top/LedBlinkerTopology.hpp>
+// OSAL initialization
+#include <Os/Os.hpp>
 // Used for signal handling shutdown
 #include <signal.h>
 // Used for command line argument processing
@@ -14,7 +15,7 @@
 #include <cstdlib>
 
 /**
- * \brief print commandline help message
+ * \brief print command line help message
  *
  * This will print a command line help message including the available command line arguments.
  *
@@ -47,9 +48,10 @@ static void signalHandler(int signum) {
  * @return: 0 on success, something else on failure
  */
 int main(int argc, char* argv[]) {
-    U32 port_number = 0;
     I32 option = 0;
-    char* hostname = nullptr;
+    CHAR* hostname = nullptr;
+    U16 port_number = 0;
+    Os::init();
 
     // Loop while reading the getopt supplied options
     while ((option = getopt(argc, argv, "hp:a:")) != -1) {
@@ -60,7 +62,7 @@ int main(int argc, char* argv[]) {
                 break;
             // Handle the -p port number argument
             case 'p':
-                port_number = static_cast<U32>(atoi(optarg));
+                port_number = static_cast<U16>(atoi(optarg));
                 break;
             // Cascade intended: help output
             case 'h':
@@ -84,7 +86,7 @@ int main(int argc, char* argv[]) {
 
     // Setup, cycle, and teardown topology
     LedBlinker::setupTopology(inputs);
-    LedBlinker::startSimulatedCycle(1000);  // Program loop cycling rate groups at 1Hz
+    LedBlinker::startSimulatedCycle(Fw::TimeInterval(1,0));  // Program loop cycling rate groups at 1Hz
     LedBlinker::teardownTopology(inputs);
     (void)printf("Exiting...\n");
     return 0;

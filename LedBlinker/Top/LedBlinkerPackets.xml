@@ -13,9 +13,9 @@
         <channel name="cmdSeq.CS_SequencesCompleted"/>
         <channel name="fileUplink.FilesReceived"/>
         <channel name="fileUplink.PacketsReceived"/>
-        <channel name="fileUplinkBufferManager.TotalBuffs"/>
-        <channel name="fileUplinkBufferManager.CurrBuffs"/>
-        <channel name="fileUplinkBufferManager.HiBuffs"/>
+        <channel name="bufferManager.TotalBuffs"/>
+        <channel name="bufferManager.CurrBuffs"/>
+        <channel name="bufferManager.HiBuffs"/>
         <channel name="fileDownlink.FilesSent"/>
         <channel name="fileDownlink.PacketsSent"/>
         <channel name="fileManager.CommandsExecuted"/>
@@ -32,13 +32,18 @@
         <channel name="fileDownlink.Warnings"/>
         <channel name="health.PingLateWarnings"/>
         <channel name="fileManager.Errors"/>
-        <channel name="fileUplinkBufferManager.NoBuffs"/>
-        <channel name="fileUplinkBufferManager.EmptyBuffs"/>
+        <channel name="bufferManager.NoBuffs"/>
+        <channel name="bufferManager.EmptyBuffs"/>
         <channel name="fileManager.Errors"/>
     </packet>
 
     <packet name="DriveTlm" id="3" level="1">
         <channel name="blockDrv.BD_Cycles"/>
+    </packet>
+
+    <packet name="Comms" id="4" level="1">
+        <channel name="comQueue.comQueueDepth"/>
+        <channel name="comQueue.buffQueueDepth"/>
     </packet>
 
     <packet name="SystemRes1" id="5" level="2">
@@ -48,12 +53,7 @@
         <channel name="systemResources.NON_VOLATILE_FREE"/>
     </packet>
 
-    <packet name="SystemRes2" id="6" level="2">
-        <channel name="systemResources.FRAMEWORK_VERSION"/>
-        <channel name="systemResources.PROJECT_VERSION"/>
-    </packet>
-
-    <packet name="SystemRes3" id="7" level="2">
+    <packet name="SystemRes2" id="7" level="2">
         <channel name="systemResources.CPU"/>
         <channel name="systemResources.CPU_00"/>
         <channel name="systemResources.CPU_01"/>
@@ -71,11 +71,6 @@
         <channel name="systemResources.CPU_13"/>
         <channel name="systemResources.CPU_14"/>
         <channel name="systemResources.CPU_15"/>
-    </packet>
-
-    <packet name="LedChannels" id="8" level="1">
-        <channel name="led.LedTransitions"/>
-        <channel name="led.BlinkingState"/>
     </packet>
 
     <!-- Ignored packets -->

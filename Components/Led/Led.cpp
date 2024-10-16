@@ -1,36 +1,38 @@
 // ======================================================================
 // \title  Led.cpp
-// \author mstarch, ortega
+// \author ortega
 // \brief  cpp file for Led component implementation class
 // ======================================================================
 
-#include <Components/Led/Led.hpp>
-#include <FpConfig.hpp>
+#include "Components/Led/Led.hpp"
+#include "FpConfig.hpp"
 
 namespace Components {
 
 // ----------------------------------------------------------------------
-// Construction, initialization, and destruction
+// Component construction and destruction
 // ----------------------------------------------------------------------
 
-Led ::Led(const char* const compName)
-    : LedComponentBase(compName), state(Fw::On::OFF), transitions(0), count(0), blinking(false) {}
+Led ::Led(const char* const compName) : LedComponentBase(compName) {}
 
 Led ::~Led() {}
 
 void Led ::parameterUpdated(FwPrmIdType id) {
-    // Read back the parameter value
     Fw::ParamValid isValid;
-    U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
-    // NOTE: isValid is always
-    FW_ASSERT(isValid == Fw::ParamValid::VALID, isValid);
+    switch (id) {
+        case PARAMID_BLINK_INTERVAL: {
+            // Read back the parameter value
+            const U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
+            // NOTE: isValid is always VALID in parameterUpdated as it was just properly set
+            FW_ASSERT(isValid == Fw::ParamValid::VALID, isValid);
 
-    // Check the parameter ID is expected
-    if (PARAMID_BLINK_INTERVAL == id) {
-        {
-            // Emit the blink set event
+            // Emit the blink interval set event
             this->log_ACTIVITY_HI_BlinkIntervalSet(interval);
+            break;
         }
+        default:
+            FW_ASSERT(0, static_cast<FwAssertArgType>(id));
+            break;
     }
 }
 
@@ -38,86 +40,61 @@ void Led ::parameterUpdated(FwPrmIdType id) {
 // Handler implementations for user-defined typed input ports
 // ----------------------------------------------------------------------
 
-void Led ::run_handler(const NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
+void Led ::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
     // Read back the parameter value
-    Fw::ParamValid isValid;
+    Fw::ParamValid isValid = Fw::ParamValid::INVALID;
     U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
 
     // Force interval to be 0 when invalid or not set
-    interval = ((Fw::ParamValid::INVALID == isValid) || (Fw::ParamValid::UNINIT == isValid)) ? 0 : interval;
+    interval = ((isValid == Fw::ParamValid::INVALID) || (isValid == Fw::ParamValid::UNINIT)) ? 0 : interval;
 
     // Only perform actions when set to blinking
-    this->lock.lock();
-    bool is_blinking = this->blinking;
-    this->lock.unlock();
-    if (is_blinking) {
-        Fw::On new_state = this->state;
-        // Check for transitions
-        if ((0 == this->count) && (this->state == Fw::On::OFF)) {
-            new_state = Fw::On::ON;
-        } else if (((interval / 2) == this->count) && (this->state == Fw::On::ON)) {
-            new_state = Fw::On::OFF;
-        }
-
-        // A transition has occurred
-        if (this->state != new_state) {
-            this->transitions = this->transitions + 1;
-            this->tlmWrite_LedTransitions(this->transitions);
+    if (this->m_blinking && (interval != 0)) {
+        // If toggling state
+        if (this->m_toggleCounter == 0) {
+            // Toggle state
+            this->m_state = (this->m_state == Fw::On::ON) ? Fw::On::OFF : Fw::On::ON;
+            this->m_transitions++;
+            this->tlmWrite_LedTransitions(this->m_transitions);
 
             // Port may not be connected, so check before sending output
             if (this->isConnected_gpioSet_OutputPort(0)) {
-                this->gpioSet_out(0, (Fw::On::ON == new_state) ? Fw::Logic::HIGH : Fw::Logic::LOW);
+                this->gpioSet_out(0, (Fw::On::ON == this->m_state) ? Fw::Logic::HIGH : Fw::Logic::LOW);
             }
 
-            this->log_ACTIVITY_LO_LedState(new_state);
-            this->state = new_state;
+            this->log_ACTIVITY_LO_LedState(this->m_state);
         }
 
-        this->count = ((this->count + 1) >= interval) ? 0 : (this->count + 1);
+        this->m_toggleCounter = (this->m_toggleCounter + 1) % interval;
     }
+    // We are not blinking
     else {
-        if(this->state == Fw::On::ON)
-        {
-          // Port may not be connected, so check before sending output
-          if (this->isConnected_gpioSet_OutputPort(0)) {
-              this->gpioSet_out(0, Fw::Logic::LOW);
-          }
+        if (this->m_state == Fw::On::ON) {
+            // Port may not be connected, so check before sending output
+            if (this->isConnected_gpioSet_OutputPort(0)) {
+                this->gpioSet_out(0, Fw::Logic::LOW);
+            }
 
-          this->state = Fw::On::OFF;
-          this->log_ACTIVITY_LO_LedState(this->state);
+            this->m_state = Fw::On::OFF;
+            this->log_ACTIVITY_LO_LedState(this->m_state);
         }
     }
 }
 
 // ----------------------------------------------------------------------
-// Command handler implementations
+// Handler implementations for commands
 // ----------------------------------------------------------------------
 
-void Led ::BLINKING_ON_OFF_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Fw::On on_off) {
-    // Create a variable to represent the command response
-    auto cmdResp = Fw::CmdResponse::OK;
+void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, Fw::On onOff) {
+    this->m_toggleCounter = 0;               // Reset count on any successful command
+    this->m_blinking = Fw::On::ON == onOff;  // Update blinking state
 
-    // Verify if on_off is a valid argument.
-    // Note: isValid is an autogenerate helper function for enums defined in fpp.
-    if (!on_off.isValid()) {
-        // NOTE: Add this event after going through the "Events" exercise.
-        this->log_WARNING_LO_InvalidBlinkArgument(on_off);
+    this->log_ACTIVITY_HI_SetBlinkingState(onOff);
 
-        // Update command response with a validation error
-        cmdResp = Fw::CmdResponse::VALIDATION_ERROR;
-    } else {
-        this->count = 0;  // Reset count on any successful command
-        this->lock.lock();
-        this->blinking = Fw::On::ON == on_off;  // Update blinking state
-        this->lock.unlock();
-        // NOTE: This event will be added during the "Events" exercise.
-        this->log_ACTIVITY_HI_SetBlinkingState(on_off);
-
-        this->tlmWrite_BlinkingState(on_off);
-    }
+    this->tlmWrite_BlinkingState(onOff);
 
     // Provide command response
-    this->cmdResponse_out(opCode, cmdSeq, cmdResp);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
 }
 
-}  // end namespace Components
+}  // namespace Components

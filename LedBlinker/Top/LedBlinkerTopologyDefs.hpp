@@ -1,11 +1,10 @@
 // ======================================================================
 // \title  LedBlinkerTopologyDefs.hpp
-// \author mstarch
 // \brief required header file containing the required definitions for the topology autocoder
 //
 // ======================================================================
-#ifndef REF_REFTOPOLOGYDEFS_HPP  // #!!
-#define REF_REFTOPOLOGYDEFS_HPP
+#ifndef LEDBLINKER_LEDBLINKERTOPOLOGYDEFS_HPP
+#define LEDBLINKER_LEDBLINKERTOPOLOGYDEFS_HPP
 
 #include "Drv/BlockDriver/BlockDriver.hpp"
 #include "Fw/Types/MallocAllocator.hpp"
@@ -20,13 +19,12 @@ namespace LedBlinker {
  * \brief required type definition to carry state
  *
  * The topology autocoder requires an object that carries state with the name `LedBlinker::TopologyState`. Only the type
- * definition is required by the autocoder and the contents of this object are otherwise opaque to the autocoder. The
- * contents are entirely up to the definition of the project. This reference application specifies hostname and port
- * fields, which are derived by command line inputs.
+ * definition is required by the autocoder and the contents of this object are otherwise opaque to the autocoder. The contents are entirely up
+ * to the definition of the project. Here, they are derived from command line inputs.
  */
 struct TopologyState {
-    const char* hostname;
-    U32 port;
+    const CHAR* hostname;
+    U16 port;
 };
 
 /**
@@ -49,40 +47,40 @@ struct TopologyState {
  * ```
  */
 namespace PingEntries {
-namespace blockDrv {
+namespace LedBlinker_blockDrv {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace tlmSend {
+namespace LedBlinker_tlmSend {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace cmdDisp {
+namespace LedBlinker_cmdDisp {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace cmdSeq {
+namespace LedBlinker_cmdSeq {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace eventLogger {
+namespace LedBlinker_eventLogger {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace fileDownlink {
+namespace LedBlinker_fileDownlink {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace fileManager {
+namespace LedBlinker_fileManager {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace fileUplink {
+namespace LedBlinker_fileUplink {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace prmDb {
+namespace LedBlinker_prmDb {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace rateGroup1 {
+namespace LedBlinker_rateGroup1 {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace rateGroup2 {
+namespace LedBlinker_rateGroup2 {
 enum { WARN = 3, FATAL = 5 };
 }
-namespace rateGroup3 {
+namespace LedBlinker_rateGroup3 {
 enum { WARN = 3, FATAL = 5 };
 }
 }  // namespace PingEntries
