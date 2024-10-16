@@ -43,17 +43,22 @@ module LedBlinker {
     stack size Default.STACK_SIZE \
     priority 100
 
-  instance fileDownlink: Svc.FileDownlink base id 0x0700 \
+  instance comQueue: Svc.ComQueue base id 0x0700 \
+      queue size Default.QUEUE_SIZE \
+      stack size Default.STACK_SIZE \
+      priority 100 \
+
+  instance fileDownlink: Svc.FileDownlink base id 0x0800 \
     queue size 30 \
     stack size Default.STACK_SIZE \
     priority 100
 
-  instance fileManager: Svc.FileManager base id 0x0800 \
+  instance fileManager: Svc.FileManager base id 0x0900 \
     queue size 30 \
     stack size Default.STACK_SIZE \
     priority 100
 
-  instance fileUplink: Svc.FileUplink base id 0x0900 \
+  instance fileUplink: Svc.FileUplink base id 0x0A00 \
     queue size 30 \
     stack size Default.STACK_SIZE \
     priority 100
@@ -98,28 +103,28 @@ module LedBlinker {
   # Passive component instances
   # ----------------------------------------------------------------------
 
-  @ Communications driver. May be swapped with other comm drivers like UART
-  instance comm: Drv.TcpServer base id 0x4000
+  @ Communications driver. May be swapped with other com drivers like UART or TCP
+  instance comDriver: Drv.TcpServer base id 0x4000
 
-  instance downlink: Svc.Framer base id 0x4100
+  instance framer: Svc.Framer base id 0x4100
 
   instance fatalAdapter: Svc.AssertFatalAdapter base id 0x4200
 
   instance fatalHandler: Svc.FatalHandler base id 0x4300
 
-  instance fileUplinkBufferManager: Svc.BufferManager base id 0x4400
+  instance bufferManager: Svc.BufferManager base id 0x4400
 
   instance posixTime: Svc.PosixTime base id 0x4500
 
   instance rateGroupDriver: Svc.RateGroupDriver base id 0x4600
 
-  instance staticMemory: Svc.StaticMemory base id 0x4700
-
   instance textLogger: Svc.PassiveTextLogger base id 0x4800
 
-  instance uplink: Svc.Deframer base id 0x4900
+  instance deframer: Svc.Deframer base id 0x4900
 
   instance systemResources: Svc.SystemResources base id 0x4A00
+
+  instance comStub: Svc.ComStub base id 0x4B00
 
   instance gpioDriver: Drv.LinuxGpioDriver base id 0x4C00
 

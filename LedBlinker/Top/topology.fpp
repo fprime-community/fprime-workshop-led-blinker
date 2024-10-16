@@ -4,16 +4,11 @@ module LedBlinker {
   # Symbolic constants for port numbers
   # ----------------------------------------------------------------------
 
-    enum Ports_RateGroups {
-      rateGroup1
-      rateGroup2
-      rateGroup3
-    }
-
-    enum Ports_StaticMemory {
-      downlink
-      uplink
-    }
+  enum Ports_RateGroups {
+    rateGroup1
+    rateGroup2
+    rateGroup3
+  }
 
   topology LedBlinker {
 
@@ -26,27 +21,28 @@ module LedBlinker {
     instance tlmSend
     instance cmdDisp
     instance cmdSeq
-    instance comm
-    instance downlink
+    instance comDriver
+    instance comQueue
+    instance comStub
+    instance deframer
     instance eventLogger
     instance fatalAdapter
     instance fatalHandler
     instance fileDownlink
     instance fileManager
     instance fileUplink
-    instance fileUplinkBufferManager
+    instance bufferManager
+    instance framer
     instance posixTime
     instance prmDb
     instance rateGroup1
     instance rateGroup2
     instance rateGroup3
     instance rateGroupDriver
-    instance staticMemory
     instance textLogger
-    instance uplink
     instance systemResources
-    instance gpioDriver
     instance led
+    instance gpioDriver
 
     # ----------------------------------------------------------------------
     # Pattern graph specifiers
@@ -72,15 +68,23 @@ module LedBlinker {
 
     connections Downlink {
 
-      tlmSend.PktSend -> downlink.comIn
-      eventLogger.PktSend -> downlink.comIn
-      fileDownlink.bufferSendOut -> downlink.bufferIn
+      eventLogger.PktSend -> comQueue.comQueueIn[0]
+      tlmSend.PktSend -> comQueue.comQueueIn[1]
+      fileDownlink.bufferSendOut -> comQueue.buffQueueIn[0]
 
-      downlink.framedAllocate -> staticMemory.bufferAllocate[Ports_StaticMemory.downlink]
-      downlink.framedOut -> comm.$send
-      downlink.bufferDeallocate -> fileDownlink.bufferReturn
+      comQueue.comQueueSend -> framer.comIn
+      comQueue.buffQueueSend -> framer.bufferIn
 
-      comm.deallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.downlink]
+      framer.framedAllocate -> bufferManager.bufferGetCallee
+      framer.framedOut -> comStub.comDataIn
+      framer.bufferDeallocate -> fileDownlink.bufferReturn
+
+      comDriver.deallocate -> bufferManager.bufferSendIn
+      comDriver.ready -> comStub.drvConnected
+
+      comStub.comStatus -> framer.comStatusIn
+      framer.comStatusOut -> comQueue.comStatusIn
+      comStub.drvDataOut -> comDriver.$send
 
     }
 
@@ -106,7 +110,7 @@ module LedBlinker {
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup3] -> rateGroup3.CycleIn
       rateGroup3.RateGroupMemberOut[0] -> $health.Run
       rateGroup3.RateGroupMemberOut[1] -> blockDrv.Sched
-      rateGroup3.RateGroupMemberOut[2] -> fileUplinkBufferManager.schedIn
+      rateGroup3.RateGroupMemberOut[2] -> bufferManager.schedIn
     }
 
     connections Sequencer {
@@ -116,21 +120,26 @@ module LedBlinker {
 
     connections Uplink {
 
-      comm.allocate -> staticMemory.bufferAllocate[Ports_StaticMemory.uplink]
-      comm.$recv -> uplink.framedIn
-      uplink.framedDeallocate -> staticMemory.bufferDeallocate[Ports_StaticMemory.uplink]
+      comDriver.allocate -> bufferManager.bufferGetCallee
+      comDriver.$recv -> comStub.drvDataIn
+      comStub.comDataOut -> deframer.framedIn
 
-      uplink.comOut -> cmdDisp.seqCmdBuff
-      cmdDisp.seqCmdStatus -> uplink.cmdResponseIn
+      deframer.framedDeallocate -> bufferManager.bufferSendIn
+      deframer.comOut -> cmdDisp.seqCmdBuff
 
-      uplink.bufferAllocate -> fileUplinkBufferManager.bufferGetCallee
-      uplink.bufferOut -> fileUplink.bufferSendIn
-      uplink.bufferDeallocate -> fileUplinkBufferManager.bufferSendIn
-      fileUplink.bufferSendOut -> fileUplinkBufferManager.bufferSendIn
+      cmdDisp.seqCmdStatus -> deframer.cmdResponseIn
+
+      deframer.bufferAllocate -> bufferManager.bufferGetCallee
+      deframer.bufferOut -> fileUplink.bufferSendIn
+      deframer.bufferDeallocate -> bufferManager.bufferSendIn
+      fileUplink.bufferSendOut -> bufferManager.bufferSendIn
     }
 
+    # Named connection group
     connections LedConnections {
+      # Rate Group 1 (1Hz cycle) ouput is connected to led's run input
       rateGroup1.RateGroupMemberOut[3] -> led.run
+      # led's gpioSet output is connected to gpioDriver's gpioWrite input
       led.gpioSet -> gpioDriver.gpioWrite
     }
 

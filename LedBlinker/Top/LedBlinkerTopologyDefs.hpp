@@ -1,11 +1,10 @@
 // ======================================================================
 // \title  LedBlinkerTopologyDefs.hpp
-// \author mstarch
 // \brief required header file containing the required definitions for the topology autocoder
 //
 // ======================================================================
-#ifndef REF_REFTOPOLOGYDEFS_HPP  // #!!
-#define REF_REFTOPOLOGYDEFS_HPP
+#ifndef LEDBLINKER_LEDBLINKERTOPOLOGYDEFS_HPP
+#define LEDBLINKER_LEDBLINKERTOPOLOGYDEFS_HPP
 
 #include "Drv/BlockDriver/BlockDriver.hpp"
 #include "Fw/Types/MallocAllocator.hpp"
@@ -20,13 +19,12 @@ namespace LedBlinker {
  * \brief required type definition to carry state
  *
  * The topology autocoder requires an object that carries state with the name `LedBlinker::TopologyState`. Only the type
- * definition is required by the autocoder and the contents of this object are otherwise opaque to the autocoder. The
- * contents are entirely up to the definition of the project. This reference application specifies hostname and port
- * fields, which are derived by command line inputs.
+ * definition is required by the autocoder and the contents of this object are otherwise opaque to the autocoder. The contents are entirely up
+ * to the definition of the project. Here, they are derived from command line inputs.
  */
 struct TopologyState {
-    const char* hostname;
-    U32 port;
+    const CHAR* hostname;
+    U16 port;
 };
 
 /**

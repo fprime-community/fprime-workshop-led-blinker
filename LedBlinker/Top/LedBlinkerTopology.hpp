@@ -1,13 +1,12 @@
 // ======================================================================
 // \title  LedBlinkerTopology.hpp
-// \author mstarch
 // \brief header file containing the topology instantiation definitions
 //
 // ======================================================================
-#ifndef REF_REFTOPOLOGY_HPP  // #!!
-#define REF_REFTOPOLOGY_HPP
-// Included for access to LedBlinker::TopologyState and LedBlinker::ConfigObjects::pingEntries. These definitions are
-// required by the autocoder, but are also used in this hand-coded topology.
+#ifndef LEDBLINKER_LEDBLINKERTOPOLOGY_HPP
+#define LEDBLINKER_LEDBLINKERTOPOLOGY_HPP
+// Included for access to LedBlinker::TopologyState and LedBlinker::ConfigObjects::pingEntries. These definitions are required by the
+// autocoder, but are also used in this hand-coded topology.
 #include <LedBlinker/Top/LedBlinkerTopologyDefs.hpp>
 
 // Remove unnecessary LedBlinker:: qualifications
@@ -35,7 +34,7 @@ namespace LedBlinker {
  * The state argument carries command line inputs used to setup the topology. For an explanation of the required type
  * LedBlinker::TopologyState see: LedBlinkerTopologyDefs.hpp.
  *
- * \param state: object shuttling CLI arguments (hostname, port) needed to construct the topology
+ * \param state: object shuttling CLI arguments (e.g. hostname/port, or UART baudrate) needed to construct the topology
  */
 void setupTopology(const TopologyState& state);
 
@@ -74,7 +73,7 @@ void teardownTopology(const TopologyState& state);
  *
  * \param milliseconds: milliseconds to delay for each cycle. Default: 1000 or 1Hz.
  */
-void startSimulatedCycle(U32 milliseconds = 1000);
+void startSimulatedCycle(Fw::TimeInterval interval = Fw::TimeInterval(1,0));
 
 /**
  * \brief stop the simulated cycle started by startSimulatedCycle
@@ -83,5 +82,5 @@ void startSimulatedCycle(U32 milliseconds = 1000);
  */
 void stopSimulatedCycle();
 
-}  // namespace LedBlinker
+} // namespace LedBlinker
 #endif

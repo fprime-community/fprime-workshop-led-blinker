@@ -1,13 +1,12 @@
 // ======================================================================
 // \title  LedBlinkerTopology.cpp
-// \author mstarch
 // \brief cpp file containing the topology instantiation code
 //
 // ======================================================================
 // Provides access to autocoded functions
-// #include <LedBlinker/Top/LedBlinkerPacketsAc.hpp>
-#include <Fw/Logger/Logger.hpp>
 #include <LedBlinker/Top/LedBlinkerTopologyAc.hpp>
+// Note: Uncomment when using Svc:TlmPacketizer
+//#include <LedBlinker/Top/LedBlinkerPacketsAc.hpp>
 
 // Necessary project-specified types
 #include <Fw/Types/MallocAllocator.hpp>
@@ -30,8 +29,9 @@ Fw::MallocAllocator mallocator;
 Svc::FprimeFraming framing;
 Svc::FprimeDeframing deframing;
 
-// The reference topology divides the incoming clock signal (1Hz) into sub-signals: 1Hz, 1/2Hz, and 1/4Hz and
-// zero offset for all the dividers
+Svc::ComQueue::QueueConfigurationTable configurationTable;
+
+// The reference topology divides the incoming clock signal (1Hz) into sub-signals: 1Hz, 1/2Hz, and 1/4Hz with 0 offset
 Svc::RateGroupDriver::DividerSet rateGroupDivisorsSet{{{1, 0}, {2, 0}, {4, 0}}};
 
 // Rate groups may supply a context token to each of the attached children whose purpose is set by the project. The
@@ -49,9 +49,14 @@ enum TopologyConstants {
     FILE_DOWNLINK_FILE_QUEUE_DEPTH = 10,
     HEALTH_WATCHDOG_CODE = 0x123,
     COMM_PRIORITY = 100,
-    UPLINK_BUFFER_MANAGER_STORE_SIZE = 3000,
-    UPLINK_BUFFER_MANAGER_QUEUE_SIZE = 30,
-    UPLINK_BUFFER_MANAGER_ID = 200
+    // bufferManager constants
+    FRAMER_BUFFER_SIZE = FW_MAX(FW_COM_BUFFER_MAX_SIZE, FW_FILE_BUFFER_MAX_SIZE + sizeof(U32)) + HASH_DIGEST_LENGTH + Svc::FpFrameHeader::SIZE,
+    FRAMER_BUFFER_COUNT = 30,
+    DEFRAMER_BUFFER_SIZE = FW_MAX(FW_COM_BUFFER_MAX_SIZE, FW_FILE_BUFFER_MAX_SIZE + sizeof(U32)),
+    DEFRAMER_BUFFER_COUNT = 30,
+    COM_DRIVER_BUFFER_SIZE = 3000,
+    COM_DRIVER_BUFFER_COUNT = 30,
+    BUFFER_MANAGER_ID = 200
 };
 
 // Ping entries are autocoded, however; this code is not properly exported. Thus, it is copied here.
@@ -78,13 +83,28 @@ Svc::Health::PingEntry pingEntries[] = {
  * desired, but is extracted here for clarity.
  */
 void configureTopology() {
+    // Buffer managers need a configured set of buckets and an allocator used to allocate memory for those buckets.
+    Svc::BufferManager::BufferBins upBuffMgrBins;
+    memset(&upBuffMgrBins, 0, sizeof(upBuffMgrBins));
+    upBuffMgrBins.bins[0].bufferSize = FRAMER_BUFFER_SIZE;
+    upBuffMgrBins.bins[0].numBuffers = FRAMER_BUFFER_COUNT;
+    upBuffMgrBins.bins[1].bufferSize = DEFRAMER_BUFFER_SIZE;
+    upBuffMgrBins.bins[1].numBuffers = DEFRAMER_BUFFER_COUNT;
+    upBuffMgrBins.bins[2].bufferSize = COM_DRIVER_BUFFER_SIZE;
+    upBuffMgrBins.bins[2].numBuffers = COM_DRIVER_BUFFER_COUNT;
+    bufferManager.setup(BUFFER_MANAGER_ID, 0, mallocator, upBuffMgrBins);
+
+    // Framer and Deframer components need to be passed a protocol handler
+    framer.setup(framing);
+    deframer.setup(deframing);
+
     // Command sequencer needs to allocate memory to hold contents of command sequences
     cmdSeq.allocateBuffer(0, mallocator, CMD_SEQ_BUFFER_SIZE);
 
     // Rate group driver needs a divisor list
     rateGroupDriver.configure(rateGroupDivisorsSet);
 
-    // Rate groups require context arrays. Empty for LedBlinkererence example.
+    // Rate groups require context arrays.
     rateGroup1.configure(rateGroup1Context, FW_NUM_ARRAY_ELEMENTS(rateGroup1Context));
     rateGroup2.configure(rateGroup2Context, FW_NUM_ARRAY_ELEMENTS(rateGroup2Context));
     rateGroup3.configure(rateGroup3Context, FW_NUM_ARRAY_ELEMENTS(rateGroup3Context));
@@ -100,16 +120,17 @@ void configureTopology() {
     // Health is supplied a set of ping entires.
     health.setPingEntries(pingEntries, FW_NUM_ARRAY_ELEMENTS(pingEntries), HEALTH_WATCHDOG_CODE);
 
-    // Buffer managers need a configured set of buckets and an allocator used to allocate memory for those buckets.
-    Svc::BufferManager::BufferBins upBuffMgrBins;
-    memset(&upBuffMgrBins, 0, sizeof(upBuffMgrBins));
-    upBuffMgrBins.bins[0].bufferSize = UPLINK_BUFFER_MANAGER_STORE_SIZE;
-    upBuffMgrBins.bins[0].numBuffers = UPLINK_BUFFER_MANAGER_QUEUE_SIZE;
-    fileUplinkBufferManager.setup(UPLINK_BUFFER_MANAGER_ID, 0, mallocator, upBuffMgrBins);
+    // Note: Uncomment when using Svc:TlmPacketizer
+    // tlmSend.setPacketList(LedBlinkerPacketsPkts, LedBlinkerPacketsIgnore, 1);
 
-    // Framer and Deframer components need to be passed a protocol handler
-    downlink.setup(framing);
-    uplink.setup(deframing);
+    // Events (highest-priority)
+    configurationTable.entries[0] = {.depth = 100, .priority = 0};
+    // Telemetry
+    configurationTable.entries[1] = {.depth = 500, .priority = 2};
+    // File Downlink
+    configurationTable.entries[2] = {.depth = 100, .priority = 1};
+    // Allocation identifier is 0 as the MallocAllocator discards it
+    comQueue.configure(configurationTable, 0, mallocator);
 
     Os::File::Status status =
         gpioDriver.open("/dev/gpiochip4", 13, Drv::LinuxGpioDriver::GpioConfiguration::GPIO_OUTPUT);
@@ -127,20 +148,22 @@ void setupTopology(const TopologyState& state) {
     setBaseIds();
     // Autocoded connection wiring. Function provided by autocoder.
     connectComponents();
+    // Autocoded configuration. Function provided by autocoder.
+    configComponents(state);
+    // Deployment-specific component configuration. Function provided above. May be inlined, if desired.
+    configureTopology();
     // Autocoded command registration. Function provided by autocoder.
     regCommands();
-    // Project-specific component configuration. Function provided above. May be inlined, if desired.
-    configureTopology();
     // Autocoded parameter loading. Function provided by autocoder.
     loadParameters();
     // Autocoded task kick-off (active components). Function provided by autocoder.
     startTasks(state);
-    // Initialize socket client communication if and only if there is a valid specification
+    // Initialize socket communication if and only if there is a valid specification
     if (state.hostname != nullptr && state.port != 0) {
         Os::TaskString name("ReceiveTask");
         // Uplink is configured for receive so a socket task is started
-        comm.configure(state.hostname, state.port);
-        comm.start(name, true, COMM_PRIORITY, Default::STACK_SIZE);
+        comDriver.configure(state.hostname, state.port);
+        comDriver.start(name, true, COMM_PRIORITY, Default::STACK_SIZE);
     }
 }
 
@@ -148,7 +171,7 @@ void setupTopology(const TopologyState& state) {
 Os::Mutex cycleLock;
 volatile bool cycleFlag = true;
 
-void startSimulatedCycle(U32 milliseconds) {
+void startSimulatedCycle(Fw::TimeInterval interval) {
     cycleLock.lock();
     bool cycling = cycleFlag;
     cycleLock.unLock();
@@ -156,7 +179,7 @@ void startSimulatedCycle(U32 milliseconds) {
     // Main loop
     while (cycling) {
         LedBlinker::blockDrv.callIsr();
-        Os::Task::delay(Fw::Time(milliseconds / 1000, milliseconds % 1000));
+        Os::Task::delay(interval);
 
         cycleLock.lock();
         cycling = cycleFlag;
@@ -176,11 +199,11 @@ void teardownTopology(const TopologyState& state) {
     freeThreads(state);
 
     // Other task clean-up.
-    comm.stop();
-    (void)comm.join();
+    comDriver.stop();
+    (void)comDriver.join();
 
     // Resource deallocation
     cmdSeq.deallocateBuffer(mallocator);
-    fileUplinkBufferManager.cleanup();
+    bufferManager.cleanup();
 }
 };  // namespace LedBlinker
