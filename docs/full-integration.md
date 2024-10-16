@@ -49,7 +49,6 @@ This is done by adding the following at the end of the `configureTopology` funct
     if (status != Os::File::Status::OP_OK) {
         Fw::Logger::log("[ERROR] Failed to open GPIO pin\n");
     }
-}
 ```
 
 And since this code uses `Fw::Logger`, you will need to add the following line near the top of the `Led.cpp` file.

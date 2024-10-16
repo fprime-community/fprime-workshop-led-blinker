@@ -16,6 +16,8 @@
 // Used for 1Hz synthetic cycling
 #include <Os/Mutex.hpp>
 
+#include <Fw/Logger/Logger.hpp>
+
 // Allows easy reference to objects in FPP/autocoder required namespaces
 using namespace LedBlinker;
 
@@ -109,10 +111,9 @@ void configureTopology() {
     downlink.setup(framing);
     uplink.setup(deframing);
 
-    // Note: Uncomment when using Svc:TlmPacketizer
-    // tlmSend.setPacketList(LedBlinkerPacketsPkts, LedBlinkerPacketsIgnore, 1);
-    bool gpio_success = gpioDriver.open(13, Drv::LinuxGpioDriver::GpioDirection::GPIO_OUT);
-    if (!gpio_success) {
+    Os::File::Status status =
+        gpioDriver.open("/dev/gpiochip4", 13, Drv::LinuxGpioDriver::GpioConfiguration::GPIO_OUTPUT);
+    if (status != Os::File::Status::OP_OK) {
         Fw::Logger::log("[ERROR] Failed to open GPIO pin\n");
     }
 }
