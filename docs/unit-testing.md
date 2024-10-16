@@ -194,7 +194,7 @@ void LedTester ::testBlinkInterval() {
     // TODO: Add logic to test adjusted blink interval
 }
 ```
-> Don't forget to add `testBlinkInterval()` to `LedTester.hpp` and `LedtestMain.cpp` as well. Run `fprime-util check and resolve any issues before continuing.
+> Don't forget to add `testBlinkInterval()` to `LedTester.hpp` and `LedTestMain.cpp` as well. Run `fprime-util check and resolve any issues before continuing.
 
 ## Checking Coverage
 
