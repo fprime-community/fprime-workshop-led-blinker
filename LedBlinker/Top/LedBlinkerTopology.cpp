@@ -178,7 +178,7 @@ void startSimulatedCycle(Fw::TimeInterval interval) {
     // Main loop
     while (cycling) {
         LedBlinker::blockDrv.callIsr();
-        Os::Task::delay(Fw::TimeInterval(milliseconds/1000, milliseconds % 1000));
+        Os::Task::delay(interval);
 
         cycleLock.lock();
         cycling = cycleFlag;
