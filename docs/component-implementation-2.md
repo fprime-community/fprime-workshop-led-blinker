@@ -227,11 +227,14 @@ fprime-util build
 
 Below is a table with tasks you must complete. These tasks require you to go back into the component's code and add the missing function calls.
 
-| Task |
-|------|
-| Inside the `parameterUpdated` function, emit an activity high event named `BlinkIntervalSet` that takes in an argument of type `U32` to report the blink interval. |
-| Inside the `run_handler` port handler, report the number of LED transitions (this->m_transitions) on channel LedTransitions. |
-| Inside the `run_handler` port handler, emit an event LedState to report the LED state (this->m_state). There are two places to add this event. |
+| Task | Solution |
+|------|----------|
+| Inside the `parameterUpdated` function, emit an activity high event named `BlinkIntervalSet` that takes in an argument of type `U32` to report the blink interval. | <details><summary>Answer</summary>`this->log_ACTIVITY_HI_BlinkIntervalSet(interval);`</details> |
+| Inside the `run_handler` port handler, report the number of LED transitions (this->m_transitions) on channel LedTransitions. | <details><summary>Answer</summary>`this->tlmWrite_LedTransitions(this->m_transitions);`</details> |
+| Inside the `run_handler` port handler, emit an event LedState to report the LED state (this->m_state). There are two places to add this event. | <details><summary>Answer</summary>`this->log_ACTIVITY_LO_LedState(this->m_state);`</details> |
+
+> NOTE: Emitting an event follows this pattern: `this->log_<severity>_<eventName>(<argument_if_any>);`  
+> NOTE: Emitting a telemetry channel follows this pattern: `this->tlmWrite_<telemetryChannel>(<telemetryValue>);`
 
 ## Conclusion
 
