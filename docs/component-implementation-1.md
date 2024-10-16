@@ -112,10 +112,12 @@ Inside your `led-blinker/Components/Led` directory, open the `Led.fpp` file. Aft
 
 ```
         @ Reports the state we set to blinking.
-        event SetBlinkingState(state: Fw.On) \
+        event SetBlinkingState($state: Fw.On) \
             severity activity high \
             format "Set blinking state to {}."
 ```
+
+> NOTE: `state` is a keyword in FPP. In order to use it as a variable name, you need to escape it by prepending `$`.
 
 ### Do it Yourself
 
