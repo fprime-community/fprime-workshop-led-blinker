@@ -122,7 +122,6 @@ void configureTopology() {
 
     // Note: Uncomment when using Svc:TlmPacketizer
     // tlmSend.setPacketList(LedBlinkerPacketsPkts, LedBlinkerPacketsIgnore, 1);
-
     // Events (highest-priority)
     configurationTable.entries[0] = {.depth = 100, .priority = 0};
     // Telemetry
@@ -133,7 +132,7 @@ void configureTopology() {
     comQueue.configure(configurationTable, 0, mallocator);
 
     Os::File::Status status =
-        gpioDriver.open("/dev/gpiochip4", 13, Drv::LinuxGpioDriver::GpioConfiguration::GPIO_OUTPUT);
+        gpioDriver.open("/dev/gpiochip0", 13, Drv::LinuxGpioDriver::GpioConfiguration::GPIO_OUTPUT);
     if (status != Os::File::Status::OP_OK) {
         Fw::Logger::log("[ERROR] Failed to open GPIO pin\n");
     }
@@ -179,7 +178,7 @@ void startSimulatedCycle(Fw::TimeInterval interval) {
     // Main loop
     while (cycling) {
         LedBlinker::blockDrv.callIsr();
-        Os::Task::delay(interval);
+        Os::Task::delay(Fw::TimeInterval(milliseconds/1000, milliseconds % 1000));
 
         cycleLock.lock();
         cycling = cycleFlag;

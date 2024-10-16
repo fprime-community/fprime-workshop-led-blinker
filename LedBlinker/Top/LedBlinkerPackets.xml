@@ -53,7 +53,7 @@
         <channel name="systemResources.NON_VOLATILE_FREE"/>
     </packet>
 
-    <packet name="SystemRes2" id="7" level="2">
+    <packet name="SystemRes2" id="6" level="2">
         <channel name="systemResources.CPU"/>
         <channel name="systemResources.CPU_00"/>
         <channel name="systemResources.CPU_01"/>
