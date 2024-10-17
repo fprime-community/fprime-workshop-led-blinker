@@ -109,13 +109,12 @@ In `test_blinking()`, after turning blinking on, add the following the check tha
 Run `pytest` and make sure the new assertion passes.
 
 Now, add the similar assertion to verify the BlinkingState is set OFF after stopping blinking
+Run `pytest` again. **Notice that this new telemetry check should fail.**
 
 ```python
 # Assert that blink command sets blinking state off
 #TODO: use fprime_test_api.assert_telemetry to check that "LedBlinker.led.BlinkingState" is off
 ```
-
-Run `pytest` again. **Notice that this new telemetry check should fail.**
 
 Events in fprime are emitted immediately, but telemetry is only emitted periodically. In the LedBlinker deployment, telemetry channels are sent once per second.
 
