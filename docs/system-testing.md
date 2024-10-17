@@ -116,7 +116,6 @@ Run `pytest` again. **Notice that this new telemetry check should fail.**
 #TODO: use fprime_test_api.assert_telemetry to check that "LedBlinker.led.BlinkingState" is off
 ```
 
-
 Events in fprime are emitted immediately, but telemetry is only emitted periodically. In the LedBlinker deployment, telemetry channels are sent once per second.
 
 The `fprime_test_api.assert_telemetry` check will immediately search for a matching `LedBlinker.led.BlinkingState` telemetry value.
