@@ -51,7 +51,7 @@ This is done by adding the following at the end of the `configureTopology` funct
     }
 ```
 
-And since this code uses `Fw::Logger`, you will need to add the following line near the top of the `Led.cpp` file.
+And since this code uses `Fw::Logger`, you will need to add the following line near the top of the `led-blinker/LedBlinker/Top/LedBlinkerTopology.cpp` file.
 
 ```c++
 #include <Fw/Logger/Logger.hpp>
