@@ -1,6 +1,6 @@
 # Specifying Requirements
 
-In this addendum to the tutorial, you will learn a bit about specifying requirements. Software requirements are derived from higher-level system requirements and represent the detail needed to implement the software.
+In this section to the tutorial, you will learn a bit about specifying requirements. Software requirements are derived from higher-level system requirements and represent the detail needed to implement the software.
 
 ## System Requirements
 

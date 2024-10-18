@@ -157,7 +157,7 @@ Verify your component is building correctly by running the following command in 
 fprime-util build
 ```
 
-Fix any errors that occur before proceeding with the rest of the tutorial.
+> Fix any errors that occur before proceeding with the rest of the tutorial.
 
 ### Component State
 
