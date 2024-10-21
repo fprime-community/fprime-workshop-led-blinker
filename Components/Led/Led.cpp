@@ -18,13 +18,13 @@ Led ::Led(const char* const compName) : LedComponentBase(compName) {}
 Led ::~Led() {}
 
 void Led ::parameterUpdated(FwPrmIdType id) {
-    Fw::ParamValid isValid;
+    Fw::ParamValid isValid = Fw::ParamValid::INVALID;
     switch (id) {
         case PARAMID_BLINK_INTERVAL: {
             // Read back the parameter value
             const U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
             // NOTE: isValid is always VALID in parameterUpdated as it was just properly set
-            FW_ASSERT(isValid == Fw::ParamValid::VALID, isValid);
+            FW_ASSERT(isValid == Fw::ParamValid::VALID, static_cast<FwAssertArgType>(isValid));
 
             // Emit the blink interval set event
             this->log_ACTIVITY_HI_BlinkIntervalSet(interval);
@@ -44,9 +44,8 @@ void Led ::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
     // Read back the parameter value
     Fw::ParamValid isValid = Fw::ParamValid::INVALID;
     U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
-
-    // Force interval to be 0 when invalid or not set
-    interval = ((isValid == Fw::ParamValid::INVALID) || (isValid == Fw::ParamValid::UNINIT)) ? 0 : interval;
+    FW_ASSERT((isValid != Fw::ParamValid::INVALID) && (isValid != Fw::ParamValid::UNINIT),
+              static_cast<FwAssertArgType>(isValid));
 
     // Only perform actions when set to blinking
     if (this->m_blinking && (interval != 0)) {
