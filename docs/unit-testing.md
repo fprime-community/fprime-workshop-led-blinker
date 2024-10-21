@@ -64,14 +64,13 @@ fprime-util check
 
 ## Add a New Test Case
 
-Now that unit tests have been written, we can add our first unit test case. First, remove the default `ToDo` test and add a new test case called `testBlinking`. 
-In `led-blinker/Components/Led/test/ut/LedTester.hpp` rename the declaration for `testToDo` to be `testBlinking` instead:
+Now that unit tests have been written, we can add our first unit test case. First, remove the default `toDo` test and add a new test case called `testBlinking`. In `led-blinker/Components/Led/test/ut/LedTester.hpp` rename the declaration for `toDo` to be `testBlinking` instead:
 
 ```c++
     void testBlinking();
 ```
 
-In `led-blinker/Components/Led/test/ut/LedTester.cpp` rename the definition for `testToDo` to be `testBlinking`:
+In `led-blinker/Components/Led/test/ut/LedTester.cpp` rename the definition for `toDo` to be `testBlinking`:
 
 ```c++
 void LedTester ::testBlinking() {
