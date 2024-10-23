@@ -10,6 +10,7 @@ def test_blinking(fprime_test_api):
     blink_start_evr = fprime_test_api.get_event_pred(
         "LedBlinker.led.SetBlinkingState", ["ON"]
     )
+    blink_stop_evr = fprime_test_api.get_event_pred("LedBlinker.led.SetBlinkingState", ["OFF"])
     led_on_evr = fprime_test_api.get_event_pred("LedBlinker.led.LedState", ["ON"])
     led_off_evr = fprime_test_api.get_event_pred("LedBlinker.led.LedState", ["OFF"])
 
@@ -45,9 +46,6 @@ def test_blinking(fprime_test_api):
     )
 
     # Send command to stop blinking, then assert blinking stops
-    blink_stop_evr = fprime_test_api.get_event_pred(
-        "LedBlinker.led.SetBlinkingState", ["OFF"]
-    )
     fprime_test_api.send_and_assert_event(
         "LedBlinker.led.BLINKING_ON_OFF", args=["OFF"], events=[blink_stop_evr]
     )
