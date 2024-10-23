@@ -2,17 +2,17 @@
 
 In this section, we will walk through the creation of system tests, also known as integration tests, for the LED component created in prior steps.
 
-Fprime system tests use a python api to dispatch commands to a deployment using the fprime GDS, verifying components behave as expected as part of deployment running on actual hardware.
+F´ system tests use a Python api to dispatch commands to a deployment using the F´ GDS, verifying components behave as expected as part of deployment running on actual hardware.
 
-Before starting this guide, users should have the LedBlinking deployment running on their hardware and connected to the fprime GDS running on a development machine. If hardware is not available, this guide can be followed by running the LedBlinking deployment locally on a development machine instead.
+Before starting this guide, users should have the LedBlinking deployment running on their hardware and connected to the F´ GDS running on a development machine. If hardware is not available, this guide can be followed by running the LedBlinking deployment locally on a development machine instead.
 
-> Note: If running the LedBlinker deployment locally instead of on the intended hardware, make sure to rebuild fprime with stubbed GPIO drivers so the LedBlinker deployment doesn't attempt to write to physical GPIO ports. Regenerate the native deployment with `fprime-util generate -DFPRIME_USE_STUBBED_DRIVERS=ON`. MacOS defaults to stubbed drivers and does not require explicitly setting this option.
+> Note: If running the LedBlinker deployment locally instead of on the intended hardware, make sure to rebuild F´ with stubbed GPIO drivers so the LedBlinker deployment doesn't attempt to write to physical GPIO ports. Regenerate the native deployment with `fprime-util generate -DFPRIME_USE_STUBBED_DRIVERS=ON`. MacOS defaults to stubbed drivers and does not require explicitly setting this option.
 
 ## Intro to Fprime System Testing
 
 Installing the fprime-gds also installs a pytest fixture called `fprime_test_api`. When used, this allows the pytest testing library to automatically connect to the currently running fprime-gds.
 
-> Note: if running the fprime GDS on non-default ports, you can use the same command line arguments used with `fprime-cli` with `pytest` to point the system testing library to the correct GDS instance
+> Note: if running the F´ GDS on non-default ports, you can use the same command line arguments used with `fprime-cli` with `pytest` to point the system testing library to the correct GDS instance
 
 First, create a basic test case to verify the system testing library is correctly setup.
 
@@ -30,7 +30,7 @@ def test_cmd_no_op(fprime_test_api):
 
 This test will send a `CMD_NO_OP` command and verify if successfully returns.
 
-Next, after verifying the fprime GDS is connected to your deployment, run the new system test and confirm it executes successfully.
+Next, after verifying the F` GDS is connected to your deployment, run the new system test and confirm it executes successfully.
 
 ```shell
 # In led-blinker/LedBlinker
@@ -40,7 +40,7 @@ $ pytest ../Components/Led/test/int/led_integration_tests.py
 
 ## Fprime System Testing Assertions
 
-The typical pattern for fprime system tests is to send a command, then wait until some condition is met, such as receiving an event. If the system test don't receive the expected results, they will time out and fail.
+The typical pattern for F´ system tests is to send a command, then wait until some condition is met, such as receiving an event. If the system test don't receive the expected results, they will time out and fail.
 
 `fprime_test_api.send_and_assert_command` will send a command and wait for its completion, but there are several other variants we will use in this guide.
 
@@ -90,7 +90,15 @@ Add the following to the `test_blinking()` method:
     )
 ```
 
-Now, run `pytest` and verify the new test passes. Open the fprime GDS webpage and see if the expected events from the test appear in the event viewer.
+### Do it Yourself
+
+Below is a table with a task you must complete before moving on to the next section. This task require you to update the section of code you just added.
+
+| Task | Solution |
+|-------|-------------|
+| 1. Add event pred definition for use in `fprime_test_api.send_and_assert_event("LedBlinker.led.BLINKING_ON_OFF", args=["OFF"], events=[blink_stop_evr])` | <details><summary>Answer</summary>`blink_stop_evr = fprime_test_api.get_event_pred("LedBlinker.led.SetBlinkingState", ["OFF"])`</details> |
+
+Now, run `pytest` and verify the new test passes. Open the F` GDS webpage and see if the expected events from the test appear in the event viewer.
 
 ## Test BlinkingState Telemetry
 
@@ -116,7 +124,7 @@ Run `pytest` again. **Notice that this new telemetry check should fail.**
 #TODO: use fprime_test_api.assert_telemetry to check that "LedBlinker.led.BlinkingState" is off
 ```
 
-Events in fprime are emitted immediately, but telemetry is only emitted periodically. In the LedBlinker deployment, telemetry channels are sent once per second.
+Events in F` are emitted immediately, but telemetry is only emitted periodically. In the LedBlinker deployment, telemetry channels are sent once per second.
 
 The `fprime_test_api.assert_telemetry` check will immediately search for a matching `LedBlinker.led.BlinkingState` telemetry value.
 However, because one second hasn't passed between setting blinking off and checking for telemetry, there hasn't been sufficient time for the updated telemetry value to be sent.
