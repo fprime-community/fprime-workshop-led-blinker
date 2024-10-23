@@ -41,8 +41,8 @@ class Led : public LedComponentBase {
         //!
         //! Port receiving calls from the rate group
         void
-        run_handler(NATIVE_INT_TYPE portNum,  //!< The port number
-                    NATIVE_UINT_TYPE context  //!< The call order
+        run_handler(FwIndexType portNum,  //!< The port number
+                    U32 context  //!< The call order
                     ) override;
 
     PRIVATE :

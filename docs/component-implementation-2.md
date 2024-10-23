@@ -75,8 +75,8 @@ In your `led-blinker/Components/Led` directory, open `Led.template.hpp` file and
     //! Handler implementation for run
     //!
     //! Port receiving calls from the rate group
-    void run_handler(NATIVE_INT_TYPE portNum,  //!< The port number
-                     NATIVE_UINT_TYPE context  //!< The call order
+    void run_handler(FwIndexType portNum,  //!< The port number
+                     U32 context  //!< The call order
                      ) override;
 ```
 
@@ -86,7 +86,7 @@ In your `led-blinker/Components/Led` directory, open `Led.template.cpp` file and
 // Handler implementations for user-defined typed input ports
 // ----------------------------------------------------------------------
 
-void Led ::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
+void Led ::run_handler(FwIndexType portNum, U32 context) {
     // TODO
 }
 ```
@@ -102,7 +102,7 @@ Copy the run_handler implementation below into your run_handler. Try filling in 
 >Don't forget to read the code and comments to understand more about how to use F´.
 
 ```cpp
-void Led ::run_handler(NATIVE_INT_TYPE portNum, NATIVE_UINT_TYPE context) {
+void Led ::run_handler(FwIndexType portNum, U32 context) {
     // Read back the parameter value
     Fw::ParamValid isValid = Fw::ParamValid::INVALID;
     U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
