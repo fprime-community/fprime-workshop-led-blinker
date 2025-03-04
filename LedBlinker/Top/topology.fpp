@@ -25,7 +25,7 @@ module LedBlinker {
     instance comQueue
     instance comStub
     instance deframer
-    instance uplinkRouter
+    instance fprimeRouter
     instance frameAccumulator
     instance eventLogger
     instance fatalAdapter
@@ -129,13 +129,13 @@ module LedBlinker {
       frameAccumulator.bufferDeallocate -> bufferManager.bufferSendIn
       frameAccumulator.bufferAllocate -> bufferManager.bufferGetCallee
       frameAccumulator.frameOut -> deframer.framedIn
-      deframer.deframedOut -> uplinkRouter.dataIn
+      deframer.deframedOut -> fprimeRouter.dataIn
 
-      uplinkRouter.commandOut -> cmdDisp.seqCmdBuff
-      uplinkRouter.fileOut -> fileUplink.bufferSendIn
-      uplinkRouter.bufferDeallocate -> bufferManager.bufferSendIn
+      fprimeRouter.commandOut -> cmdDisp.seqCmdBuff
+      fprimeRouter.fileOut -> fileUplink.bufferSendIn
+      fprimeRouter.bufferDeallocate -> bufferManager.bufferSendIn
 
-      cmdDisp.seqCmdStatus -> uplinkRouter.cmdResponseIn
+      cmdDisp.seqCmdStatus -> fprimeRouter.cmdResponseIn
 
       fileUplink.bufferSendOut -> bufferManager.bufferSendIn
     }
