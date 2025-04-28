@@ -72,21 +72,23 @@ module LedBlinker {
 
       eventLogger.PktSend -> comQueue.comPktQueueIn[0]
       tlmSend.PktSend -> comQueue.comPktQueueIn[1]
-      fileDownlink.bufferSendOut -> comQueue.buffQueueIn[0]
-
-      comQueue.queueSend -> framer.dataIn
-      framer.dataReturn -> comQueue.bufferReturnIn
+      fileDownlink.bufferSendOut -> comQueue.bufferQueueIn[0]
       comQueue.bufferReturnOut[0] -> fileDownlink.bufferReturn
 
-      framer.bufferAllocate -> bufferManager.bufferGetCallee
-      framer.framedDataOut -> comStub.comDataIn
-
-      comDriver.deallocate -> bufferManager.bufferSendIn
-      comDriver.ready -> comStub.drvConnected
-
-      comStub.comStatus -> framer.comStatusIn
+      comQueue.queueSend -> framer.dataIn
+      framer.dataReturnOut -> comQueue.bufferReturnIn
       framer.comStatusOut -> comQueue.comStatusIn
+
+      framer.bufferAllocate -> bufferManager.bufferGetCallee
+      framer.bufferDeallocate -> bufferManager.bufferSendIn
+      
+      framer.dataOut -> comStub.comDataIn
+      comStub.dataReturnOut -> framer.dataReturnIn
+      comStub.comStatusOut -> framer.comStatusIn
+
       comStub.drvDataOut -> comDriver.$send
+      comDriver.dataReturnOut -> comStub.dataReturnIn
+      comDriver.ready -> comStub.drvConnected
 
     }
 
