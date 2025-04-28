@@ -70,8 +70,8 @@ module LedBlinker {
 
     connections Downlink {
 
-      eventLogger.PktSend -> comQueue.comPktQueueIn[0]
-      tlmSend.PktSend -> comQueue.comPktQueueIn[1]
+      eventLogger.PktSend -> comQueue.comPacketQueueIn[0]
+      tlmSend.PktSend -> comQueue.comPacketQueueIn[1]
       fileDownlink.bufferSendOut -> comQueue.bufferQueueIn[0]
       comQueue.bufferReturnOut[0] -> fileDownlink.bufferReturn
 
