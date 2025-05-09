@@ -5,7 +5,7 @@
 // ======================================================================
 
 #include "Components/Led/Led.hpp"
-#include "FpConfig.hpp"
+#include "config/FpConfig.hpp"
 
 namespace Components {
 
