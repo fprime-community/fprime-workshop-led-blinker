@@ -127,6 +127,6 @@ module LedBlinker {
 
   instance fprimeRouter: Svc.FprimeRouter base id 0x4E00
 
-  instance fprimeRouter: Svc.LinuxTimer base id 0x4F00
+  instance linuxTimer: Svc.LinuxTimer base id 0x4F00
 
 }
