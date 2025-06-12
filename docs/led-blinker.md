@@ -121,7 +121,7 @@ The purpose of this exercise is to walk you through the creation and initial des
 
 ### Component Design
 
-In order for our component to blink an LED, it needs to accept a command to turn on the LED and drive a GPIO pin via a port call to the GPIO driver. It will also need a [rate group](https://fprime.jpl.nasa.gov/latest/documentation/user-manual/design/rate-group.md) input port to control the timing of the blink. Additionally, we will define events and telemetry channels to report component state, and a parameter to control the period of the blink.
+In order for our component to blink an LED, it needs to accept a command to turn on the LED and drive a GPIO pin via a port call to the GPIO driver. It will also need a [rate group](https://fprime.jpl.nasa.gov/latest/docs/user-manual/design-patterns/rate-group/) input port to control the timing of the blink. Additionally, we will define events and telemetry channels to report component state, and a parameter to control the period of the blink.
 
 This component design is captured in the block diagram below with input ports on the left and output ports on the right. Ports for standard F´ functions (e.g. commands, events, telemetry, and parameters) are circled in green.
 
