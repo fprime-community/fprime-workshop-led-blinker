@@ -375,7 +375,7 @@ void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, Fw::On on
 Before finishing the implementation, let's take a break and try running the above command through the ground system. This will require integrating the component into the system topology, which we will get into in the next section.
 
 > [!NOTE]
-> The last TODO in the `BLINKING_ON_OFF` command handler will be addressed in a future section. 
+> The last TODO in the `BLINKING_ON_OFF` command handler will be addressed in a future section.
 
 ---
 
@@ -408,12 +408,12 @@ Select communication driver type:
 3 - UART
 Choose from 1, 2, 3 [1]: 2
 [INFO] Found CMake file at 'led-blinker/project.cmake'
-Add component LedBlinker to led-blinker/project.cmake at end of file? (yes/no) [yes]: 
+Add component LedBlinker to led-blinker/project.cmake at end of file? (yes/no) [yes]:
 ```
 > [!NOTE]
 > Use the default response for any other questions asked.
 
-In order to check that the deployment was created successfully, the user can build the deployment. This will build the code for the current host system, not the remote embedded hardware allowing local testing during development. 
+In order to check that the deployment was created successfully, the user can build the deployment. This will build the code for the current host system, not the remote embedded hardware allowing local testing during development.
 
 ```shell
 # In led-blinker
@@ -569,7 +569,7 @@ fprime-util impl
 In your `led-blinker/Components/Led` directory, open `Led.template.hpp` file and copy this block over to `Led.hpp`.
 
 ```cpp
-  PRIVATE:
+  private:
     // ----------------------------------------------------------------------
     // Handler implementations for user-defined typed input ports
     // ----------------------------------------------------------------------
@@ -685,7 +685,7 @@ fprime-util build
 
 When ground updates a component's parameter, the user may want the component to react to the parameter update. F Prime provides a function called `parameterUpdated` where your component can react to each parameter update. Implementing `parameterUpdated` for a component is optional but we'll implement it for this tutorial.
 
-In your `led-blinker/Components/Led` directory, open the file `Led.hpp` and add the following function signature in the `PRIVATE:` scope:
+In your `led-blinker/Components/Led` directory, open the file `Led.hpp` and add the following function signature in the `private:` scope:
 
 ```cpp
     //! Emit parameter updated EVR
@@ -740,7 +740,7 @@ Below is a table with tasks you must complete. These tasks require you to go bac
 | Inside the `run_handler` port handler, emit an event LedState to report the LED state (this->m_state). There are two places to add this event. | <details><summary>Answer</summary>`this->log_ACTIVITY_LO_LedState(this->m_state);`</details> |
 
 > [!TIP]
-> Emitting an event follows this pattern: `this->log_<severity>_<eventName>(<argument_if_any>);`  
+> Emitting an event follows this pattern: `this->log_<severity>_<eventName>(<argument_if_any>);`
 > [!TIP]
 > Emitting a telemetry channel follows this pattern: `this->tlmWrite_<telemetryChannel>(<telemetryValue>);`
 > [!TIP]
@@ -770,7 +770,7 @@ fprime-util generate --ut
 > [!NOTE]
 > Unit tests run with special build settings and as such need their own build cache generated.
 
-Next we will generate unit test template files. This is similar to the component implementations we have run, but will set up the complete unit test harness. 
+Next we will generate unit test template files. This is similar to the component implementations we have run, but will set up the complete unit test harness.
 
 To do so, run the implementation command in the terminal within your `led-blinker/Components/Led` directory:
 ```shell
@@ -838,7 +838,7 @@ TEST(Nominal, TestBlinking) {
 }
 ```
 
-Use `fprime-util check` to make sure the new check builds and passes. 
+Use `fprime-util check` to make sure the new check builds and passes.
 
 > [!NOTE]
 > Ensure all errors are resolved before continuing.
@@ -887,7 +887,7 @@ Next, enable blinking, then step through 3 cycles to verify the LED component bl
                         Fw::CmdResponse::OK);  // ensure the expected command response was emitted
 ```
 
-The F´ unit test framework provides `this->sendCmd_COMMAND_NAME(args)` function that allows calling a command on the component under test. `BLINKING_ON_OFF` is an `async` command, it's not dispatched immediately, but instead added to an execution queue that would normally be driven off the component's thread. 
+The F´ unit test framework provides `this->sendCmd_COMMAND_NAME(args)` function that allows calling a command on the component under test. `BLINKING_ON_OFF` is an `async` command, it's not dispatched immediately, but instead added to an execution queue that would normally be driven off the component's thread.
 
 To dispatch a queued command, unit tests must explicitly call the `doDispatch()` function to dispatch the first message on the queue.
 
@@ -1050,7 +1050,7 @@ In the prerequisites for this tutorial, the ARM Linux cross-compilers were insta
 
 ### Running on Hardware
 
-Now it is time to run on hardware. For this tutorial, the assumption is that the Arm Linux machine is available on the network, is running SSH, and the username, password, device address, and host address are known to the student. Without this configuration, users should skip to the next section of the tutorial. 
+Now it is time to run on hardware. For this tutorial, the assumption is that the Arm Linux machine is available on the network, is running SSH, and the username, password, device address, and host address are known to the student. Without this configuration, users should skip to the next section of the tutorial.
 
 Follow the [F´ Running on ARM Linux Tutorial](https://fprime.jpl.nasa.gov/latest/docs/tutorials/cross-compilation#f-running-on-arm-linux-tutorial) for step-by-step instructions on how to upload the software to the hardware platform, launching F´ GDS, and for running the uploaded software.
 
@@ -1240,13 +1240,13 @@ Congratulations! You have now completed the F´ on-hardware tutorial. You should
 
 [Return to Tutorials](https://fprime.jpl.nasa.gov/latest/documentation/tutorials/){ .md-button .md-button--primary }
 
---- 
+---
 
 
 ## Appendix: Optional Hardware Requirements
 
 You will need two hardware elements in order to run on hardware during the LedBlinker tutorial:
-1. an embedded ARM Linux computer (e.g. RaspberryPi or similar), 
+1. an embedded ARM Linux computer (e.g. RaspberryPi or similar),
 2. an LED capable of withstanding the operating voltage of the computer.
 
 > [!IMPORTANT]
@@ -1268,7 +1268,7 @@ The user may use any LED that can withstand the GPIO voltage of the chosen platf
 For this tutorial, GPIO pin 13 will be used. For platforms that do not have GPIO pin 13 readily available another pin should be chosen, noted, and used in-place of GPIO 13.
 
 ```
-GPIO 13 ----> LED + (cathode) 
-GND     <---- LED - (anode)     
+GPIO 13 ----> LED + (cathode)
+GND     <---- LED - (anode)
 ```
 
