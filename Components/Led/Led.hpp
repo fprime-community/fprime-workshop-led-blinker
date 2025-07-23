@@ -24,14 +24,14 @@ class Led : public LedComponentBase {
     //! Destroy Led object
     ~Led();
 
-    PRIVATE :
+    private :
         //! Emit parameter updated EVR
         //!
         void
         parameterUpdated(FwPrmIdType id  //!< The parameter ID
                          ) override;
 
-    PRIVATE :
+    private :
 
         // ----------------------------------------------------------------------
         // Handler implementations for user-defined typed input ports
@@ -45,7 +45,7 @@ class Led : public LedComponentBase {
                     U32 context  //!< The call order
                     ) override;
 
-    PRIVATE :
+    private :
         // ----------------------------------------------------------------------
         // Handler implementations for commands
         // ----------------------------------------------------------------------
