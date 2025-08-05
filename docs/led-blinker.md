@@ -28,6 +28,15 @@ To run on hardware with cross-compiling, you must also:
 > [!NOTE]
 > Attendees to an in-person F´ workshop will have access to 64-bit ARM hardware and should set up the 64-bit cross compiling environment.
 
+## Troubleshooting
+
+If at any point during this tutorial you encounter issues:
+1. **Check your current directory**: Ensure you are in the correct directory as specified in each step of the tutorial
+2. **Activate your virtual environment**: Always make sure your F´ project's virtual environment is activated with `. fprime-venv/bin/activate`
+3. **Refer to the F´ troubleshooting guide**: Visit [F´ Installation and Troubleshooting](https://fprime.jpl.nasa.gov/latest/docs/getting-started/installing-fprime/#troubleshooting) for common installation and setup issues
+4. **Verify your F´ installation**: Run `fprime-util --help` to ensure F´ tools are properly installed
+5. **Check build errors**: If you encounter build errors, ensure all previous steps were completed successfully
+
 ## Tutorial Steps
 
 This tutorial is composed of the following steps:
@@ -73,6 +82,7 @@ fprime-util generate
 ## 2. Specifying Requirements
 
 In this section to the tutorial, you will learn a bit about specifying requirements. Software requirements are derived from higher-level system requirements and represent the detail needed to implement the software.
+> [!NOTE] Typically these would be done in the Component's Software Specifications Document, or `sdd.md` 
 
 ### System Requirements
 
@@ -126,6 +136,7 @@ In order for our component to blink an LED, it needs to accept a command to turn
 This component design is captured in the block diagram below with input ports on the left and output ports on the right. Ports for standard F´ functions (e.g. commands, events, telemetry, and parameters) are circled in green.
 
 ![Led Component Block Diagram](img/component-design.png)
+> [!NOTE] This component diagram was created using the built-in [fprime-visual](https://github.com/fprime-community/fprime-visual) tool
 
 In this exercise, the `BLINKING_ON_OFF` command shall toggle the blinking state of the LED. The period of the blinking is controlled by the `BLINK_INTERVAL` parameter. Blinking is implemented on the `run` rate group input port. The component also defines several telemetry channels and events describing the various actions taken by the component.
 
@@ -221,6 +232,8 @@ Replace that block with the following:
             onOff: Fw.On @< Indicates whether the blinking should be on or off
         )
 ```
+> [!NOTE] 
+> The text following a symbol @ or @< is called an annotation. These annotations are carried through the parsing and become comments in the generated code. For more information, see [The FPP User's Guide](https://nasa.github.io/fpp/fpp-users-guide.html#Writing-Comments-and-Annotations_Annotations)
 
 #### Events
 
@@ -275,6 +288,8 @@ Verify your component is building correctly by running the following command in 
 # In led-blinker/Components/Led
 fprime-util build
 ```
+> [!SUGGESTION]
+> Append the flag `-j4` or `-j8` to build faster with more cores
 
 > [!NOTE]
 > Fix any errors that occur before proceeding with the rest of the tutorial.
@@ -408,7 +423,7 @@ Select communication driver type:
 3 - UART
 Choose from 1, 2, 3 [1]: 2
 [INFO] Found CMake file at 'led-blinker/project.cmake'
-Add component LedBlinker to led-blinker/project.cmake at end of file? (yes/no) [yes]:
+Add component LedBlinker to led-blinker/project.cmake at end of file? (yes/no) [yes]: yes
 ```
 > [!NOTE]
 > Use the default response for any other questions asked.
@@ -523,7 +538,7 @@ Below is a table with a task you must complete before moving on to the next sect
 
 | Task | Solution |
 |-------|-------------|
-| 1. Add a telemetry channel `LedTransitions` of type `U64` to Led.fpp. | <details><summary>Answer</summary>`telemetry LedTransitions: U64`</details> |
+| 1. Add a telemetry channel `LedTransitions` of type `U64` to count LED Transitions to `Led.fpp`. | <details><summary>Answer</summary>`telemetry LedTransitions: U64`</details> |
 
 #### Parameters
 
@@ -792,16 +807,16 @@ mv LedTestMain.template.cpp LedTestMain.cpp
 Then, register the unit test files with the build system by uncommenting these lines at the very end of the component `CMakeLists.txt` file in your `led-blinker/Components/Led` directory:
 
 ```cmake
-set(UT_SOURCE_FILES
-  "${CMAKE_CURRENT_LIST_DIR}/Led.fpp"
-  "${CMAKE_CURRENT_LIST_DIR}/test/ut/LedTestMain.cpp"
-  "${CMAKE_CURRENT_LIST_DIR}/test/ut/LedTester.cpp"
+register_fprime_ut(
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/Led.fpp"
+    SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/test/ut/LedTestMain.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/test/ut/LedTester.cpp"
+    DEPENDS
+        STest # For rules-based testing
+    UT_AUTO_HELPERS
 )
-set(UT_MOD_DEPS
-  STest
-)
-set(UT_AUTO_HELPERS ON)
-register_fprime_ut()
 ```
 
 Finally, test the skeleton unit tests with the following command:
@@ -958,6 +973,10 @@ fprime-util check --coverage
 ```
 
 Now open the file `led-blinker/Components/Led/coverage/coverage.html` with your web browser and explore the coverage report.
+```shell
+# In led-blinker/Components/Led/coverage
+open coverage.html
+``` 
 
 ### LED Blinker Step 6 Conclusion
 
@@ -997,14 +1016,25 @@ To do this, add the following lines to `led-blinker/LedBlinker/Top/topology.fpp`
     # Named connection group
     connections LedConnections {
       # Rate Group 1 (1Hz cycle) ouput is connected to led's run input
-      rateGroup1.RateGroupMemberOut[3] -> led.run
+      rateGroup1.RateGroupMemberOut[4] -> led.run
       # led's gpioSet output is connected to gpioDriver's gpioWrite input
       led.gpioSet -> gpioDriver.gpioWrite
     }
 ```
 
 > [!NOTE]
-> `rateGroup1` is preconfigured to call all `RateGroupMemberOut` at a rate of 1 Hz. We use index `RateGroupMemberOut[3]` because `RateGroupMemberOut[0]` through `RateGroupMemberOut[2]` were used previously in the `RateGroups` connection block.
+> `rateGroup1` is preconfigured to call all `RateGroupMemberOut` at a rate of 1 Hz. We use index `RateGroupMemberOut[4]` because `RateGroupMemberOut[0]` through `RateGroupMemberOut[3]` were used previously in the `RateGroups` connection block.
+
+To verify the LED blinking status or to track its activity remotely, we must ensure our telemetry packets are sent.
+
+In `led-blinker/LedBlinker/Top/LedBlinkerPackets.fppi` under `packet CDH id 1 group 1`, add the following snippet: 
+
+
+```
+    # LED Blinker telemetry channels
+    LedBlinker.led.BlinkingState
+    LedBlinker.led.LedTransitions
+``` 
 
 ### Configuring The GPIO Driver
 
@@ -1079,7 +1109,15 @@ Installing the fprime-gds also installs a pytest fixture called `fprime_test_api
 > [!NOTE]
 > If running the GDS on non-default ports, you can use the same command line arguments used with `fprime-cli` with `pytest` to point the system testing library to the correct GDS instance
 
-First, create a basic test case to verify the system testing library is correctly setup.
+
+First, we'll create a basic test case to verify the system testing library is correctly setup.
+
+Make a directory `int`, which is a convention in flight software development for integration. Then, create the file `led_integration_tests.py` 
+```shell
+# In Components/Led/test
+mkdir int 
+touch led_integration_tests.py
+```
 
 
 Open the file `Components/Led/test/int/led_integration_tests.py` and add the following contents:
@@ -1238,7 +1276,6 @@ To verify this, `fprime_test_api.assert_telemetry_count` can be used to wait for
 
 Congratulations! You have now completed the F´ on-hardware tutorial. You should now have a solid understanding of building an F´ project that runs on hardware!
 
-[Return to Tutorials](https://fprime.jpl.nasa.gov/latest/documentation/tutorials/){ .md-button .md-button--primary }
 
 ---
 
