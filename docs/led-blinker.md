@@ -1023,17 +1023,6 @@ To do this, add the following lines to `led-blinker/LedBlinker/Top/topology.fpp`
 > [!NOTE]
 > `rateGroup1` is preconfigured to call all `RateGroupMemberOut` at a rate of 1 Hz. We use index `RateGroupMemberOut[4]` because `RateGroupMemberOut[0]` through `RateGroupMemberOut[3]` were used previously in the `RateGroups` connection block.
 
-To verify the LED blinking status or to track its activity remotely, we must ensure our telemetry packets are sent.
-
-In `led-blinker/LedBlinker/Top/LedBlinkerPackets.fppi` under `packet CDH id 1 group 1`, add the following snippet: 
-
-
-```
-    # LED Blinker telemetry channels
-    LedBlinker.led.BlinkingState
-    LedBlinker.led.LedTransitions
-``` 
-
 ### Configuring The GPIO Driver
 
 So far the GPIO driver has been instantiated and wired, but has not been told what GPIO pin to control. For this tutorial, GPIO pin 13 will be used. To configure this, the `open` function needs to be called in the topology's C++ implementation and passed the pin's number and direction.

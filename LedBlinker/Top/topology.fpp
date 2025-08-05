@@ -51,7 +51,7 @@ module LedBlinker {
   # Telemetry packets (only used when TlmPacketizer is used)
   # ----------------------------------------------------------------------
 
-    include "LedBlinkerPackets.fppi"
+    # include "LedBlinkerPackets.fppi"
 
   # ----------------------------------------------------------------------
   # Direct graph specifiers
