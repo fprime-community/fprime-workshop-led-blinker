@@ -103,9 +103,9 @@ void LedTester ::testBlinkInterval() {
 // Handlers for typed from ports
 // ----------------------------------------------------------------------
 
-Drv::GpioStatus LedTester ::from_gpioSet_handler(const FwIndexType portNum, const Fw::Logic& state) {
-    this->pushFromPortEntry_gpioSet(state);
-    return Drv::GpioStatus::OP_OK;
-}
+// Drv::GpioStatus LedTester ::from_gpioSet_handler(const FwIndexType portNum, const Fw::Logic& state) {
+//     this->pushFromPortEntry_gpioSet(state);
+//     return Drv::GpioStatus::OP_OK;
+// }
 
 }  // namespace Components

@@ -46,15 +46,15 @@ class LedTester : public LedGTestBase {
     void testBlinking();
     void testBlinkInterval();
 
-  private:
-    // ----------------------------------------------------------------------
-    // Handlers for typed from ports
-    // ----------------------------------------------------------------------
+  // private:
+  //   // ----------------------------------------------------------------------
+  //   // Handlers for typed from ports
+  //   // ----------------------------------------------------------------------
 
-    //! Handler for from_gpioSet
-    //!
-    Drv::GpioStatus from_gpioSet_handler(const FwIndexType portNum, /*!< The port number*/
-                                         const Fw::Logic& state);
+  //   //! Handler for from_gpioSet
+  //   //!
+  //   Drv::GpioStatus from_gpioSet_handler(const FwIndexType portNum, /*!< The port number*/
+  //                                        const Fw::Logic& state);
 
   private:
     // ----------------------------------------------------------------------
