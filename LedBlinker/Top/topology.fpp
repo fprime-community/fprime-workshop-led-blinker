@@ -135,7 +135,9 @@ module LedBlinker {
       rateGroup1.RateGroupMemberOut[4] -> led.run
       # led's gpioSet output is connected to gpioDriver's gpioWrite input
       led.gpioSet -> gpioDriver.gpioWrite
+
     }
+
 
   }
 
