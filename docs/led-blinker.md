@@ -1014,7 +1014,7 @@ We can create a named connections block in the topology and connect the two port
 To do this, add the following lines to `led-blinker/LedBlinker/Top/topology.fpp`:
 ```
     # Named connection group
-    connections LedConnections {
+    connections LedBlinker {
       # Rate Group 1 (1Hz cycle) ouput is connected to led's run input
       rateGroup1.RateGroupMemberOut[4] -> led.run
       # led's gpioSet output is connected to gpioDriver's gpioWrite input
@@ -1024,17 +1024,6 @@ To do this, add the following lines to `led-blinker/LedBlinker/Top/topology.fpp`
 
 > [!NOTE]
 > `rateGroup1` is preconfigured to call all `RateGroupMemberOut` at a rate of 1 Hz. We use index `RateGroupMemberOut[4]` because `RateGroupMemberOut[0]` through `RateGroupMemberOut[3]` were used previously in the `RateGroups` connection block.
-
-To verify the LED blinking status or to track its activity remotely, we must ensure our telemetry packets are sent.
-
-In `led-blinker/LedBlinker/Top/LedBlinkerPackets.fppi` under `packet CDH id 1 group 1`, add the following snippet: 
-
-
-```
-    # LED Blinker telemetry channels
-    LedBlinker.led.BlinkingState
-    LedBlinker.led.LedTransitions
-``` 
 
 ### Configuring The GPIO Driver
 
