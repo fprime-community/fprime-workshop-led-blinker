@@ -288,7 +288,7 @@ Verify your component is building correctly by running the following command in 
 # In led-blinker/Components/Led
 fprime-util build
 ```
-> [!SUGGESTION]
+> [!TIP]
 > Append the flag `-j4` or `-j8` to build faster with more cores
 
 > [!NOTE]

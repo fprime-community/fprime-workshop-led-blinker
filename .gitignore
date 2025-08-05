@@ -4,6 +4,8 @@ cmake-build-*
 build-artifacts/
 build-fprime-*
 *-template
+*.template.cpp
+*.template.hpp
 
 # Misc
 /venv/
@@ -12,5 +14,3 @@ build-fprime-*
 /.vscode/
 .DS_Store
 *.gcov
-
-__pycache__
