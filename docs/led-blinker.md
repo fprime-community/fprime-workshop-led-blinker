@@ -446,7 +446,7 @@ The component can now be added to the deployment's topology effectively adding t
 Add the following to `led-blinker/LedBlinker/Top/instances.fpp`.  Typically, this is added to the "Active component instances" section of that document.
 
 ```
-  instance led: Components.Led base id 0x0E00 \
+  instance led: Components.Led base id 0x10005000 \
     queue size Default.QUEUE_SIZE \
     stack size Default.STACK_SIZE \
     priority 95
@@ -994,7 +994,7 @@ F´ provides a GPIO driver for Linux systems called `Drv.LinuxGpioDriver`. This 
 
 Add to "Passive Component" section of `led-blinker/LedBlinker/Top/instance.fpp`:
 ```
-  instance gpioDriver: Drv.LinuxGpioDriver base id 0x4C00
+  instance gpioDriver: Drv.LinuxGpioDriver base id 0x10015000
 ```
 
 Add to the instance list of `led-blinker/LedBlinker/Top/topology.fpp`:
