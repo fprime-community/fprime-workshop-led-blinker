@@ -6,6 +6,8 @@ permalink: /
 
 This is designed to be an extended introductory F´ tutorial taking the user through the basics of creating components, using events, telemetry, commands, and parameters, and integrating topologies with the goal of running F´ on embedded hardware. Users will be guided through the process of software development and testing on embedded Linux running on an ARM processor (e.g. RaspberryPI, Odroid, etc).
 
+The goal of this tutorial is to build a spacecraft whose mission is to blink an LED.
+
 > [!TIP]
 > The source for this tutorial is located here: [https://github.com/fprime-community/fprime-workshop-led-blinker](https://github.com/fprime-community/fprime-workshop-led-blinker). If you are stuck at some point during the tutorial, you may refer to that reference as the "solution".
 
