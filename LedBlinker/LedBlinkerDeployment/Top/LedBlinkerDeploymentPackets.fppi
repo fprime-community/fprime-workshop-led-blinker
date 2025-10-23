@@ -1,4 +1,4 @@
-telemetry packets LedBlinkerPackets {
+telemetry packets LedBlinkerDeploymentPackets {
 
   packet CDH id 1 group 1 {
     CdhCore.cmdDisp.CommandsDispatched

@@ -4,7 +4,7 @@
 //
 // ======================================================================
 // Provides access to autocoded functions
-#include <LedBlinker/Top/LedBlinkerTopologyAc.hpp>
+#include <LedBlinker/LedBlinkerDeployment/Top/LedBlinkerDeploymentTopologyAc.hpp>
 // Note: Uncomment when using Svc:TlmPacketizer
 //#include <LedBlinker/Top/LedBlinkerPacketsAc.hpp>
 
@@ -32,6 +32,9 @@ enum TopologyConstants {
     COMM_PRIORITY = 100,
 };
 
+// Public functions for use in main program are namespaced with deployment name LedBlinker
+namespace LedBlinkerDeployment {
+
 /**
  * \brief configure/setup components in project-specific way
  *
@@ -57,8 +60,7 @@ void configureTopology() {
     }
 }
 
-// Public functions for use in main program are namespaced with deployment name LedBlinker
-namespace LedBlinker {
+
 void setupTopology(const TopologyState& state) {
     // Autocoded initialization. Function provided by autocoder.
     initComponents(state);

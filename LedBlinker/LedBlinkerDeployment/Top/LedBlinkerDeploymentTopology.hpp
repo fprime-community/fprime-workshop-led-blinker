@@ -5,13 +5,12 @@
 // ======================================================================
 #ifndef LEDBLINKER_LEDBLINKERTOPOLOGY_HPP
 #define LEDBLINKER_LEDBLINKERTOPOLOGY_HPP
-// Included for access to LedBlinker::TopologyState and LedBlinker::ConfigObjects::pingEntries. These definitions are required by the
-// autocoder, but are also used in this hand-coded topology.
-#include <LedBlinker/Top/LedBlinkerTopologyDefs.hpp>
+// Included for access to LedBlinker::TopologyState and LedBlinker::ConfigObjects::pingEntries. These definitions are
+// required by the autocoder, but are also used in this hand-coded topology.
+#include <LedBlinker/LedBlinkerDeployment/Top/LedBlinkerDeploymentTopologyDefs.hpp>
 
-// Remove unnecessary LedBlinker:: qualifications
-using namespace LedBlinker;
-namespace LedBlinker {
+
+namespace LedBlinkerDeployment {
 /**
  * \brief initialize and run the F´ topology
  *
@@ -71,14 +70,14 @@ void teardownTopology(const TopologyState& state);
  * This loop is stopped via a stopRateGroups call.
  *
  */
-void startRateGroups(const Fw::TimeInterval& interval = Fw::TimeInterval(1,0));
+void startRateGroups(const Fw::TimeInterval& interval = Fw::TimeInterval(1, 0));
 
 /**
- * \brief stop the rate groups 
+ * \brief stop the rate groups
  *
  * This stops the cycle started by startRateGroups.
  */
 void stopRateGroups();
 
-} // namespace LedBlinker
+}  // namespace LedBlinkerDeployment
 #endif

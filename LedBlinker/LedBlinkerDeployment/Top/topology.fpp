@@ -10,7 +10,7 @@ module LedBlinker {
     rateGroup3
   }
 
-  topology LedBlinker {
+  topology LedBlinkerDeployment {
 
   # ----------------------------------------------------------------------
   # Subtopology imports

@@ -7,9 +7,9 @@
 #ifndef Components_Led_HPP
 #define Components_Led_HPP
 
-#include "Components/Led/LedComponentAc.hpp"
+#include "LedBlinker/Components/Led/LedComponentAc.hpp"
 
-namespace Components {
+namespace LedBlinker {
 
 class Led : public LedComponentBase {
   public:
