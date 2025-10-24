@@ -32,7 +32,7 @@ enum TopologyConstants {
     COMM_PRIORITY = 100,
 };
 
-// Public functions for use in main program are namespaced with deployment name LedBlinker
+// Public functions for use in main program are namespaced with deployment module name
 namespace LedBlinker {
 
 /**
