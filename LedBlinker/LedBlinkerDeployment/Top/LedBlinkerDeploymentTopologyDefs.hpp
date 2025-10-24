@@ -51,13 +51,13 @@ namespace PingEntries {
     namespace LedBlinker_cmdSeq {enum { WARN = 3, FATAL = 5 };}
 }  // namespace PingEntries
 
-// Definitions are placed within a namespace named after the deployment
-namespace LedBlinkerDeployment {
+// Definitions are placed within the same namespace (FPP module name)
+namespace LedBlinker {
 
 /**
  * \brief required type definition to carry state
  *
- * The topology autocoder requires an object that carries state with the name `LedBlinkerDeployment::TopologyState`. Only the type
+ * The topology autocoder requires an object that carries state with the name `LedBlinker::TopologyState`. Only the type
  * definition is required by the autocoder and the contents of this object are otherwise opaque to the autocoder. The
  * contents are entirely up to the definition of the project. This deployment uses subtopologies.
  */
@@ -71,8 +71,6 @@ struct TopologyState {
 };
 
 namespace PingEntries = ::PingEntries;
-}  // namespace LedBlinkerDeployment
-
-using namespace LedBlinkerDeployment;
+}  // namespace LedBlinker
 
 #endif

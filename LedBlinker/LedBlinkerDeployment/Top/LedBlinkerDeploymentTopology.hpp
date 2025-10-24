@@ -10,7 +10,7 @@
 #include <LedBlinker/LedBlinkerDeployment/Top/LedBlinkerDeploymentTopologyDefs.hpp>
 
 
-namespace LedBlinkerDeployment {
+namespace LedBlinker {
 /**
  * \brief initialize and run the F´ topology
  *
@@ -79,5 +79,5 @@ void startRateGroups(const Fw::TimeInterval& interval = Fw::TimeInterval(1, 0));
  */
 void stopRateGroups();
 
-}  // namespace LedBlinkerDeployment
+}  // namespace LedBlinker
 #endif

@@ -34,7 +34,7 @@ void print_usage(const char* app) {
  * @param signum
  */
 static void signalHandler(int signum) {
-    LedBlinkerDeployment::stopRateGroups();
+    LedBlinker::stopRateGroups();
 }
 
 /**
@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
         }
     }
     // Object for communicating state to the topology
-    LedBlinkerDeployment::TopologyState inputs;
+    LedBlinker::TopologyState inputs;
     inputs.hostname = hostname;
     inputs.port = port_number;
 
@@ -86,9 +86,9 @@ int main(int argc, char* argv[]) {
     (void)printf("Hit Ctrl-C to quit\n");
 
     // Setup, cycle, and teardown topology
-    LedBlinkerDeployment::setupTopology(inputs);
-    LedBlinkerDeployment::startRateGroups(Fw::TimeInterval(1,0));  // Program loop cycling rate groups at 1Hz
-    LedBlinkerDeployment::teardownTopology(inputs);
+    LedBlinker::setupTopology(inputs);
+    LedBlinker::startRateGroups(Fw::TimeInterval(1,0));  // Program loop cycling rate groups at 1Hz
+    LedBlinker::teardownTopology(inputs);
     (void)printf("Exiting...\n");
     return 0;
 }

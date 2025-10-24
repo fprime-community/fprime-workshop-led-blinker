@@ -33,7 +33,7 @@ enum TopologyConstants {
 };
 
 // Public functions for use in main program are namespaced with deployment name LedBlinker
-namespace LedBlinkerDeployment {
+namespace LedBlinker {
 
 /**
  * \brief configure/setup components in project-specific way
