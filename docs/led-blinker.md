@@ -172,7 +172,7 @@ It is time to create the basic component. In a terminal, navigate to the project
 
 ```bash
 # In led-blinker
-cd Components
+cd LedBlinker/Components
 
 fprime-util new --component
 ```
@@ -182,7 +182,7 @@ You will be prompted for information regarding your component. Fill out the prom
 [INFO] Cookiecutter source: using builtin
   [1/8] Component name (MyComponent): Led
   [2/8] Component short description (Component for F Prime FSW framework.): Component to blink an LED driven by a rate group
-  [3/8] Component namespace (Components): Components
+  [3/8] Component namespace (LedBlinker): LedBlinker
   [4/8] Select component kind
     1 - active
     2 - passive
@@ -204,20 +204,20 @@ You will be prompted for information regarding your component. Fill out the prom
     1 - yes
     2 - no
     Choose from [1/2] (1): 1
-[INFO] Found CMake file at 'led-blinker/Components/CMakeLists.txt'
-Add Led to led-blinker/Components/CMakeLists.txt at end of file? (yes/no) [yes]: yes
+[INFO] Found CMake file at 'LedBlinker/Components/CMakeLists.txt'
+Add Led to LedBlinker/Components/CMakeLists.txt at end of file? (yes/no) [yes]: yes
 Generate implementation files? (yes/no) [yes]: yes
 Refreshing cache and generating implementation files...
 [INFO] Created new component and generated initial implementations.
 ```
-Your new component is located in the directory `led-blinker/Components/Led`.
+Your new component is located in the directory `LedBlinker/Components/Led`.
 
 #### Commands
 
 Commands are used to command the component from the ground system or a command sequencer. We will add a command named `BLINKING_ON_OFF` to turn on or off the blinking LED. This command will take in an argument named `onOff` of type `Fw.On`.
 
 
-Inside your `led-blinker/Components/Led` directory, open the file `Led.fpp` and search for the following:
+Inside your `LedBlinker/Components/Led` directory, open the file `Led.fpp` and search for the following:
 
 ```
         # One async command/port is required for active components
@@ -241,7 +241,7 @@ Replace that block with the following:
 
 Events represent a log of system activities. Events are typically emitted any time the system takes an action. Events are also emitted to report off-nominal conditions.
 
-Inside your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the command you added in the previous section, add this event:
+Inside your `LedBlinker/Components/Led` directory, open the `Led.fpp` file. After the command you added in the previous section, add this event:
 
 ```
         @ Reports the state we set to blinking.
@@ -267,31 +267,29 @@ You have completed the Command and Event design phase. We'll move on to the Comm
 
 ### Component Implementation
 
-In the `led-blinker/Components/Led` directory, run the following:
+In the `LedBlinker/Components/Led` directory, run the following:
 
 ```bash
-# In led-blinker/Components/Led
+# In LedBlinker/Components/Led
 fprime-util impl
 ```
 
 This command will auto generate two files: `Led.template.hpp` and `Led.template.cpp`. These files contain the stub implementation for the component's newly added command.
 
-Since this is the start of the component's implementation, we can use the generated template files for our initial component implementation. Inside your `led-blinker/Components/Led` directory, rename `Led.template.hpp` to `Led.hpp` and rename `Led.template.cpp` to `Led.cpp`. You can rename the files through the terminal using the two commands below:
+Since this is the start of the component's implementation, we can use the generated template files for our initial component implementation. Inside your `LedBlinker/Components/Led` directory, rename `Led.template.hpp` to `Led.hpp` and rename `Led.template.cpp` to `Led.cpp`. You can rename the files through the terminal using the two commands below:
 
 ```bash
-# In led-blinker/Components/Led
+# In LedBlinker/Components/Led
 mv Led.template.hpp Led.hpp
 mv Led.template.cpp Led.cpp
 ```
 
-Verify your component is building correctly by running the following command in the `led-blinker/Components/Led` directory.
+Verify your component is building correctly by running the following command in the `LedBlinker/Components/Led` directory.
 
 ```bash
-# In led-blinker/Components/Led
+# In LedBlinker/Components/Led
 fprime-util build
 ```
-> [!TIP]
-> Append the flag `-j4` or `-j8` to build faster with more cores
 
 > [!NOTE]
 > Fix any errors that occur before proceeding with the rest of the tutorial.
@@ -300,7 +298,7 @@ fprime-util build
 
 Many of the behaviors of the component discussed in the [Component Design](#component-design) section require the tracking of some state. Let us set up and initialize that state.
 
-Open `Led.hpp` in `led-blinker/Components/Led`. Add the following private member variables to the end of the file just before the two closing `}` of the class definition and namespace.
+Open `Led.hpp` in `LedBlinker/Components/Led`. Add the following private member variables to the end of the file just before the two closing `}` of the class definition and namespace.
 
 ```cpp
     Fw::On m_state = Fw::On::OFF; //! Keeps track if LED is on or off
@@ -309,10 +307,10 @@ Open `Led.hpp` in `led-blinker/Components/Led`. Add the following private member
     bool m_blinking = false; //! Flag: if true then LED blinking will occur else no blinking will happen
 ```
 
-Run the following in the `led-blinker/Components/Led` directory to verify your component is building correctly.
+Run the following in the `LedBlinker/Components/Led` directory to verify your component is building correctly.
 
 ```bash
-# In led-blinker/Components/Led
+# In LedBlinker/Components/Led
 fprime-util build
 ```
 
@@ -340,7 +338,7 @@ void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, Fw::On on
 Run the following command in the terminal to verify your component is building correctly.
 
 ```bash
-# In led-blinker/Components/Led
+# In LedBlinker/Components/Led
 fprime-util build
 ```
 
@@ -349,7 +347,7 @@ fprime-util build
 
 #### Events
 
-Open `Led.cpp` in your `led-blinker/Components/Led` directory and navigate to the `BLINKING_ON_OFF` command. Report, via an event, the blinking state has been set.
+Open `Led.cpp` in your `LedBlinker/Components/Led` directory and navigate to the `BLINKING_ON_OFF` command. Report, via an event, the blinking state has been set.
 
 To do so, replace:
 ```cpp
@@ -404,37 +402,38 @@ In this section, users will create a deployment and perform the initial integrat
 > [!NOTE]
 > Users must have created the [initial Led component implementation](#4-led-blinker-initial-component-integration) in order to run through this section. Users may continue to define commands, events, telemetry, and ports after this initial integration.
 
-### Creating the `LedBlinker` Deployment
+### Creating the `LedBlinkerDeployment` Deployment
 
 In order to produce an executable to run the software, users need to create a deployment. A deployment is one software executable that contains the main entry point, and an F´ system topology.
 
-Create a new deployment in the `led-blinker` directory with:
+Create a new deployment in the `LedBlinker/LedBlinkerDeployment` directory with:
 
 ```shell
 #In led-blinker
 fprime-util new --deployment
 ```
 
-This will ask for some input, respond with the following answers:
+This will ask for some input, respond with the answers `LedBlinkerDeployment` for the deployment name and `2` for the communication driver type, shown below:
+
 ```shell
-[INFO] Cookiecutter: using builtin template for new deployment
-Deployment name [MyDeployment]: LedBlinker
-Select communication driver type:
-1 - TcpClient
-2 - TcpServer
-3 - UART
-Choose from 1, 2, 3 [1]: 2
-[INFO] Found CMake file at 'led-blinker/project.cmake'
-Add component LedBlinker to led-blinker/project.cmake at end of file? (yes/no) [yes]: yes
+  [1/2] Deployment name (MyDeployment): LedBlinkerDeployment
+  [2/2] Select communication driver type
+    1 - TcpClient
+    2 - TcpServer
+    3 - UART
+    Choose from [1/2/3] (1): 2
+[INFO] Found CMake file at 'LedBlinker/LedBlinkerDeployment/CMakeLists.txt'
+Add LedBlinkerDeployment to LedBlinker/LedBlinkerDeployment/CMakeLists.txt at end of file? (yes/no) [yes]: yes
+[INFO] New deployment successfully created: /Users/chammard/Work/fp/tmp/LedBlinker/LedBlinkerDeployment/LedBlinkerDeployment
 ```
 > [!NOTE]
-> Use the default response for any other questions asked.
+> Use the default response for any other questions asked. Usually, you may want to choose a shorter name for a deployment, as this will impact namespaces and file paths. We are using a verbose name here for the learning experience.
 
 In order to check that the deployment was created successfully, the user can build the deployment. This will build the code for the current host system, not the remote embedded hardware allowing local testing during development.
 
 ```shell
-# In led-blinker
-cd LedBlinker
+# In LedBlinker
+cd LedBlinkerDeployment
 fprime-util build
 ```
 
@@ -445,10 +444,10 @@ fprime-util build
 
 The component can now be added to the deployment's topology effectively adding this component to the running system. This is done by modifying `instances.fpp` and `topology.fpp` in the `Top` directory.
 
-Add the following to `led-blinker/LedBlinker/Top/instances.fpp`.  Typically, this is added to the "Active component instances" section of that document.
+Add the following to `LedBlinker/LedBlinkerDeployment/Top/instances.fpp`.  Typically, this is added to the "Active component instances" section of that document.
 
 ```
-  instance led: Components.Led base id 0x10005000 \
+  instance led: LedBlinker.Led base id 0x10005000 \
     queue size Default.QUEUE_SIZE \
     stack size Default.STACK_SIZE \
     priority 95
@@ -456,7 +455,7 @@ Add the following to `led-blinker/LedBlinker/Top/instances.fpp`.  Typically, thi
 
 This defines an instance of the `Led` component called `led`. Since the component is active it needs a queue size, stack size, and priority for the thread of the component and the queue that thread serves. We have chosen the topology specified defaults and a priority of 95.
 
-Next, the topology needs to use the above definition. This is done by adding the `led` instance to the list of instances defined in `led-blinker/LedBlinker/Top/topology.fpp`:
+Next, the topology needs to use the above definition. This is done by adding the `led` instance to the list of instances defined in `LedBlinker/LedBlinkerDeployment/Top/topology.fpp`:
 
 ```
     # ----------------------------------------------------------------------
@@ -472,8 +471,7 @@ Next, the topology needs to use the above definition. This is done by adding the
 Build your deployment
 
 ```shell
-# In led-blinker
-cd LedBlinker
+cd LedBlinkerDeployment
 fprime-util build
 ```
 
@@ -500,10 +498,10 @@ Test the component integration with the following steps:
 
 Congratulations! You have now integrated your component and tested that integration.
 
-Return to the `led-blinker/LedBlinker` and run the following commands to test whenever you desire.
+Return to the `LedBlinker/LedBlinkerDeployment` and run the following commands to test whenever you desire.
 
 ```
-#In led-blinker/LedBlinker
+#In LedBlinker/LedBlinkerDeployment
 fprime-util build
 fprime-gds  --ip-client
 
@@ -527,7 +525,7 @@ In this section, we will complete the component design and implementation by add
 
 Telemetry channels represent the state of the system. Typically, telemetry channels are defined for any states that give crucial insight into the component's behavior.
 
-Inside your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the events you added in the previous section, add a telemetry channel of type `Fw.On` to report the blinking state.
+Inside your `LedBlinker/Components/Led` directory, open the `Led.fpp` file. After the events you added in the previous section, add a telemetry channel of type `Fw.On` to report the blinking state.
 
 ```
         @ Telemetry channel to report blinking state.
@@ -548,7 +546,7 @@ Parameters are ground-controllable settings for the system. Parameters are used 
 
 For each parameter you define in your fpp, the F´ autocoder will autogenerate a SET and SAVE command. The SET command allows ground to update the parameter. The SAVE command tells your parameter database to stage this new parameter value for saving. To save the parameter for use on a FSW reboot, ground will need to send the `PRM_SAVE_FILE` command.
 
-In your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the telemetry channels you added previously, add a parameter for the blinking interval. Give the parameter the name `BLINK_INTERVAL`, type `U32`, and a default value. It is good practice to assign parameters a valid default value.
+In your `LedBlinker/Components/Led` directory, open the `Led.fpp` file. After the telemetry channels you added previously, add a parameter for the blinking interval. Give the parameter the name `BLINK_INTERVAL`, type `U32`, and a default value. It is good practice to assign parameters a valid default value.
 
 ```
         @ Blinking interval in rate group ticks
@@ -559,7 +557,7 @@ In your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After t
 
 Any communication between components should be accomplished through F´ ports. Thus far we have been using a set of standard ports for handling Commands, Telemetry, Events, and Parameters. This section will add two specific ports to our component: input `run` to be called from the rate group, and output `gpioSet` to drive the GPIO driver.
 
-In your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After the parameters you added previously, add the following two ports:
+In your `LedBlinker/Components/Led` directory, open the `Led.fpp` file. After the parameters you added previously, add the following two ports:
 
 ```
         @ Port receiving calls from the rate group
@@ -576,14 +574,14 @@ In your `led-blinker/Components/Led` directory, open the `Led.fpp` file. After t
 
 #### Input Port Implementation
 
-In your `led-blinker/Components/Led` directory, run the following to autogenerate stub functions for the `run` input port we just added.
+In your `LedBlinker/Components/Led` directory, run the following to autogenerate stub functions for the `run` input port we just added.
 
 ```bash
-# In led-blinker/Components/Led
+# In LedBlinker/Components/Led
 fprime-util impl
 ```
 
-In your `led-blinker/Components/Led` directory, open `Led.template.hpp` file and copy this block over to `Led.hpp`.
+In your `LedBlinker/Components/Led` directory, open `Led.template.hpp` file and copy this block over to `Led.hpp`.
 
 ```cpp
   private:
@@ -599,7 +597,7 @@ In your `led-blinker/Components/Led` directory, open `Led.template.hpp` file and
                      ) override;
 ```
 
-In your `led-blinker/Components/Led` directory, open `Led.template.cpp` file and copy this block over to `Led.cpp`.
+In your `LedBlinker/Components/Led` directory, open `Led.template.cpp` file and copy this block over to `Led.cpp`.
 ```cpp
 // ----------------------------------------------------------------------
 // Handler implementations for user-defined typed input ports
@@ -666,7 +664,7 @@ void Led ::run_handler(FwIndexType portNum, U32 context) {
 In the terminal, run the following to verify your component is building correctly.
 
 ```bash
-# In led-blinker/Components/Led
+# In LedBlinker/Components/Led
 fprime-util build
 ```
 
@@ -675,7 +673,7 @@ fprime-util build
 
 #### Command Implementation Continued
 
-Inside your `led-blinker/Components/Led` directory, open `Led.cpp`, and navigate to the `BLINKING_ON_OFF` command. Report the blinking state via the telemetry channel we just added. To do so, replace the following:
+Inside your `LedBlinker/Components/Led` directory, open `Led.cpp`, and navigate to the `BLINKING_ON_OFF` command. Report the blinking state via the telemetry channel we just added. To do so, replace the following:
 
 ```cpp
       // TODO: Report the blinking state (onOff) on channel BlinkingState.
@@ -691,7 +689,7 @@ with the function to send the telemetry channel:
 In the terminal, run the following to verify your component is building correctly.
 
 ```bash
-# In led-blinker/Components/Led
+# In LedBlinker/Components/Led
 fprime-util build
 ```
 
@@ -702,7 +700,7 @@ fprime-util build
 
 When ground updates a component's parameter, the user may want the component to react to the parameter update. F Prime provides a function called `parameterUpdated` where your component can react to each parameter update. Implementing `parameterUpdated` for a component is optional but we'll implement it for this tutorial.
 
-In your `led-blinker/Components/Led` directory, open the file `Led.hpp` and add the following function signature in the `private:` scope:
+In your `LedBlinker/Components/Led` directory, open the file `Led.hpp` and add the following function signature in the `private:` scope:
 
 ```cpp
     //! Emit parameter updated EVR
@@ -713,7 +711,7 @@ In your `led-blinker/Components/Led` directory, open the file `Led.hpp` and add 
 
 > This function is called when a parameter is updated via the auto generated SET command. Although the value is updated automatically, this function gives developers a chance to respond to changing parameters. This tutorial uses it to emit an event.
 
-Save file and in your `led-blinker/Components/Led` directory, open `Led.cpp` and add the implementation for `parameterUpdated`:
+Save file and in your `LedBlinker/Components/Led` directory, open `Led.cpp` and add the implementation for `parameterUpdated`:
 
 ```cpp
 void Led ::parameterUpdated(FwPrmIdType id) {
@@ -740,7 +738,7 @@ void Led ::parameterUpdated(FwPrmIdType id) {
 In the terminal, run the following to verify your component is building correctly.
 
 ```bash
-# In led-blinker/Components/Led
+# In LedBlinker/Components/Led
 fprime-util build
 ```
 > [!NOTE]
@@ -781,7 +779,7 @@ To start off, use `fprime-util` to generate a unit test outline for the `Led` co
 First, generate a unit test build cache by running the following terminal commands:
 
 ```shell
-#In led-blinker/Components/Led
+#In LedBlinker/Components/Led
 fprime-util generate --ut
 ```
 > [!NOTE]
@@ -789,24 +787,24 @@ fprime-util generate --ut
 
 Next we will generate unit test template files. This is similar to the component implementations we have run, but will set up the complete unit test harness.
 
-To do so, run the implementation command in the terminal within your `led-blinker/Components/Led` directory:
+To do so, run the implementation command in the terminal within your `LedBlinker/Components/Led` directory:
 ```shell
-#In led-blinker/Components/Led
+#In LedBlinker/Components/Led
 fprime-util impl --ut
 ```
 
-This step should create the files `LedTester.template.cpp`, `LedTester.template.hpp`, and `LedTestMain.template.cpp` in `led-blinker/Components/Led/test/ut`.
+This step should create the files `LedTester.template.cpp`, `LedTester.template.hpp`, and `LedTestMain.template.cpp` in `LedBlinker/Components/Led/test/ut`.
 
-Since this is the start of the test's implementation, we use the generated template files for our initial test implementation. Inside your `led-blinker/Components/Led/test/ut` directory, rename the files removing the `.template` suffix:
+Since this is the start of the test's implementation, we use the generated template files for our initial test implementation. Inside your `LedBlinker/Components/Led/test/ut` directory, rename the files removing the `.template` suffix:
 
 ```bash
-# In led-blinker/Components/Led/test/ut
+# In LedBlinker/Components/Led/test/ut
 mv LedTester.template.hpp LedTester.hpp
 mv LedTester.template.cpp LedTester.cpp
 mv LedTestMain.template.cpp LedTestMain.cpp
 ```
 
-Then, register the unit test files with the build system by uncommenting these lines at the very end of the component `CMakeLists.txt` file in your `led-blinker/Components/Led` directory:
+Then, register the unit test files with the build system by uncommenting these lines at the very end of the component `CMakeLists.txt` file in your `LedBlinker/Components/Led` directory:
 
 ```cmake
 register_fprime_ut(
@@ -824,21 +822,21 @@ register_fprime_ut(
 Finally, test the skeleton unit tests with the following command:
 
 ```shell
-#In led-blinker/Components/Led
+#In LedBlinker/Components/Led
 fprime-util check
 ```
 > [!NOTE]
-> `check` will build and run unit tests. To simply build them, run `fprime-util build --ut`.
+> `check` will build and run unit tests. It may report an error as no tests are defined yet. To simply build them, run `fprime-util build --ut`.
 
 ### Add a New Test Case
 
-Now that unit tests have been written, we can add our first unit test case. First, remove the default `toDo` test and add a new test case called `testBlinking`. In `led-blinker/Components/Led/test/ut/LedTester.hpp` rename the declaration for `toDo` to be `testBlinking` instead:
+Now that unit tests have been written, we can add our first unit test case. First, remove the default `toDo` test and add a new test case called `testBlinking`. In `LedBlinker/Components/Led/test/ut/LedTester.hpp` rename the declaration for `toDo` to be `testBlinking` instead:
 
 ```c++
     void testBlinking();
 ```
 
-In `led-blinker/Components/Led/test/ut/LedTester.cpp` rename the definition for `toDo` to be `testBlinking`:
+In `LedBlinker/Components/Led/test/ut/LedTester.cpp` rename the definition for `toDo` to be `testBlinking`:
 
 ```c++
 void LedTester ::testBlinking() {
@@ -846,11 +844,11 @@ void LedTester ::testBlinking() {
 }
 ```
 
-In `led-blinker/Components/Led/test/ut/LedTestMain.cpp`:
+In `LedBlinker/Components/Led/test/ut/LedTestMain.cpp`:
 
 ```c++
 TEST(Nominal, TestBlinking) {
-    Components::LedTester tester;
+    LedBlinker::LedTester tester;
     tester.testBlinking();
 }
 ```
@@ -865,7 +863,7 @@ Use `fprime-util check` to make sure the new check builds and passes.
 
 The first test we will write is to test that the LED doesn't blink when blinking is disabled.
 
-Add the following code to the `testBlinking` method in `led-blinker/Components/Led/test/ut/LedTester.cpp`:
+Add the following code to the `testBlinking` method in `LedBlinker/Components/Led/test/ut/LedTester.cpp`:
 
 ```c++
     // This test will make use of parameters. So need to load them.
@@ -883,7 +881,7 @@ Add the following code to the `testBlinking` method in `led-blinker/Components/L
     ASSERT_TLM_LedTransitions_SIZE(0);  // ensure no LedTransitions were recorded
 ```
 
-The `this->invoke_to_<port-name>()` methods are used to call input ports on the component under test acting like a port invocation in the system topology but driven by our test harness. `gpioSet` is an `async` input port, it's not dispatched immediately, but instead added to an execution queue that would normally be driven off the component's thread.
+The `this->invoke_to_<port-name>()` methods are used to call input ports on the component under test acting like a port invocation in the system topology but driven by our test harness. `run` is an `async` input port, it's not dispatched immediately, but instead added to an execution queue that would normally be driven off the component's thread.  
 
 To dispatch a queued port message, unit tests must explicitly call the `doDispatch()` function to dispatch the first message on the queue.
 
@@ -970,13 +968,13 @@ void LedTester ::testBlinkInterval() {
 Coverage of the code can be easily checked by adding the `--coverage` flag and opening the report with your web browser.
 
 ```shell
-# In led-blinker/Components/Led
+# In LedBlinker/Components/Led
 fprime-util check --coverage
 ```
 
-Now open the file `led-blinker/Components/Led/coverage/coverage.html` with your web browser and explore the coverage report.
+Now open the file `LedBlinker/Components/Led/coverage/coverage.html` with your web browser and explore the coverage report.
 ```shell
-# In led-blinker/Components/Led/coverage
+# In LedBlinker/Components/Led/coverage
 open coverage.html
 ``` 
 
@@ -994,18 +992,18 @@ Now it is time to add a GPIO driver to our system and attach it to the `led` com
 
 F´ provides a GPIO driver for Linux systems called `Drv.LinuxGpioDriver`. This should be added to both the instance definition list and the topology instance list just like we did for the `led` component. Since the GPIO driver is a passive component, its definition is a bit more simple.
 
-Add to "Passive Component" section of `led-blinker/LedBlinker/Top/instance.fpp`:
+Add to "Passive Component" section of `LedBlinker/LedBlinkerDeployment/Top/instance.fpp`:
 ```
   instance gpioDriver: Drv.LinuxGpioDriver base id 0x10015000
 ```
 
-Add to the instance list of `led-blinker/LedBlinker/Top/topology.fpp`:
+Add to the instance list of `LedBlinker/LedBlinkerDeployment/Top/topology.fpp`:
 ```
     instance gpioDriver
 ```
 
 > [!NOTE]
-> In `led-blinker/LedBlinker` build the deployment and resolve any errors before continuing.
+> In `LedBlinker/LedBlinkerDeployment` build the deployment and resolve any errors before continuing.
 
 ### Wiring The `led` Component Instance to the `gpioComponent` Component Instance and Rate Group
 
@@ -1013,7 +1011,7 @@ The `Led` component defines the `gpioSet` output port and the `LinuxGpioDriver` 
 
 We can create a named connections block in the topology and connect the two port pairs. Remember to use the component instances and not the component definitions for each connection.
 
-To do this, add the following lines to `led-blinker/LedBlinker/Top/topology.fpp`:
+To do this, add the following lines to `LedBlinker/LedBlinkerDeployment/Top/topology.fpp`:
 ```
     # Named connection group
     connections LedBlinker {
@@ -1031,7 +1029,7 @@ To do this, add the following lines to `led-blinker/LedBlinker/Top/topology.fpp`
 
 So far the GPIO driver has been instantiated and wired, but has not been told what GPIO pin to control. For this tutorial, GPIO pin 13 will be used. To configure this, the `open` function needs to be called in the topology's C++ implementation and passed the pin's number and direction.
 
-This is done by adding the following at the end of the `configureTopology` function defined in `led-blinker/LedBlinker/Top/LedBlinkerTopology.cpp`:
+This is done by adding the following at the end of the `configureTopology` function defined in `LedBlinker/LedBlinkerDeployment/Top/LedBlinkerTopology.cpp`:
 
 ```c++
     Os::File::Status status =
@@ -1041,7 +1039,7 @@ This is done by adding the following at the end of the `configureTopology` funct
     }
 ```
 
-And since this code uses `Fw::Logger`, you will need to add the following line near the top of the `led-blinker/LedBlinker/Top/LedBlinkerTopology.cpp` file.
+And since this code uses `Fw::Logger`, you will need to add the following line near the top of the `LedBlinker/LedBlinkerDeployment/Top/LedBlinkerTopology.cpp` file.
 
 ```c++
 #include <Fw/Logger/Logger.hpp>
@@ -1050,7 +1048,7 @@ And since this code uses `Fw::Logger`, you will need to add the following line n
 This code tells the GPIO driver to open pin 13 as an output pin. If this fails, an error is printed to the console, but the system continues to start.
 
 > [!WARNING]
-> In `led-blinker/LedBlinker` build the deployment and resolve any errors before continuing.
+> In `LedBlinker/LedBlinkerDeployment` build the deployment and resolve any errors before continuing.
 
 ### LED Blinker Step 7 Conclusion
 
@@ -1107,7 +1105,7 @@ Make a directory `int`, which is a convention in flight software development for
 ```shell
 # In Components/Led/test
 mkdir int 
-touch led_integration_tests.py
+touch int/led_integration_tests.py
 ```
 
 
@@ -1127,7 +1125,7 @@ This test will send a `CMD_NO_OP` command and verify if successfully returns.
 Next, after verifying the F´ GDS is connected to your deployment, run the new system test and confirm it executes successfully.
 
 ```shell
-# In led-blinker/LedBlinker
+# In LedBlinker/LedBlinkerDeployment
 # Requires fprime-gds to be running and connected to LedBlinker deployment
 $ pytest ../Components/Led/test/int/led_integration_tests.py
 ```

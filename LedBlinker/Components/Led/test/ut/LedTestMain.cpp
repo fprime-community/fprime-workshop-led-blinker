@@ -7,12 +7,12 @@
 #include "LedTester.hpp"
 
 TEST(Nominal, TestBlinking) {
-    Components::LedTester tester;
+    LedBlinker::LedTester tester;
     tester.testBlinking();
 }
 
 TEST(Nominal, TestBlinkInterval) {
-    Components::LedTester tester;
+    LedBlinker::LedTester tester;
     tester.testBlinkInterval();
 }
 

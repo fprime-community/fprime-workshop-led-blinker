@@ -6,7 +6,7 @@
 
 #include "LedTester.hpp"
 
-namespace Components {
+namespace LedBlinker {
 
 // ----------------------------------------------------------------------
 // Construction and destruction
@@ -108,4 +108,4 @@ Drv::GpioStatus LedTester ::from_gpioSet_handler(const FwIndexType portNum, cons
     return Drv::GpioStatus::OP_OK;
 }
 
-}  // namespace Components
+}  // namespace LedBlinker

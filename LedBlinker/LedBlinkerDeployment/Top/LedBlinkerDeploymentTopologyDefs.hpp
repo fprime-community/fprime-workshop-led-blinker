@@ -23,7 +23,7 @@
 #include "Svc/Subtopologies/ComCcsds/Ports_ComBufferQueueEnumAc.hpp"
 
 // Include autocoded FPP constants
-#include "LedBlinker/Top/FppConstantsAc.hpp"
+#include "LedBlinker/LedBlinkerDeployment/Top/FppConstantsAc.hpp"
 
 /**
  * \brief required ping constants
@@ -51,7 +51,7 @@ namespace PingEntries {
     namespace LedBlinker_cmdSeq {enum { WARN = 3, FATAL = 5 };}
 }  // namespace PingEntries
 
-// Definitions are placed within a namespace named after the deployment
+// Definitions are placed within the same namespace (FPP module name)
 namespace LedBlinker {
 
 /**
@@ -72,4 +72,5 @@ struct TopologyState {
 
 namespace PingEntries = ::PingEntries;
 }  // namespace LedBlinker
+
 #endif

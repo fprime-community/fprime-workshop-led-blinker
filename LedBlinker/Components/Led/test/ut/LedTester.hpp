@@ -7,10 +7,10 @@
 #ifndef Components_LedTester_HPP
 #define Components_LedTester_HPP
 
-#include "Components/Led/Led.hpp"
-#include "Components/Led/LedGTestBase.hpp"
+#include "LedBlinker/Components/Led/Led.hpp"
+#include "LedBlinker/Components/Led/LedGTestBase.hpp"
 
-namespace Components {
+namespace LedBlinker {
 
 class LedTester : public LedGTestBase {
   public:
@@ -76,6 +76,6 @@ class LedTester : public LedGTestBase {
     Led component;
 };
 
-}  // namespace Components
+}  // namespace LedBlinker
 
 #endif

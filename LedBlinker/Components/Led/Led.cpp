@@ -4,10 +4,10 @@
 // \brief  cpp file for Led component implementation class
 // ======================================================================
 
-#include "Components/Led/Led.hpp"
+#include "LedBlinker/Components/Led/Led.hpp"
 #include "config/FpConfig.hpp"
 
-namespace Components {
+namespace LedBlinker {
 
 // ----------------------------------------------------------------------
 // Component construction and destruction
@@ -96,4 +96,4 @@ void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, Fw::On on
     this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
 }
 
-}  // namespace Components
+}  // namespace LedBlinker
