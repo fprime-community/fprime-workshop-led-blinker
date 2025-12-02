@@ -17,7 +17,9 @@ LedTester ::LedTester() : LedGTestBase("LedTester", LedTester::MAX_HISTORY_SIZE)
     this->connectPorts();
 }
 
-LedTester ::~LedTester() {}
+LedTester ::~LedTester() {
+    this->component.deinit();
+}
 
 // ----------------------------------------------------------------------
 // Tests
