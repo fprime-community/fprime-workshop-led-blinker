@@ -406,10 +406,11 @@ In this section, users will create a deployment and perform the initial integrat
 
 In order to produce an executable to run the software, users need to create a deployment. A deployment is one software executable that contains the main entry point, and an F´ system topology.
 
-Create a new deployment in the `LedBlinker/LedBlinkerDeployment` directory with:
+Create a new deployment with the following:
 
 ```shell
 #In led-blinker
+cd LedBlinker
 fprime-util new --deployment
 ```
 
