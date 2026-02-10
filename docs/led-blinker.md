@@ -66,7 +66,7 @@ An F´ Project ties to a specific version of tools to work with F´. In order to
 this project and install the correct version of tools, you should perform a bootstrap of F´:
 
 1. Ensure you meet the [F´ System Requirements](https://github.com/nasa/fprime?tab=readme-ov-file#system-requirements)
-2. [Bootstrap your F´ project](https://fprime.jpl.nasa.gov/latest/docs/getting-started/installing-fprime/#creating-a-new-f-project) with the name `led-blinker`
+2. [Bootstrap your F´ project](https://fprime.jpl.nasa.gov/latest/docs/getting-started/installing-fprime/#creating-a-new-f-project) with the name `led-blinker` and namespace `LedBlinker`
 
 Bootstrapping your F´ project created a folder called `led-blinker` (or any name you chose) containing the standard F´ project structure as well as the virtual environment up containing the tools to work with F´.
 
@@ -416,10 +416,11 @@ In this section, users will create a deployment and perform the initial integrat
 
 In order to produce an executable to run the software, users need to create a deployment. A deployment is one software executable that contains the main entry point, and an F´ system topology.
 
-Create a new deployment in the `LedBlinker/LedBlinkerDeployment` directory with:
+Create a new deployment with the following:
 
 ```shell
 #In led-blinker
+cd LedBlinker
 fprime-util new --deployment
 ```
 
@@ -1027,14 +1028,14 @@ To do this, add the following lines to `LedBlinker/LedBlinkerDeployment/Top/topo
     # Named connection group
     connections LedBlinker {
       # Rate Group 1 (1Hz cycle) ouput is connected to led's run input
-      rateGroup1.RateGroupMemberOut[4] -> led.run
+      rateGroup1.RateGroupMemberOut[5] -> led.run
       # led's gpioSet output is connected to gpioDriver's gpioWrite input
       led.gpioSet -> gpioDriver.gpioWrite
     }
 ```
 
 > [!NOTE]
-> `rateGroup1` is preconfigured to call all `RateGroupMemberOut` at a rate of 1 Hz. We use index `RateGroupMemberOut[4]` because `RateGroupMemberOut[0]` through `RateGroupMemberOut[3]` were used previously in the `RateGroups` connection block.
+> `rateGroup1` is preconfigured to call all `RateGroupMemberOut` at a rate of 1 Hz. We use index `RateGroupMemberOut[5]` because `RateGroupMemberOut[0]` through `RateGroupMemberOut[4]` are used already (see the `RateGroups` connection block in `topology.fpp`).
 
 ### Configuring The GPIO Driver
 
@@ -1128,10 +1129,10 @@ def test_cmd_no_op(fprime_test_api):
 
     Test that CMD_NO_OP can be sent and return without and errors
     """
-    fprime_test_api.send_and_assert_command("LedBlinker.cmdDisp.CMD_NO_OP")
+    fprime_test_api.send_and_assert_command("CdhCore.cmdDisp.CMD_NO_OP")
 ```
 
-This test will send a `CMD_NO_OP` command and verify if successfully returns.
+This test will send a `CMD_NO_OP` command and verify if successfully returns. `CdhCore.cmdDisp` is the qualified name of the command dispatcher component instance defined in the LedBlinker deployment topology, as imported from the `CdhCore` subtopology.
 
 Next, after verifying the F´ GDS is connected to your deployment, run the new system test and confirm it executes successfully.
 
