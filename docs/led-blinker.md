@@ -33,6 +33,7 @@ To run on hardware with cross-compiling, you must also:
 ## Troubleshooting
 
 If at any point during this tutorial you encounter issues:
+
 1. **Check your current directory**: Ensure you are in the correct directory as specified in each step of the tutorial
 2. **Activate your virtual environment**: Always make sure your F´ project's virtual environment is activated with `. fprime-venv/bin/activate`
 3. **Refer to the F´ troubleshooting guide**: Visit [F´ Installation and Troubleshooting](https://fprime.jpl.nasa.gov/latest/docs/getting-started/installing-fprime/#troubleshooting) for common installation and setup issues
@@ -84,7 +85,9 @@ fprime-util generate
 ## 2. Specifying Requirements
 
 In this section to the tutorial, you will learn a bit about specifying requirements. Software requirements are derived from higher-level system requirements and represent the detail needed to implement the software.
-> [!NOTE] Typically these would be done in the Component's Software Specifications Document, or `sdd.md` 
+
+> [!NOTE] 
+> Typically these would be done in the Component's Software Specifications Document, or `sdd.md` 
 
 ### System Requirements
 
@@ -138,13 +141,16 @@ In order for our component to blink an LED, it needs to accept a command to turn
 This component design is captured in the block diagram below with input ports on the left and output ports on the right. Ports for standard F´ functions (e.g. commands, events, telemetry, and parameters) are circled in green.
 
 ![Led Component Block Diagram](img/component-design.png)
-> [!NOTE] This component diagram was created using the built-in [fprime-visual](https://github.com/fprime-community/fprime-visual) tool
+
+> [!NOTE]
+> This component diagram was created using the built-in [fprime-visual](https://github.com/fprime-community/fprime-visual) tool
 
 In this exercise, the `BLINKING_ON_OFF` command shall toggle the blinking state of the LED. The period of the blinking is controlled by the `BLINK_INTERVAL` parameter. Blinking is implemented on the `run` rate group input port. The component also defines several telemetry channels and events describing the various actions taken by the component.
 
 #### Design Summary
 
 **Component Ports:**
+
 1. `run`: invoked at a set rate from the rate group, used to control the LED blinking
 2. `gpioSet`: invoked by the `Led` component to control the GPIO driver
 
@@ -152,18 +158,22 @@ In this exercise, the `BLINKING_ON_OFF` command shall toggle the blinking state 
 > Standard component ports (circled in green) are not listed here.
 
 **Commands:**
+
 1. `BLINKING_ON_OFF`: turn the LED blinking on/off
 
 **Events:**
+
 1. `SetBlinkingState`: emitted when the component sets the blink state
 2. `BlinkIntervalSet`: emitted when the component blink interval parameter is set
 3. `LedState`: emitted when the LED is driven to a new state
 
 **Telemetry Channels:**
+
 1. `BlinkingState`: state of the LED blinking
 2. `LedTransitions`: count of the LED transitions
 
 **Parameters:**
+
 1. `BLINK_INTERVAL`: LED blink period in number of rate group calls
 
 #### Create the component
@@ -488,6 +498,7 @@ fprime-gds --ip-client
 This will likely open up your browser and show the running flight software.  If it does not open a browser, navigate to `http://localhost:5000`.
 
 Test the component integration with the following steps:
+
 1. **Verify connection**: confirm that there is a green circle and not a red X in the upper right corner.
 2. **Send a Command**: select the 'Commanding' tab, search for `led.BLINKING_ON_OFF` and send it with the argument set to `ON`.
 3. **Verify Event**: select the 'Events' tab and verify that the `SetBlinkingState` event reports the blinking state was set to `ON`.
