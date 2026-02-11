@@ -6,7 +6,7 @@ permalink: /
 
 This is designed to be an extended introductory F´ tutorial taking the user through the basics of creating components, using events, telemetry, commands, and parameters, and integrating topologies with the goal of running F´ on embedded hardware. Users will be guided through the process of software development and testing on embedded Linux running on an ARM processor (e.g. RaspberryPI, Odroid, etc).
 
-The goal of this tutorial is to build a spacecraft whose mission is to blink an LED.
+The goal of this tutorial is to build a spacecraft whose mission is to blink an LED at a configurable interval, and report status to the ground.
 
 > [!TIP]
 > The source for this tutorial is located here: [https://github.com/fprime-community/fprime-workshop-led-blinker](https://github.com/fprime-community/fprime-workshop-led-blinker). If you are stuck at some point during the tutorial, you may refer to that reference as the "solution".
@@ -17,7 +17,7 @@ In order to run through this tutorial, you must first do the following:
 
 1. Meet the [F´ System Requirements](https://github.com/nasa/fprime?tab=readme-ov-file#system-requirements)
 2. Install an IDE or text editor supporting copy-paste. [VSCode](https://code.visualstudio.com/) has [plugins](https://marketplace.visualstudio.com/items?itemName=jet-propulsion-laboratory.fpp) to work with FPP.
-3. Attempt the [Hello World Tutorial](https://fprime.jpl.nasa.gov/latest/docs/tutorials/)
+3. Run through the [Hello World Tutorial](https://fprime.jpl.nasa.gov/latest/docs/tutorials/)
 
 > [!IMPORTANT]
 > If you do not have the hardware, you can still follow the LED Blinker tutorial! You should just skip the Hardware sections.
@@ -30,13 +30,20 @@ To run on hardware with cross-compiling, you must also:
 > [!NOTE]
 > Attendees to an in-person F´ workshop will have access to 64-bit ARM hardware and should set up the 64-bit cross compiling environment.
 
+
 ## Troubleshooting
 
 If at any point during this tutorial you encounter issues:
+
 1. **Check your current directory**: Ensure you are in the correct directory as specified in each step of the tutorial
-2. **Activate your virtual environment**: Always make sure your F´ project's virtual environment is activated with `. fprime-venv/bin/activate`
+
+2. **Activate your virtual environment**: Always make sure your F´ project's virtual environment is activated with<br>
+`. fprime-venv/bin/activate`
+
 3. **Refer to the F´ troubleshooting guide**: Visit [F´ Installation and Troubleshooting](https://fprime.jpl.nasa.gov/latest/docs/getting-started/installing-fprime/#troubleshooting) for common installation and setup issues
+
 4. **Verify your F´ installation**: Run `fprime-util --help` to ensure F´ tools are properly installed
+
 5. **Check build errors**: If you encounter build errors, ensure all previous steps were completed successfully
 
 ## Tutorial Steps
@@ -44,17 +51,28 @@ If at any point during this tutorial you encounter issues:
 This tutorial is composed of the following steps:
 
 1. [Project Setup](#1-led-blinker-project-setup)
+
 2. [Requirements Specification](#2-specifying-requirements)
+
 3. [Component Design and Initial Implementation](#3-led-blinker-component-design-and-initial-implementation)
+
 4. [Initial Component Integration](#4-led-blinker-initial-component-integration)
+
 5. [Continuing Component Implementation](#5-led-blinker-component-design-and-implementation-continued)
+
 6. [Unit-Testing](#6-led-blinker-unit-testing)
+
 7. [Full System Integration](#7-led-blinker-full-system-integration)
+
 8. [Running on Hardware](#8-led-blinker-running-on-hardware)
+
 9. [System Testing](#9-system-testing)
+
 10. [Conclusion](#10-led-blinker-conclusion)
 
+
 ---
+
 
 ## 1. LED Blinker: Project Setup
 
@@ -64,31 +82,34 @@ This tutorial is composed of the following steps:
 An F´ Project ties to a specific version of tools to work with F´. In order to create
 this project and install the correct version of tools, you should perform a bootstrap of F´:
 
-1. Ensure you meet the [F´ System Requirements](https://github.com/nasa/fprime?tab=readme-ov-file#system-requirements)
-2. [Bootstrap your F´ project](https://fprime.jpl.nasa.gov/latest/docs/getting-started/installing-fprime/#creating-a-new-f-project) with the name `led-blinker` and namespace `LedBlinker`
+### 1a. [Bootstrap your F´ project](https://fprime.jpl.nasa.gov/latest/docs/getting-started/installing-fprime/#creating-a-new-f-project) with the name `led-blinker` and namespace `LedBlinker`
 
 Bootstrapping your F´ project created a folder called `led-blinker` (or any name you chose) containing the standard F´ project structure as well as the virtual environment up containing the tools to work with F´.
 
-Next, generate a build cache using the following commands:
+### 1b. Next, generate a build cache using the following commands:
 
-```
+```shell
 cd led-blinker
 . fprime-venv/bin/activate
 fprime-util generate
 ```
+
 > [!NOTE]
 > Always remember to activate your project's virtual environment whenever you work with it.
 
+
 ---
+
 
 ## 2. Specifying Requirements
 
-In this section to the tutorial, you will learn a bit about specifying requirements. Software requirements are derived from higher-level system requirements and represent the detail needed to implement the software.
-> [!NOTE] Typically these would be done in the Component's Software Specifications Document, or `sdd.md` 
+In this section to the tutorial, you will learn a bit about specifying requirements. Software requirements are derived from higher-level sub-system and system requirements and represent the detail needed to implement the software.
 
-### System Requirements
+> [!NOTE] Typically these would be done in the Component's Software Specifications Document, or `sdd.md`
 
-For this tutorial we have several higher-level system requirements. These requirements would be defined by requirements specified by the electronics subsystem which are themselves derived by requirements defined at the full system level.
+### Sub-system Requirements
+
+For this tutorial we have several higher-level system requirements. These would be specified by the electronics subsystem which are themselves derived from the full system level.
 
 | Requirement     | Description                                              |
 |-----------------|----------------------------------------------------------|
@@ -138,6 +159,7 @@ In order for our component to blink an LED, it needs to accept a command to turn
 This component design is captured in the block diagram below with input ports on the left and output ports on the right. Ports for standard F´ functions (e.g. commands, events, telemetry, and parameters) are circled in green.
 
 ![Led Component Block Diagram](img/component-design.png)
+
 > [!NOTE] This component diagram was created using the built-in [fprime-visual](https://github.com/fprime-community/fprime-visual) tool
 
 In this exercise, the `BLINKING_ON_OFF` command shall toggle the blinking state of the LED. The period of the blinking is controlled by the `BLINK_INTERVAL` parameter. Blinking is implemented on the `run` rate group input port. The component also defines several telemetry channels and events describing the various actions taken by the component.
@@ -145,6 +167,7 @@ In this exercise, the `BLINKING_ON_OFF` command shall toggle the blinking state 
 #### Design Summary
 
 **Component Ports:**
+
 1. `run`: invoked at a set rate from the rate group, used to control the LED blinking
 2. `gpioSet`: invoked by the `Led` component to control the GPIO driver
 
@@ -152,25 +175,29 @@ In this exercise, the `BLINKING_ON_OFF` command shall toggle the blinking state 
 > Standard component ports (circled in green) are not listed here.
 
 **Commands:**
+
 1. `BLINKING_ON_OFF`: turn the LED blinking on/off
 
 **Events:**
+
 1. `SetBlinkingState`: emitted when the component sets the blink state
 2. `BlinkIntervalSet`: emitted when the component blink interval parameter is set
 3. `LedState`: emitted when the LED is driven to a new state
 
 **Telemetry Channels:**
+
 1. `BlinkingState`: state of the LED blinking
 2. `LedTransitions`: count of the LED transitions
 
 **Parameters:**
+
 1. `BLINK_INTERVAL`: LED blink period in number of rate group calls
 
 #### Create the component
 
 It is time to create the basic component. In a terminal, navigate to the project's root directory and run the following:
 
-```bash
+```shell
 # In led-blinker
 cd LedBlinker/Components
 
@@ -178,7 +205,7 @@ fprime-util new --component
 ```
 You will be prompted for information regarding your component. Fill out the prompts as shown below:
 
-```bash
+```shell
 [INFO] Cookiecutter source: using builtin
   [1/8] Component name (MyComponent): Led
   [2/8] Component short description (Component for F Prime FSW framework.): Component to blink an LED driven by a rate group
@@ -234,7 +261,8 @@ Replace that block with the following:
             onOff: Fw.On @< Indicates whether the blinking should be on or off
         )
 ```
-> [!NOTE] 
+
+> [!NOTE]
 > The text following a symbol @ or @< is called an annotation. These annotations are carried through the parsing and become comments in the generated code. For more information, see [The FPP User's Guide](https://nasa.github.io/fpp/fpp-users-guide.html#Writing-Comments-and-Annotations_Annotations)
 
 #### Events
@@ -269,7 +297,7 @@ You have completed the Command and Event design phase. We'll move on to the Comm
 
 In the `LedBlinker/Components/Led` directory, run the following:
 
-```bash
+```shell
 # In LedBlinker/Components/Led
 fprime-util impl
 ```
@@ -278,7 +306,7 @@ This command will auto generate two files: `Led.template.hpp` and `Led.template.
 
 Since this is the start of the component's implementation, we can use the generated template files for our initial component implementation. Inside your `LedBlinker/Components/Led` directory, rename `Led.template.hpp` to `Led.hpp` and rename `Led.template.cpp` to `Led.cpp`. You can rename the files through the terminal using the two commands below:
 
-```bash
+```shell
 # In LedBlinker/Components/Led
 mv Led.template.hpp Led.hpp
 mv Led.template.cpp Led.cpp
@@ -286,7 +314,7 @@ mv Led.template.cpp Led.cpp
 
 Verify your component is building correctly by running the following command in the `LedBlinker/Components/Led` directory.
 
-```bash
+```shell
 # In LedBlinker/Components/Led
 fprime-util build
 ```
@@ -309,7 +337,7 @@ Open `Led.hpp` in `LedBlinker/Components/Led`. Add the following private member 
 
 Run the following in the `LedBlinker/Components/Led` directory to verify your component is building correctly.
 
-```bash
+```shell
 # In LedBlinker/Components/Led
 fprime-util build
 ```
@@ -337,7 +365,7 @@ void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, Fw::On on
 ```
 Run the following command in the terminal to verify your component is building correctly.
 
-```bash
+```shell
 # In LedBlinker/Components/Led
 fprime-util build
 ```
@@ -362,7 +390,7 @@ with:
 
 Run the following to verify your component is building correctly.
 
-```bash
+```shell
 fprime-util build
 ```
 
@@ -427,6 +455,7 @@ This will ask for some input, respond with the answers `LedBlinkerDeployment` fo
 Add LedBlinkerDeployment to LedBlinker/LedBlinkerDeployment/CMakeLists.txt at end of file? (yes/no) [yes]: yes
 [INFO] New deployment successfully created: /Users/chammard/Work/fp/tmp/LedBlinker/LedBlinkerDeployment/LedBlinkerDeployment
 ```
+
 > [!NOTE]
 > Use the default response for any other questions asked. Usually, you may want to choose a shorter name for a deployment, as this will impact namespaces and file paths. We are using a verbose name here for the learning experience.
 
@@ -486,7 +515,7 @@ The topology may now be run. This can be done with the `fprime-gds` command. Sin
 ```shell
 fprime-gds --ip-client
 ```
-This will likely open up your browser and show the running flight software.  If it does not open a browser, navigate to `http://localhost:5000`.
+This will likely open up your browser and show the running flight software.  If it does not open a browser, navigate to [http://localhost:5000](http://localhost:5000).
 
 Test the component integration with the following steps:
 1. **Verify connection**: confirm that there is a green circle and not a red X in the upper right corner.
@@ -577,7 +606,7 @@ In your `LedBlinker/Components/Led` directory, open the `Led.fpp` file. After th
 
 In your `LedBlinker/Components/Led` directory, run the following to autogenerate stub functions for the `run` input port we just added.
 
-```bash
+```shell
 # In LedBlinker/Components/Led
 fprime-util impl
 ```
@@ -664,7 +693,7 @@ void Led ::run_handler(FwIndexType portNum, U32 context) {
 ```
 In the terminal, run the following to verify your component is building correctly.
 
-```bash
+```shell
 # In LedBlinker/Components/Led
 fprime-util build
 ```
@@ -689,7 +718,7 @@ with the function to send the telemetry channel:
 
 In the terminal, run the following to verify your component is building correctly.
 
-```bash
+```shell
 # In LedBlinker/Components/Led
 fprime-util build
 ```
@@ -738,10 +767,11 @@ void Led ::parameterUpdated(FwPrmIdType id) {
 
 In the terminal, run the following to verify your component is building correctly.
 
-```bash
+```shell
 # In LedBlinker/Components/Led
 fprime-util build
 ```
+
 > [!NOTE]
 > Resolve any errors before continuing
 
@@ -757,8 +787,10 @@ Below is a table with tasks you must complete. These tasks require you to go bac
 
 > [!TIP]
 > Emitting an event follows this pattern: `this->log_<severity>_<eventName>(<argument_if_any>);`
+
 > [!TIP]
 > Emitting a telemetry channel follows this pattern: `this->tlmWrite_<telemetryChannel>(<telemetryValue>);`
+
 > [!TIP]
 > After running `fprime-util build`, your IDE should be able to autocomplete these functions.
 
@@ -783,6 +815,7 @@ First, generate a unit test build cache by running the following terminal comman
 #In LedBlinker/Components/Led
 fprime-util generate --ut
 ```
+
 > [!NOTE]
 > Unit tests run with special build settings and as such need their own build cache generated.
 
@@ -798,7 +831,7 @@ This step should create the files `LedTester.template.cpp`, `LedTester.template.
 
 Since this is the start of the test's implementation, we use the generated template files for our initial test implementation. Inside your `LedBlinker/Components/Led/test/ut` directory, rename the files removing the `.template` suffix:
 
-```bash
+```shell
 # In LedBlinker/Components/Led/test/ut
 mv LedTester.template.hpp LedTester.hpp
 mv LedTester.template.cpp LedTester.cpp
@@ -826,6 +859,7 @@ Finally, test the skeleton unit tests with the following command:
 #In LedBlinker/Components/Led
 fprime-util check
 ```
+
 > [!NOTE]
 > `check` will build and run unit tests. It may report an error as no tests are defined yet. To simply build them, run `fprime-util build --ut`.
 
@@ -882,7 +916,7 @@ Add the following code to the `testBlinking` method in `LedBlinker/Components/Le
     ASSERT_TLM_LedTransitions_SIZE(0);  // ensure no LedTransitions were recorded
 ```
 
-The `this->invoke_to_<port-name>()` methods are used to call input ports on the component under test acting like a port invocation in the system topology but driven by our test harness. `run` is an `async` input port, it's not dispatched immediately, but instead added to an execution queue that would normally be driven off the component's thread.  
+The `this->invoke_to_<port-name>()` methods are used to call input ports on the component under test acting like a port invocation in the system topology but driven by our test harness. `run` is an `async` input port, it's not dispatched immediately, but instead added to an execution queue that would normally be driven off the component's thread.
 
 To dispatch a queued port message, unit tests must explicitly call the `doDispatch()` function to dispatch the first message on the queue.
 
@@ -961,6 +995,7 @@ void LedTester ::testBlinkInterval() {
     // TODO: Add logic to test adjusted blink interval
 }
 ```
+
 > [!NOTE]
 > Don't forget to add `testBlinkInterval()` to `LedTester.hpp` and `LedTestMain.cpp` as well. Run `fprime-util check` and resolve any issues before continuing.
 
@@ -977,7 +1012,7 @@ Now open the file `LedBlinker/Components/Led/coverage/coverage.html` with your w
 ```shell
 # In LedBlinker/Components/Led/coverage
 open coverage.html
-``` 
+```
 
 ### LED Blinker Step 6 Conclusion
 
@@ -1102,10 +1137,10 @@ Installing the fprime-gds also installs a pytest fixture called `fprime_test_api
 
 First, we'll create a basic test case to verify the system testing library is correctly setup.
 
-Make a directory `int`, which is a convention in flight software development for integration. Then, create the file `led_integration_tests.py` 
+Make a directory `int`, which is a convention in flight software development for integration. Then, create the file `led_integration_tests.py`
 ```shell
 # In Components/Led/test
-mkdir int 
+mkdir int
 touch int/led_integration_tests.py
 ```
 
@@ -1266,8 +1301,26 @@ To verify this, `fprime_test_api.assert_telemetry_count` can be used to wait for
 
 Congratulations! You have now completed the F´ on-hardware tutorial. You should now have a solid understanding of building an F´ project that runs on hardware!
 
+If you feel inclined, consider how flexible your implementation is in the face of fluid requirements.  For example, adapt to:
+
+### 10a. New requirements
+
+Require separate blinking intervals for ON and OFF.  For example, ON 1
+second, OFF 3 seconds.
+
+### 10b. Changing Requirements
+
+Requirement LED-BLINKER-002 only says to "stop LED blinking" on
+command.  It does not specify whether to also enforce the final LED
+state.  That is, if the LED happens to be ON when blinking is stopped,
+should you leave it ON (for a beacon), or turn it OFF (to save power)?
+Whichever choice your code implemented, clarify the requirement to
+specify the opposite and update your implementation to match.
+
+
 
 ---
+
 
 
 ## Appendix: Optional Hardware Requirements
@@ -1298,4 +1351,3 @@ For this tutorial, GPIO pin 13 will be used. For platforms that do not have GPIO
 GPIO 13 ----> LED + (cathode)
 GND     <---- LED - (anode)
 ```
-
