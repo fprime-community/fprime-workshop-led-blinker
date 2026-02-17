@@ -37,8 +37,7 @@ If at any point during this tutorial you encounter issues:
 
 1. **Check your current directory**: Ensure you are in the correct directory as specified in each step of the tutorial
 
-2. **Activate your virtual environment**: Always make sure your F´ project's virtual environment is activated with<br>
-`. fprime-venv/bin/activate`
+2. **Activate your virtual environment**: Always make sure your F´ project's virtual environment is activated with `. fprime-venv/bin/activate`
 
 3. **Refer to the F´ troubleshooting guide**: Visit [F´ Installation and Troubleshooting](https://fprime.jpl.nasa.gov/latest/docs/getting-started/installing-fprime/#troubleshooting) for common installation and setup issues
 
@@ -108,7 +107,7 @@ In this section to the tutorial, you will learn a bit about specifying requireme
 > [!NOTE] 
 > Typically these would be done in the Component's Software Specifications Document, or `sdd.md` 
 
-### Sub-system Requirements
+### System Requirements
 
 For this tutorial we have several higher-level system requirements. These would be specified by the electronics subsystem which are themselves derived from the full system level.
 
@@ -1304,26 +1303,8 @@ To verify this, `fprime_test_api.assert_telemetry_count` can be used to wait for
 
 Congratulations! You have now completed the F´ on-hardware tutorial. You should now have a solid understanding of building an F´ project that runs on hardware!
 
-If you feel inclined, consider how flexible your implementation is in the face of fluid requirements.  For example, adapt to:
-
-### 10a. New requirements
-
-Require separate blinking intervals for ON and OFF.  For example, ON 1
-second, OFF 3 seconds.
-
-### 10b. Changing Requirements
-
-Requirement LED-BLINKER-002 only says to "stop LED blinking" on
-command.  It does not specify whether to also enforce the final LED
-state.  That is, if the LED happens to be ON when blinking is stopped,
-should you leave it ON (for a beacon), or turn it OFF (to save power)?
-Whichever choice your code implemented, clarify the requirement to
-specify the opposite and update your implementation to match.
-
-
 
 ---
-
 
 
 ## Appendix: Optional Hardware Requirements
