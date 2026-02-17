@@ -103,9 +103,10 @@ fprime-util generate
 
 ## 2. Specifying Requirements
 
-In this section to the tutorial, you will learn a bit about specifying requirements. Software requirements are derived from higher-level sub-system and system requirements and represent the detail needed to implement the software.
+In this section to the tutorial, you will learn a bit about specifying requirements. Software requirements are derived from higher-level system requirements and represent the detail needed to implement the software.
 
-> [!NOTE] Typically these would be done in the Component's Software Specifications Document, or `sdd.md`
+> [!NOTE] 
+> Typically these would be done in the Component's Software Specifications Document, or `sdd.md` 
 
 ### Sub-system Requirements
 
@@ -160,7 +161,8 @@ This component design is captured in the block diagram below with input ports on
 
 ![Led Component Block Diagram](img/component-design.png)
 
-> [!NOTE] This component diagram was created using the built-in [fprime-visual](https://github.com/fprime-community/fprime-visual) tool
+> [!NOTE]
+> This component diagram was created using the built-in [fprime-visual](https://github.com/fprime-community/fprime-visual) tool
 
 In this exercise, the `BLINKING_ON_OFF` command shall toggle the blinking state of the LED. The period of the blinking is controlled by the `BLINK_INTERVAL` parameter. Blinking is implemented on the `run` rate group input port. The component also defines several telemetry channels and events describing the various actions taken by the component.
 
@@ -518,6 +520,7 @@ fprime-gds --ip-client
 This will likely open up your browser and show the running flight software.  If it does not open a browser, navigate to [http://localhost:5000](http://localhost:5000).
 
 Test the component integration with the following steps:
+
 1. **Verify connection**: confirm that there is a green circle and not a red X in the upper right corner.
 2. **Send a Command**: select the 'Commanding' tab, search for `led.BLINKING_ON_OFF` and send it with the argument set to `ON`.
 3. **Verify Event**: select the 'Events' tab and verify that the `SetBlinkingState` event reports the blinking state was set to `ON`.
