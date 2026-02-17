@@ -14,4 +14,5 @@
       <li><a href="/fprime-workshop-led-blinker/#7-led-blinker-full-system-integration">Full System Integration</a></li>
       <li><a href="/fprime-workshop-led-blinker/#8-led-blinker-running-on-hardware">Running on Hardware</a></li>
       <li><a href="/fprime-workshop-led-blinker/#9-system-testing">System Testing</a></li>
+      <li><a href="/fprime-workshop-led-blinker/#10-led-blinker-conclusion">Conclusion</a></li>
     </ol>
