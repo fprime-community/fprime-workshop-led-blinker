@@ -69,6 +69,10 @@ This tutorial is composed of the following steps:
 
 10. [Conclusion](#10-led-blinker-conclusion)
 
+**Follow-Up:**
+
+- [Timeliness and Deadline-Driven Components](timeliness.md) — refactor the LED component to use a queued component with rate group dispatch for deadline enforcement
+
 
 ---
 
@@ -1302,6 +1306,10 @@ To verify this, `fprime_test_api.assert_telemetry_count` can be used to wait for
 ## 10. LED Blinker: Conclusion
 
 Congratulations! You have now completed the F´ on-hardware tutorial. You should now have a solid understanding of building an F´ project that runs on hardware!
+
+### What's Next?
+
+Ready to learn how flight software handles timing deadlines? Continue to [Timeliness and Deadline-Driven Components](timeliness.md), where you will refactor the `Led` component from an active component to a queued component with rate group dispatch — the pattern used in real flight software.
 
 
 ---
