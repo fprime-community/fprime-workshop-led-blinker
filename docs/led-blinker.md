@@ -69,7 +69,7 @@ This tutorial is composed of the following steps:
 
 10. [Conclusion](#10-led-blinker-conclusion)
 
-**Follow-Up:**
+**Extension Lessons:**
 
 - [Timeliness and Deadline-Driven Components](timeliness.md) — refactor the LED component to use a queued component with rate group dispatch for deadline enforcement
 
@@ -243,6 +243,12 @@ Refreshing cache and generating implementation files...
 [INFO] Created new component and generated initial implementations.
 ```
 Your new component is located in the directory `LedBlinker/Components/Led`.
+
+#### Why `active`?
+
+We chose an `active` component because it owns a thread and processes commands asynchronously from its own queue. For this tutorial, the LED blinker does not have hard timing deadlines — it is sufficient for the blink to happen at approximately the right rate. An active component with an `async` rate group port is a simple way to achieve this event-driven periodic behavior.
+
+However, in flight software where timing is critical (e.g. control loops that must execute within a strict deadline), a `queued` component with a `sync` rate group port is preferred. This pattern runs the component's work directly on the rate group's thread, enabling the rate group to detect when work exceeds the allotted cycle time (a "slip"). To learn more about this pattern and refactor the `Led` component accordingly, see the extension lesson on [Timeliness and Deadline-Driven Components](timeliness.md).
 
 #### Commands
 
@@ -1309,7 +1315,7 @@ Congratulations! You have now completed the F´ on-hardware tutorial. You should
 
 ### What's Next?
 
-Ready to learn how flight software handles timing deadlines? Continue to [Timeliness and Deadline-Driven Components](timeliness.md), where you will refactor the `Led` component from an active component to a queued component with rate group dispatch — the pattern used in real flight software.
+Ready to learn how flight software handles timing deadlines? Continue to the extension lesson on [Timeliness and Deadline-Driven Components](timeliness.md), where you will refactor the `Led` component from an active component to a queued component with rate group dispatch — the pattern used in real flight software.
 
 
 ---

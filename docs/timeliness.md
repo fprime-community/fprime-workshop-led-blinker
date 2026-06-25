@@ -2,9 +2,9 @@
 permalink: /timeliness
 ---
 
-# Follow-Up: Timeliness and Deadline-Driven Components
+# Extension Lesson: Timeliness and Deadline-Driven Components
 
-This follow-up section builds on the completed LED Blinker tutorial. You will refactor the `Led` component from an **active** component to a **queued** component driven synchronously by a rate group, introducing the concept of **timeliness** — the ability to detect when work exceeds its allotted time.
+This extension lesson builds on the completed LED Blinker tutorial. You will refactor the `Led` component from an **active** component to a **queued** component driven synchronously by a rate group, introducing the concept of **timeliness** — the ability to detect when work exceeds its allotted time.
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@ You must have completed the [LED Blinker Tutorial](led-blinker.md) through at le
 
 ## Why Timeliness Matters
 
-In the original tutorial, the `Led` component is an **active** component. Active components own a thread and process work from an internal queue whenever that thread is scheduled by the OS. This is fine for event-driven tasks (like responding to commands), but it has a critical limitation: **there is no way to detect if the component's work takes longer than the rate group cycle**.
+In the original tutorial, the `Led` component is an active component. Active components own a thread and process work from an internal queue whenever that thread is scheduled by the OS. This approach works well for event-driven tasks (like responding to commands) and for non-deadline timing signals where approximate periodicity is sufficient. However, since there is jitter in the dispatch of the message and there is no way to detect slips, this approach is insufficient for deadline-driven work.
 
 Consider what happens when the rate group invokes the `Led` component's `run` port:
 
@@ -40,7 +40,7 @@ This pattern gives you the best of both worlds: hard deadline enforcement from t
              |     Led (queued)      |
              |                       |
              |  run_handler (sync):  |
-    cmd ---->|    1. doDispatch()    |----> gpioSet
+    cmd ---->|  1. dispatchAvail..() |----> gpioSet
    (async)   |    2. blink logic     |
              +-----------------------+
 ```
@@ -91,37 +91,30 @@ with:
 
 ### 2a. Add Queue Dispatch to the `run` Handler
 
-Since the `BLINKING_ON_OFF` command is `async`, it will be placed in the component's queue when received. However, a **queued** component has no thread of its own to process the queue — we must explicitly dispatch queued messages during the synchronous `run` handler.
+Since the `BLINKING_ON_OFF` command is `async`, it will be placed in the component's queue when received. However, a queued component has no thread of its own to process the queue — we must explicitly dispatch queued messages during the synchronous `run` handler. This has the advantage that the time to dispatch the queue is also summed into the rate group, so all work done for the component is accounted for in deadline detection.
 
 Open `LedBlinker/Components/Led/Led.cpp` and add the queue dispatch at the **beginning** of the `run_handler`:
 
 ```cpp
 void Led ::run_handler(FwIndexType portNum, U32 context) {
-    // Dispatch any queued messages (e.g. commands) that arrived since the last cycle
-    for (FwSizeType i = 0; i < this->getNum_cmdIn_InputPorts(); i++) {
-        MsgDispatchStatus stat = this->doDispatch();
-        if (MSG_DISPATCH_EMPTY == stat) {
-            break;
-        }
-        FW_ASSERT(MSG_DISPATCH_OK == stat);
-    }
+    // Dispatch all queued messages (e.g. commands) that arrived since the last cycle
+    this->dispatchAvailableMessages();
 
     // Read back the parameter value
     Fw::ParamValid isValid = Fw::ParamValid::INVALID;
     // ... rest of existing implementation unchanged ...
 ```
 
-> [!NOTE]
-> `doDispatch()` processes one message from the queue per call. We loop up to the number of command input ports as a reasonable upper bound, breaking early when the queue is empty. This mirrors the pattern used by `Svc::Health` in the F Prime framework.
+`dispatchAvailableMessages()` is a helper provided by `QueuedComponentBase` that dispatches all currently queued messages in a single call. It iterates over each message in the queue, calling `doDispatch()` for each one, and stops when the queue is empty or an error occurs.
 
 ### 2b. Understanding the Dispatch Pattern
 
-The dispatch loop deserves some explanation. In the active component version, the component's internal thread continuously waited for messages and dispatched them one at a time. Now that we have removed the thread, nothing will process the queue unless we do it explicitly.
+In the active component version, the component's internal thread continuously waited for messages and dispatched them one at a time. Now that we have removed the thread, nothing will process the queue unless we do it explicitly.
 
-By placing the dispatch at the beginning of `run_handler`, we ensure that:
+By placing `dispatchAvailableMessages()` at the beginning of `run_handler`, we ensure that:
 1. Commands received between cycles are processed at a well-defined point
 2. All work (command handling and blink logic) runs in the rate group's thread context
-3. If the total work exceeds the cycle time, the rate group detects the slip
+3. If the total work (dispatch + blink logic) exceeds the cycle time, the rate group detects the slip
 
 ---
 

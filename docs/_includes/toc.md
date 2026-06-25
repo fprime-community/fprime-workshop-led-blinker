@@ -16,7 +16,7 @@
       <li><a href="/fprime-workshop-led-blinker/#9-system-testing">System Testing</a></li>
       <li><a href="/fprime-workshop-led-blinker/#10-led-blinker-conclusion">Conclusion</a></li>
     </ol>
-<h4><a href="/fprime-workshop-led-blinker/timeliness">Follow-Up</a></h4>
+<h4><a href="/fprime-workshop-led-blinker/timeliness">Extension Lessons</a></h4>
     <ul>
       <li><a href="/fprime-workshop-led-blinker/timeliness">Timeliness and Deadline-Driven Components</a></li>
     </ul>
