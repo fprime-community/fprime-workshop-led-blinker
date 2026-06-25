@@ -56,30 +56,19 @@ Open `LedBlinker/Components/Led/Led.fpp`. We need to make two changes:
 
 ### 1a. Change the Component Kind from `active` to `queued`
 
-Replace:
-```
-    active component Led {
-```
-
-with:
-```
-    queued component Led {
+```diff
+-    active component Led {
++    queued component Led {
 ```
 
 ### 1b. Change the `run` Port from `async` to `sync`
 
 The `run` port must be synchronous so that it executes in the rate group's thread context. This is what enables deadline detection.
 
-Replace:
-```
-        @ Port receiving calls from the rate group
-        async input port run: Svc.Sched
-```
-
-with:
-```
-        @ Port receiving calls from the rate group
-        sync input port run: Svc.Sched
+```diff
+         @ Port receiving calls from the rate group
+-        async input port run: Svc.Sched
++        sync input port run: Svc.Sched
 ```
 
 > [!IMPORTANT]
@@ -124,18 +113,12 @@ Since the component is no longer active, it does not need its own thread. Howeve
 
 Open `LedBlinker/LedBlinkerDeployment/Top/instances.fpp` and find the `led` instance definition.
 
-Replace:
-```
+```diff
   instance led: LedBlinker.Led base id 0x10005000 \
-    queue size Default.QUEUE_SIZE \
-    stack size Default.STACK_SIZE \
-    priority 95
-```
-
-with:
-```
-  instance led: LedBlinker.Led base id 0x10005000 \
-    queue size Default.QUEUE_SIZE
+-    queue size Default.QUEUE_SIZE \
+-    stack size Default.STACK_SIZE \
+-    priority 95
++    queue size Default.QUEUE_SIZE
 ```
 
 Move the `led` instance from the "Active component instances" section to the "Queued component instances" section:
@@ -166,18 +149,12 @@ Since the `run` port is now `sync` instead of `async`, invoking it in unit tests
 
 Open `LedBlinker/Components/Led/test/ut/LedTester.cpp` and update the test cases.
 
-**Before** (active component pattern):
-```c++
-    this->invoke_to_run(0, 0);     // invoke the 'run' port to simulate running one cycle
-    this->component.doDispatch();   // Trigger execution of async port
+```diff
+     this->invoke_to_run(0, 0);     // invoke the 'run' port to simulate running one cycle
+-    this->component.doDispatch();   // Trigger execution of async port
 ```
 
-**After** (queued component pattern):
-```c++
-    this->invoke_to_run(0, 0);     // invoke the 'run' port (sync — executes immediately)
-```
-
-Remove all `this->component.doDispatch()` lines that follow `invoke_to_run` calls.
+Remove all `this->component.doDispatch()` lines that follow `invoke_to_run` calls. The `run` port is now `sync`, so calling it executes the handler immediately — there is no queued message to dispatch.
 
 > [!IMPORTANT]
 > Commands are still `async`, so `this->component.doDispatch()` is still required after `this->sendCmd_BLINKING_ON_OFF(...)`. Only the run port dispatch changes.
