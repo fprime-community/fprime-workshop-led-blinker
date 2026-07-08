@@ -360,7 +360,7 @@ Now that the member variables are set up, we can continue into the component imp
 Now we will implement the behavior of the `BLINKING_ON_OFF` command. An initial implementation is shown below and may be copied into `Led.cpp` in-place of the BLINKING_ON_OFF command stub.
 
 ```cpp
-void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, Fw::On onOff) {
+void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const Fw::On& onOff) {
     this->m_toggleCounter = 0;               // Reset count on any successful command
     this->m_blinking = Fw::On::ON == onOff;  // Update blinking state
 
@@ -412,7 +412,7 @@ fprime-util build
 
 Congratulations!  You have now implemented some basic functionality in a new F´ component. Your command should look like this
 ```cpp
-void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, Fw::On onOff) {
+void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const Fw::On& onOff) {
     this->m_toggleCounter = 0;               // Reset count on any successful command
     this->m_blinking = Fw::On::ON == onOff;  // Update blinking state
 
