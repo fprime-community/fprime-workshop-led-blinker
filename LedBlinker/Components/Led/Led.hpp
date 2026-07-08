@@ -56,7 +56,7 @@ class Led : public LedComponentBase {
         void
         BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode,  //!< The opcode
                                    U32 cmdSeq,           //!< The command sequence number
-                                   Fw::On onOff          //!< Indicates whether the blinking should be on or off
+                                   const Fw::On& onOff   //!< Indicates whether the blinking should be on or off
                                    ) override;
 
     Fw::On m_state = Fw::On::OFF;  //! Keeps track if LED is on or off
