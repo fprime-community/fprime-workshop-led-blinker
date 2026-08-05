@@ -44,7 +44,7 @@ void Led ::run_handler(FwIndexType portNum, U32 context) {
     // Read back the parameter value
     Fw::ParamValid isValid = Fw::ParamValid::INVALID;
     U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
-    FW_ASSERT((isValid != Fw::ParamValid::INVALID) && (isValid != Fw::ParamValid::UNINIT),
+    FW_ASSERT((isValid == Fw::ParamValid::VALID) || (isValid == Fw::ParamValid::DEFAULT),
               static_cast<FwAssertArgType>(isValid));
 
     // Only perform actions when set to blinking
