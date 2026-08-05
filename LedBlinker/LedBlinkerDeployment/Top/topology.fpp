@@ -1,4 +1,4 @@
-module LedBlinker {
+module LedBlinkerDeployment {
 
   # ----------------------------------------------------------------------
   # Symbolic constants for port numbers

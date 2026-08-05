@@ -9,8 +9,7 @@
 // required by the autocoder, but are also used in this hand-coded topology.
 #include <LedBlinker/LedBlinkerDeployment/Top/LedBlinkerDeploymentTopologyDefs.hpp>
 
-
-namespace LedBlinker {
+namespace LedBlinkerDeployment {
 /**
  * \brief initialize and run the F´ topology
  *
@@ -79,5 +78,5 @@ void startRateGroups(const Fw::TimeInterval& interval = Fw::TimeInterval(1, 0));
  */
 void stopRateGroups();
 
-}  // namespace LedBlinker
+}  // namespace LedBlinkerDeployment
 #endif

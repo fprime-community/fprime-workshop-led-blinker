@@ -18,9 +18,9 @@
 #include "Svc/Subtopologies/DataProducts/SubtopologyTopologyDefs.hpp"
 #include "Svc/Subtopologies/FileHandling/SubtopologyTopologyDefs.hpp"
 
-//ComCcsds Enum Includes
-#include "Svc/Subtopologies/ComCcsds/Ports_ComPacketQueueEnumAc.hpp"
+// ComCcsds Enum Includes
 #include "Svc/Subtopologies/ComCcsds/Ports_ComBufferQueueEnumAc.hpp"
+#include "Svc/Subtopologies/ComCcsds/Ports_ComPacketQueueEnumAc.hpp"
 
 // Include autocoded FPP constants
 #include "LedBlinker/LedBlinkerDeployment/Top/FppConstantsAc.hpp"
@@ -45,14 +45,22 @@
  * ```
  */
 namespace PingEntries {
-    namespace LedBlinker_rateGroup1 {enum { WARN = 3, FATAL = 5 };}
-    namespace LedBlinker_rateGroup2 {enum { WARN = 3, FATAL = 5 };}
-    namespace LedBlinker_rateGroup3 {enum { WARN = 3, FATAL = 5 };}
-    namespace LedBlinker_cmdSeq {enum { WARN = 3, FATAL = 5 };}
+namespace LedBlinkerDeployment_rateGroup1 {
+enum { WARN = 3, FATAL = 5 };
+}
+namespace LedBlinkerDeployment_rateGroup2 {
+enum { WARN = 3, FATAL = 5 };
+}
+namespace LedBlinkerDeployment_rateGroup3 {
+enum { WARN = 3, FATAL = 5 };
+}
+namespace LedBlinkerDeployment_cmdSeq {
+enum { WARN = 3, FATAL = 5 };
+}
 }  // namespace PingEntries
 
 // Definitions are placed within the same namespace (FPP module name)
-namespace LedBlinker {
+namespace LedBlinkerDeployment {
 
 /**
  * \brief required type definition to carry state
@@ -62,15 +70,15 @@ namespace LedBlinker {
  * contents are entirely up to the definition of the project. This deployment uses subtopologies.
  */
 struct TopologyState {
-    const char* hostname;   //!< Hostname for TCP communication
-    U16 port;              //!< Port for TCP communication
-    CdhCore::SubtopologyState cdhCore;           //!< Subtopology state for CdhCore
-    ComCcsds::SubtopologyState comCcsds;         //!< Subtopology state for ComCcsds 
-    DataProducts::SubtopologyState dataProducts; //!< Subtopology state for DataProducts
-    FileHandling::SubtopologyState fileHandling; //!< Subtopology state for FileHandling
+    const char* hostname;                         //!< Hostname for TCP communication
+    U16 port;                                     //!< Port for TCP communication
+    CdhCore::SubtopologyState cdhCore;            //!< Subtopology state for CdhCore
+    ComCcsds::SubtopologyState comCcsds;          //!< Subtopology state for ComCcsds
+    DataProducts::SubtopologyState dataProducts;  //!< Subtopology state for DataProducts
+    FileHandling::SubtopologyState fileHandling;  //!< Subtopology state for FileHandling
 };
 
 namespace PingEntries = ::PingEntries;
-}  // namespace LedBlinker
+}  // namespace LedBlinkerDeployment
 
 #endif

@@ -1,4 +1,4 @@
-module LedBlinker {
+module LedBlinkerDeployment {
 
   # ----------------------------------------------------------------------
   # Base ID Convention
