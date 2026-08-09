@@ -1,6 +1,6 @@
 # LED Blinker: An F´ Tutorial on Physical Hardware
 
-This repository contains the source code and documentation for the F Prime MathComponent tutorial.
+This repository contains the source code and documentation for the F Prime LED Blinker tutorial.
 
 To run through the tutorial, please visit the F´ website and look for the tutorial section: https://fprime.jpl.nasa.gov
 
