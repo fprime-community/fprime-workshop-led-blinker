@@ -34,7 +34,7 @@ void LedTester ::testBlinking() {
     this->invoke_to_run(0, 0);     // invoke the 'run' port to simulate running one cycle
     this->component.doDispatch();  // Trigger execution of async port
 
-    ASSERT_EVENTS_LedState_SIZE(0);  // ensure no LedState change events we emitted
+    ASSERT_EVENTS_LedState_SIZE(0);  // ensure no LedState change events were emitted
 
     ASSERT_from_gpioSet_SIZE(0);  // ensure gpio LED wasn't set
 
