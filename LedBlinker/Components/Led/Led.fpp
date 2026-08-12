@@ -21,12 +21,12 @@ module LedBlinker {
         @ Event logged when the LED turns on or off
         event LedState(onOff: Fw.On) \
             severity activity low \
-            format "LED is {}"
+            format "LED is {}."
 
         @ Event logged when the LED blink interval is updated
         event BlinkIntervalSet(interval: U32) \
             severity activity high \
-            format "LED blink interval set to {}"
+            format "LED blink interval set to {}."
 
         @ Blinking interval in rate group ticks
         param BLINK_INTERVAL: U32 default 1

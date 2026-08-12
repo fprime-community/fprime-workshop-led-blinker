@@ -298,8 +298,8 @@ Below is a table with tasks you must complete before moving on to the next secti
 
 | Task | Solution |
 |-------|-------------|
-| 1. Add an activity high event named `BlinkIntervalSet` to the fpp. The event takes an argument of `U32` type to indicate the set interval. | <details><summary>Answer</summary>`event BlinkIntervalSet(interval: U32) severity activity high format "LED blink interval set to {}"`</details> |
-| 2. Add an activity low event named `LedState` to the fpp. The event takes an argument of `Fw.On` type to indicate the LED has been driven to a different state. | <details><summary>Answer</summary>`event LedState(onOff: Fw.On) severity activity low format "LED is {}"`</details> |
+| 1. Add an activity high event named `BlinkIntervalSet` to the fpp. The event takes an argument of `U32` type to indicate the set interval. | <details><summary>Answer</summary>`event BlinkIntervalSet(interval: U32) severity activity high format "LED blink interval set to {}."`</details> |
+| 2. Add an activity low event named `LedState` to the fpp. The event takes an argument of `Fw.On` type to indicate the LED has been driven to a different state. | <details><summary>Answer</summary>`event LedState(onOff: Fw.On) severity activity low format "LED is {}."`</details> |
 
 
 You have completed the Command and Event design phase. We'll move on to the Command and Event implementation phase.
@@ -921,7 +921,7 @@ Add the following code to the `testBlinking` method in `LedBlinker/Components/Le
     this->invoke_to_run(0, 0);     // invoke the 'run' port to simulate running one cycle
     this->component.doDispatch();  // Trigger execution of async port
 
-    ASSERT_EVENTS_LedState_SIZE(0);  // ensure no LedState change events we emitted
+    ASSERT_EVENTS_LedState_SIZE(0);  // ensure no LedState change events were emitted
 
     ASSERT_from_gpioSet_SIZE(0);  // ensure gpio LED wasn't set
 
@@ -1040,7 +1040,7 @@ Now it is time to add a GPIO driver to our system and attach it to the `led` com
 
 F´ provides a GPIO driver for Linux systems called `Drv.LinuxGpioDriver`. This should be added to both the instance definition list and the topology instance list just like we did for the `led` component. Since the GPIO driver is a passive component, its definition is a bit more simple.
 
-Add to "Passive Component" section of `LedBlinker/LedBlinkerDeployment/Top/instance.fpp`:
+Add to "Passive Component" section of `LedBlinker/LedBlinkerDeployment/Top/instances.fpp`:
 ```
   instance gpioDriver: Drv.LinuxGpioDriver base id 0x10015000
 ```
@@ -1163,7 +1163,7 @@ Open the file `Components/Led/test/int/led_integration_tests.py` and add the fol
 def test_cmd_no_op(fprime_test_api):
     """Test command CMD_NO_OP
 
-    Test that CMD_NO_OP can be sent and return without and errors
+    Test that CMD_NO_OP can be sent and return without any errors
     """
     fprime_test_api.send_and_assert_command("CdhCore.cmdDisp.CMD_NO_OP")
 ```
