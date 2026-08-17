@@ -106,24 +106,6 @@ fprime-util generate
 > [!NOTE]
 > Always remember to activate your project's virtual environment whenever you work with it.
 
-### 1c. (Optional) Targeting a specific F´ version
-
-`fprime-bootstrap` pins the latest F´ *release*. If you need to run this tutorial against a different F´ revision — for example `devel` when validating an upcoming release — repoint the framework checkout and reinstall the tools that revision pins:
-
-```shell
-# In led-blinker
-cd lib/fprime
-git fetch origin
-git checkout origin/devel    # or any tag/commit you need
-cd ../..
-. fprime-venv/bin/activate
-pip install -r lib/fprime/requirements.txt
-fprime-util generate -f       # regenerate the build cache against the new framework
-```
-
-> [!WARNING]
-> Non-release revisions are not guaranteed to match this tutorial's text. Use a release unless you have a specific reason not to.
-
 
 ---
 
@@ -491,9 +473,6 @@ This will ask for some input, respond with the answers `LedBlinkerDeployment` fo
 Add LedBlinkerDeployment to LedBlinker/LedBlinkerDeployment/CMakeLists.txt at end of file? (yes/no) [yes]: yes
 [INFO] New deployment successfully created: <path to your project>/LedBlinker/LedBlinkerDeployment
 ```
-
-> [!IMPORTANT]
-> Do not skip the deployment namespace question. Its default is taken from the directory you are in, so it is already `LedBlinker` here and pressing Enter is enough — but the answer becomes the FPP `module` and the C++ `namespace` of the generated topology, so answering it with the driver-type number instead generates `module 2` and a build failure reading `error: identifier expected`.
 
 > [!NOTE]
 > Use the default response for any other questions asked. Usually, you may want to choose a shorter name for a deployment, as this will impact namespaces and file paths. We are using a verbose name here for the learning experience.
@@ -902,7 +881,7 @@ fprime-util check
 ```
 
 > [!NOTE]
-> `fprime-util check` runs the unit tests but does not build a unit test executable that does not exist yet, so the newly registered tests must be built once with `fprime-util build --ut` first. Skipping that build produces a confusing CTest error of the form `Could not find executable .../LedBlinker_Components_Led_ut_exe` followed by `returned non-zero exit status 8` rather than a test failure. It is also normal for `check` to report failures until the test cases below are written.
+> `check` will build and run unit tests. It may report an error as no tests are defined yet. To simply build them, run `fprime-util build --ut`.
 
 ### Add a New Test Case
 
@@ -1101,7 +1080,7 @@ To do this, add the following lines to `LedBlinker/LedBlinkerDeployment/Top/topo
 ```
 
 > [!IMPORTANT]
-> `rateGroup1` is preconfigured to call all `RateGroupMemberOut` at a rate of 1 Hz. Each output port index may only be connected once, so you must use the first index that your generated topology does not already use. Look at the `RateGroups` connection block in your own `topology.fpp` and count the `rateGroup1.RateGroupMemberOut[...]` connections: the index shown above assumes indices `[0]` through `[5]` are taken. If you pick an index that is in use, the build fails with `error: duplicate connection at output port <N>` and names the conflicting line — pick the next free index instead.
+> `rateGroup1` is preconfigured to call all `RateGroupMemberOut` at a rate of 1 Hz. We use index `RateGroupMemberOut[6]` because `RateGroupMemberOut[0]` through `RateGroupMemberOut[5]` are used already (see the `RateGroups` connection block in `topology.fpp`).
 
 ### Configuring The GPIO Driver
 
@@ -1126,7 +1105,7 @@ And since this code uses `Fw::Logger`, you will need to add the following line n
 This code tells the GPIO driver to open pin 13 as an output pin. If this fails, an error is printed to the console, but the system continues to start.
 
 > [!NOTE]
-> `/dev/gpiochip4` is the GPIO chip of a Raspberry Pi 5. Other boards expose different chips (a Raspberry Pi 4, for example, uses `/dev/gpiochip0`); run `gpioinfo` on your hardware to find the chip that owns your pin. When you run the deployment locally on your development machine instead of on hardware, that chip does not exist and the deployment logs `[ERROR] Failed to open GPIO pin` at startup. That is expected off-hardware: the rest of the software, including the events and telemetry used in the following sections, still works.
+> `/dev/gpiochip4` is the GPIO chip of a Raspberry Pi 5. Other boards expose different chips (a Raspberry Pi 4, for example, uses `/dev/gpiochip0`); run `gpioinfo` on your hardware to find the chip that owns your pin. When you run the deployment locally on your development machine instead of on hardware, that chip does not exist and the deployment logs `[ERROR] Failed to open GPIO pin` at startup. That is expected: the rest of the software, including the events and telemetry used in the following sections, still works.
 
 > [!WARNING]
 > In `LedBlinker/LedBlinkerDeployment` build the deployment and resolve any errors before continuing.
@@ -1170,7 +1149,7 @@ F Prime system tests use a Python API to dispatch commands to a deployment using
 Before starting this guide, users should have the LedBlinking deployment running on their hardware and connected to the F´ GDS running on a development machine. If hardware is not available, this guide can be followed by running the LedBlinking deployment locally on a development machine instead.
 
 > [!NOTE]
-> If running the LedBlinker deployment locally instead of on the intended hardware, make sure to rebuild F´ with stubbed GPIO drivers so the LedBlinker deployment doesn't attempt to write to physical GPIO ports. Regenerate the native deployment with `fprime-util generate -f -DFPRIME_USE_STUBBED_DRIVERS=ON`. The `-f` flag is required to replace the build cache generated in step 1; without it the command fails with `InvalidBuildCacheException: ... already exists`. MacOS defaults to stubbed drivers and does not require explicitly setting this option.
+> If running the LedBlinker deployment locally instead of on the intended hardware, make sure to rebuild F´ with stubbed GPIO drivers so the LedBlinker deployment doesn't attempt to write to physical GPIO ports. Regenerate the native deployment with `fprime-util generate -DFPRIME_USE_STUBBED_DRIVERS=ON`. MacOS defaults to stubbed drivers and does not require explicitly setting this option.
 
 ### Intro to F Prime System Testing
 
@@ -1380,6 +1359,6 @@ The user may use any LED that can withstand the GPIO voltage of the chosen platf
 For this tutorial, GPIO pin 13 will be used. For platforms that do not have GPIO pin 13 readily available another pin should be chosen, noted, and used in-place of GPIO 13.
 
 ```
-GPIO 13 ----> LED + (anode)
-GND     <---- LED - (cathode)
+GPIO 13 ----> LED + (cathode)
+GND     <---- LED - (anode)
 ```

@@ -171,16 +171,11 @@ fprime-util check
 
 Now that the `Led` component runs synchronously in the rate group, the rate group will detect if the component's work takes longer than one cycle.
 
-To test this, you could temporarily add a simulated delay inside `run_handler`, right after the `dispatchAvailableMessages()` call you added in Step 2:
+To test this, you could temporarily add a simulated delay to the `run_handler`:
 
 ```cpp
-void Led ::run_handler(FwIndexType portNum, U32 context) {
-    this->dispatchAvailableMessages();
-
-    // TEMPORARY: Simulate slow work to demonstrate rate group slip detection
-    Os::Task::delay(Fw::TimeInterval(2, 0));  // Sleep 2 seconds in a 1Hz rate group
-
-    // ... rest of existing implementation unchanged ...
+// TEMPORARY: Simulate slow work to demonstrate rate group slip detection
+Os::Task::delay(Fw::TimeInterval(2, 0));  // Sleep 2 seconds in a 1Hz rate group
 ```
 
 Run the deployment with the GDS:
@@ -190,14 +185,7 @@ fprime-util build
 fprime-gds --ip-client
 ```
 
-You should see a `WARNING_HI` event from the rate group indicating a **cycle slip** — the rate group detected that `Led` did not complete within its allotted time. In the Events tab it looks like this, once per overrun cycle:
-
-```text
-WARNING_HI  LedBlinker.rateGroup1.RateGroupCycleSlip  Rate group cycle slipped on cycle 0
-```
-
-> [!NOTE]
-> You will also see `WARNING_HI  CdhCore.health.HLTH_PING_WARN  Ping entry LedBlinker_rateGroup1 late warning`. That is the health component noticing the same overrun: because the rate group is blocked in `Led`, it cannot answer its health ping in time. It disappears along with the cycle slips once the simulated delay is removed.
+You should see a `WARNING_HI` event from the rate group indicating a **cycle slip** — the rate group detected that `Led` did not complete within its allotted time.
 
 > [!WARNING]
 > Remove the simulated delay after testing! This is for demonstration purposes only.
