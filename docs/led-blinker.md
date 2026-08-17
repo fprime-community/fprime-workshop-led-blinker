@@ -481,7 +481,7 @@ This will ask for some input, respond with the answers `LedBlinkerDeployment` fo
 
 ```shell
   [1/3] Deployment name (MyDeployment): LedBlinkerDeployment
-  [2/3] Deployment namespace (LedBlinkerDeployment): LedBlinker
+  [2/3] Deployment namespace (LedBlinker): LedBlinker
   [3/3] Select communication driver type
     1 - TcpClient
     2 - TcpServer
@@ -493,7 +493,7 @@ Add LedBlinkerDeployment to LedBlinker/LedBlinkerDeployment/CMakeLists.txt at en
 ```
 
 > [!IMPORTANT]
-> Do not skip the deployment namespace question: it must be answered with `LedBlinker`, matching your project namespace. That answer becomes the FPP `module` and the C++ `namespace` of the generated topology, so supplying only two answers puts the driver-type number in the namespace, generating `module 2` and a build failure reading `error: identifier expected`.
+> Do not skip the deployment namespace question. Its default is taken from the directory you are in, so it is already `LedBlinker` here and pressing Enter is enough — but the answer becomes the FPP `module` and the C++ `namespace` of the generated topology, so answering it with the driver-type number instead generates `module 2` and a build failure reading `error: identifier expected`.
 
 > [!NOTE]
 > Use the default response for any other questions asked. Usually, you may want to choose a shorter name for a deployment, as this will impact namespaces and file paths. We are using a verbose name here for the learning experience.
