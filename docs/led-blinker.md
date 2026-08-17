@@ -238,7 +238,7 @@ You will be prompted for information regarding your component. Fill out the prom
 [INFO] Cookiecutter source: using builtin
   [1/8] Component name (MyComponent): Led
   [2/8] Component short description (Component for F Prime FSW framework.): Component to blink an LED driven by a rate group
-  [3/8] Component namespace (Components): LedBlinker
+  [3/8] Component namespace (LedBlinker): LedBlinker
   [4/8] Select component kind
     1 - active
     2 - passive
