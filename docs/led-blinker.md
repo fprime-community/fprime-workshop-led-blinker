@@ -87,6 +87,12 @@ this project and install the correct version of tools, you should perform a boot
 
 ### 1a. [Bootstrap your F´ project](https://fprime.jpl.nasa.gov/latest/docs/getting-started/installing-fprime/#creating-a-new-f-project) with the name `led-blinker` and namespace `LedBlinker`
 
+```shell
+fprime-bootstrap project
+```
+
+Answer `led-blinker` for the project name and `LedBlinker` for the project namespace.
+
 Bootstrapping your F´ project created a folder called `led-blinker` (or any name you chose) containing the standard F´ project structure as well as the virtual environment up containing the tools to work with F´.
 
 ### 1b. Next, generate a build cache using the following commands:
@@ -99,6 +105,24 @@ fprime-util generate
 
 > [!NOTE]
 > Always remember to activate your project's virtual environment whenever you work with it.
+
+### 1c. (Optional) Targeting a specific F´ version
+
+`fprime-bootstrap` pins the latest F´ *release*. If you need to run this tutorial against a different F´ revision — for example `devel` when validating an upcoming release — repoint the framework checkout and reinstall the tools that revision pins:
+
+```shell
+# In led-blinker
+cd lib/fprime
+git fetch origin
+git checkout origin/devel    # or any tag/commit you need
+cd ../..
+. fprime-venv/bin/activate
+pip install -r lib/fprime/requirements.txt
+fprime-util generate -f       # regenerate the build cache against the new framework
+```
+
+> [!WARNING]
+> Non-release revisions are not guaranteed to match this tutorial's text. Use a release unless you have a specific reason not to.
 
 
 ---
@@ -214,7 +238,7 @@ You will be prompted for information regarding your component. Fill out the prom
 [INFO] Cookiecutter source: using builtin
   [1/8] Component name (MyComponent): Led
   [2/8] Component short description (Component for F Prime FSW framework.): Component to blink an LED driven by a rate group
-  [3/8] Component namespace (LedBlinker): LedBlinker
+  [3/8] Component namespace (Components): LedBlinker
   [4/8] Select component kind
     1 - active
     2 - passive
@@ -439,7 +463,7 @@ Before finishing the implementation, let's take a break and try running the abov
 In this section, users will create a deployment and perform the initial integration of the LED component into that deployment. This deployment will automatically include the basic command and data handling setup needed to interact with the component. Wiring the `Led` component to the GPIO driver component will be covered in a later section after the component implementation has finished.
 
 > [!NOTE]
-> Users must have created the [initial Led component implementation](#4-led-blinker-initial-component-integration) in order to run through this section. Users may continue to define commands, events, telemetry, and ports after this initial integration.
+> Users must have created the [initial Led component implementation](#3-led-blinker-component-design-and-initial-implementation) in order to run through this section. Users may continue to define commands, events, telemetry, and ports after this initial integration.
 
 ### Creating the `LedBlinkerDeployment` Deployment
 
@@ -453,19 +477,23 @@ cd LedBlinker
 fprime-util new --deployment
 ```
 
-This will ask for some input, respond with the answers `LedBlinkerDeployment` for the deployment name and `2` for the communication driver type, shown below:
+This will ask for some input, respond with the answers `LedBlinkerDeployment` for the deployment name, `LedBlinker` for the deployment namespace, and `2` for the communication driver type, shown below:
 
 ```shell
-  [1/2] Deployment name (MyDeployment): LedBlinkerDeployment
-  [2/2] Select communication driver type
+  [1/3] Deployment name (MyDeployment): LedBlinkerDeployment
+  [2/3] Deployment namespace (LedBlinkerDeployment): LedBlinker
+  [3/3] Select communication driver type
     1 - TcpClient
     2 - TcpServer
     3 - UART
     Choose from [1/2/3] (1): 2
 [INFO] Found CMake file at 'LedBlinker/LedBlinkerDeployment/CMakeLists.txt'
 Add LedBlinkerDeployment to LedBlinker/LedBlinkerDeployment/CMakeLists.txt at end of file? (yes/no) [yes]: yes
-[INFO] New deployment successfully created: /Users/chammard/Work/fp/tmp/LedBlinker/LedBlinkerDeployment/LedBlinkerDeployment
+[INFO] New deployment successfully created: <path to your project>/LedBlinker/LedBlinkerDeployment
 ```
+
+> [!IMPORTANT]
+> Do not skip the deployment namespace question: it must be answered with `LedBlinker`, matching your project namespace. That answer becomes the FPP `module` and the C++ `namespace` of the generated topology, so supplying only two answers puts the driver-type number in the namespace, generating `module 2` and a build failure reading `error: identifier expected`.
 
 > [!NOTE]
 > Use the default response for any other questions asked. Usually, you may want to choose a shorter name for a deployment, as this will impact namespaces and file paths. We are using a verbose name here for the learning experience.
@@ -512,7 +540,7 @@ Next, the topology needs to use the above definition. This is done by adding the
 Build your deployment
 
 ```shell
-cd LedBlinkerDeployment
+# In LedBlinker/LedBlinkerDeployment
 fprime-util build
 ```
 
@@ -865,15 +893,16 @@ register_fprime_ut(
 )
 ```
 
-Finally, test the skeleton unit tests with the following command:
+Finally, build and test the skeleton unit tests with the following commands:
 
 ```shell
 #In LedBlinker/Components/Led
+fprime-util build --ut
 fprime-util check
 ```
 
 > [!NOTE]
-> `check` will build and run unit tests. It may report an error as no tests are defined yet. To simply build them, run `fprime-util build --ut`.
+> `fprime-util check` runs the unit tests but does not build a unit test executable that does not exist yet, so the newly registered tests must be built once with `fprime-util build --ut` first. Skipping that build produces a confusing CTest error of the form `Could not find executable .../LedBlinker_Components_Led_ut_exe` followed by `returned non-zero exit status 8` rather than a test failure. It is also normal for `check` to report failures until the test cases below are written.
 
 ### Add a New Test Case
 
@@ -1023,7 +1052,8 @@ fprime-util check --coverage
 Now open the file `LedBlinker/Components/Led/coverage/coverage.html` with your web browser and explore the coverage report.
 ```shell
 # In LedBlinker/Components/Led/coverage
-open coverage.html
+open coverage.html      # macOS
+xdg-open coverage.html  # Linux
 ```
 
 ### LED Blinker Step 6 Conclusion
@@ -1063,21 +1093,21 @@ To do this, add the following lines to `LedBlinker/LedBlinkerDeployment/Top/topo
 ```
     # Named connection group
     connections LedBlinker {
-      # Rate Group 1 (1Hz cycle) ouput is connected to led's run input
-      rateGroup1.RateGroupMemberOut[5] -> led.run
+      # Rate Group 1 (1Hz cycle) output is connected to led's run input
+      rateGroup1.RateGroupMemberOut[6] -> led.run
       # led's gpioSet output is connected to gpioDriver's gpioWrite input
       led.gpioSet -> gpioDriver.gpioWrite
     }
 ```
 
-> [!NOTE]
-> `rateGroup1` is preconfigured to call all `RateGroupMemberOut` at a rate of 1 Hz. We use index `RateGroupMemberOut[5]` because `RateGroupMemberOut[0]` through `RateGroupMemberOut[4]` are used already (see the `RateGroups` connection block in `topology.fpp`).
+> [!IMPORTANT]
+> `rateGroup1` is preconfigured to call all `RateGroupMemberOut` at a rate of 1 Hz. Each output port index may only be connected once, so you must use the first index that your generated topology does not already use. Look at the `RateGroups` connection block in your own `topology.fpp` and count the `rateGroup1.RateGroupMemberOut[...]` connections: the index shown above assumes indices `[0]` through `[5]` are taken. If you pick an index that is in use, the build fails with `error: duplicate connection at output port <N>` and names the conflicting line — pick the next free index instead.
 
 ### Configuring The GPIO Driver
 
 So far the GPIO driver has been instantiated and wired, but has not been told what GPIO pin to control. For this tutorial, GPIO pin 13 will be used. To configure this, the `open` function needs to be called in the topology's C++ implementation and passed the pin's number and direction.
 
-This is done by adding the following at the end of the `configureTopology` function defined in `LedBlinker/LedBlinkerDeployment/Top/LedBlinkerTopology.cpp`:
+This is done by adding the following at the end of the `configureTopology` function defined in `LedBlinker/LedBlinkerDeployment/Top/LedBlinkerDeploymentTopology.cpp` (the file is named after your deployment):
 
 ```c++
     Os::File::Status status =
@@ -1087,13 +1117,16 @@ This is done by adding the following at the end of the `configureTopology` funct
     }
 ```
 
-And since this code uses `Fw::Logger`, you will need to add the following line near the top of the `LedBlinker/LedBlinkerDeployment/Top/LedBlinkerTopology.cpp` file.
+And since this code uses `Fw::Logger`, you will need to add the following line near the top of the `LedBlinker/LedBlinkerDeployment/Top/LedBlinkerDeploymentTopology.cpp` file.
 
 ```c++
 #include <Fw/Logger/Logger.hpp>
 ```
 
 This code tells the GPIO driver to open pin 13 as an output pin. If this fails, an error is printed to the console, but the system continues to start.
+
+> [!NOTE]
+> `/dev/gpiochip4` is the GPIO chip of a Raspberry Pi 5. Other boards expose different chips (a Raspberry Pi 4, for example, uses `/dev/gpiochip0`); run `gpioinfo` on your hardware to find the chip that owns your pin. When you run the deployment locally on your development machine instead of on hardware, that chip does not exist and the deployment logs `[ERROR] Failed to open GPIO pin` at startup. That is expected off-hardware: the rest of the software, including the events and telemetry used in the following sections, still works.
 
 > [!WARNING]
 > In `LedBlinker/LedBlinkerDeployment` build the deployment and resolve any errors before continuing.
@@ -1137,7 +1170,7 @@ F Prime system tests use a Python API to dispatch commands to a deployment using
 Before starting this guide, users should have the LedBlinking deployment running on their hardware and connected to the F´ GDS running on a development machine. If hardware is not available, this guide can be followed by running the LedBlinking deployment locally on a development machine instead.
 
 > [!NOTE]
-> If running the LedBlinker deployment locally instead of on the intended hardware, make sure to rebuild F´ with stubbed GPIO drivers so the LedBlinker deployment doesn't attempt to write to physical GPIO ports. Regenerate the native deployment with `fprime-util generate -DFPRIME_USE_STUBBED_DRIVERS=ON`. MacOS defaults to stubbed drivers and does not require explicitly setting this option.
+> If running the LedBlinker deployment locally instead of on the intended hardware, make sure to rebuild F´ with stubbed GPIO drivers so the LedBlinker deployment doesn't attempt to write to physical GPIO ports. Regenerate the native deployment with `fprime-util generate -f -DFPRIME_USE_STUBBED_DRIVERS=ON`. The `-f` flag is required to replace the build cache generated in step 1; without it the command fails with `InvalidBuildCacheException: ... already exists`. MacOS defaults to stubbed drivers and does not require explicitly setting this option.
 
 ### Intro to F Prime System Testing
 
@@ -1207,7 +1240,7 @@ def test_blinking(fprime_test_api):
     """Test that LED component can respond to ground commands"""
 ```
 
-First, we will turn blinking on, verify that we receive a `SetBlinkingState` event, then check that `LedState` on and off events start arriving. After, we will turn blinking off, and make sure that a `SetBlinkingState` off event arrives.
+First, we will turn blinking on, verify that we receive a `SetBlinkingState` event, then check that `LedState` on and off events start arriving. Because the LED toggles once per second, waiting for this sequence of events takes several seconds, so we raise the assertion timeout above its 5 second default. After, we will turn blinking off, and make sure that a `SetBlinkingState` off event arrives.
 
 Add the following to the `test_blinking()` method:
 
@@ -1221,6 +1254,7 @@ Add the following to the `test_blinking()` method:
         "LedBlinker.led.BLINKING_ON_OFF",
         args=["ON"],
         events=[blink_start_evr, led_on_evr, led_off_evr, led_on_evr],
+        timeout=10,
     )
 
     # Send command to stop blinking, then assert blinking stops
@@ -1346,6 +1380,6 @@ The user may use any LED that can withstand the GPIO voltage of the chosen platf
 For this tutorial, GPIO pin 13 will be used. For platforms that do not have GPIO pin 13 readily available another pin should be chosen, noted, and used in-place of GPIO 13.
 
 ```
-GPIO 13 ----> LED + (cathode)
-GND     <---- LED - (anode)
+GPIO 13 ----> LED + (anode)
+GND     <---- LED - (cathode)
 ```
