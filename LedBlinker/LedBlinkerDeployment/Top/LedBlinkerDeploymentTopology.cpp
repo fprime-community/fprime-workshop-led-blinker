@@ -24,9 +24,9 @@ Svc::RateGroupDriver::DividerSet rateGroupDivisorsSet{{{1, 0}, {2, 0}, {4, 0}}};
 
 // Rate groups may supply a context token to each of the attached children whose purpose is set by the project. The
 // reference topology sets each token to zero as these contexts are unused in this project.
-Svc::ActiveRateGroup::ContextArray rateGroup1Context(0);
-Svc::ActiveRateGroup::ContextArray rateGroup2Context(0);
-Svc::ActiveRateGroup::ContextArray rateGroup3Context(0);
+Svc::ActiveRateGroup::ContextArray rateGroup_1HzContext(0);
+Svc::ActiveRateGroup::ContextArray rateGroup_0_5HzContext(0);
+Svc::ActiveRateGroup::ContextArray rateGroup_0_25HzContext(0);
 
 enum TopologyConstants {
     COMM_PRIORITY = 100,
@@ -47,9 +47,9 @@ void configureTopology() {
     rateGroupDriver.configure(rateGroupDivisorsSet);
 
     // Rate groups require context arrays.
-    rateGroup1.configure(rateGroup1Context);
-    rateGroup2.configure(rateGroup2Context);
-    rateGroup3.configure(rateGroup3Context);
+    rateGroup_1Hz.configure(rateGroup_1HzContext);
+    rateGroup_0_5Hz.configure(rateGroup_0_5HzContext);
+    rateGroup_0_25Hz.configure(rateGroup_0_25HzContext);
 
     // Command sequencer needs to allocate memory to hold contents of command sequences
     cmdSeq.allocateBuffer(0, mallocator, 5 * 1024);

@@ -24,9 +24,9 @@ telemetry packets LedBlinkerDeploymentPackets {
     LedBlinker.led.BlinkingState
     LedBlinker.led.LedTransitionCount
 
-    LedBlinker.rateGroup1.RgMaxTime
-    LedBlinker.rateGroup2.RgMaxTime
-    LedBlinker.rateGroup3.RgMaxTime
+    LedBlinker.rateGroup_1Hz.RgMaxTime
+    LedBlinker.rateGroup_0_5Hz.RgMaxTime
+    LedBlinker.rateGroup_0_25Hz.RgMaxTime
   }
 
   packet CDHErrors id 2 group 1 {
@@ -40,9 +40,9 @@ telemetry packets LedBlinkerDeploymentPackets {
     ComCcsds.commsBufferManager.NoBuffs
     ComCcsds.commsBufferManager.EmptyBuffs
 
-    LedBlinker.rateGroup1.RgCycleSlips
-    LedBlinker.rateGroup2.RgCycleSlips
-    LedBlinker.rateGroup3.RgCycleSlips
+    LedBlinker.rateGroup_1Hz.RgCycleSlips
+    LedBlinker.rateGroup_0_5Hz.RgCycleSlips
+    LedBlinker.rateGroup_0_25Hz.RgCycleSlips
   }
 
   packet SystemRes1 id 5 group 2 {
