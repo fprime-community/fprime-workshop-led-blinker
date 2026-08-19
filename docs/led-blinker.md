@@ -254,7 +254,7 @@ Your new component is located in the directory `LedBlinker/Components/Led`.
 
 We chose an `active` component because it owns a thread and processes commands asynchronously from its own queue. For this tutorial, the LED blinker does not have hard timing deadlines — it is sufficient for the blink to happen at approximately the right rate. An active component with an `async` rate group port is a simple way to achieve this event-driven periodic behavior.
 
-However, in flight software where timing is critical (e.g. control loops that must execute within a strict deadline), a `queued` component with a `sync` rate group port is preferred. This pattern runs the component's work directly on the rate group's thread, enabling the rate group to detect when work exceeds the allotted cycle time (a "slip"). To learn more about this pattern and refactor the `Led` component accordingly, see the extension lesson on [Timeliness and Deadline-Driven Components](timeliness.md).
+However, in flight software where timing is critical (e.g. control loops that must execute within a strict deadline), a `queued` component with a `sync` rate group port is preferred. This pattern runs the component's work directly on the rate group's thread, enabling the rate group to detect when work exceeds the allotted cycle time (a "slip"). To learn more about this pattern and refactor the `Led` component accordingly, see the extension lesson on [Timeliness and Deadline-Driven Components](timeliness.md). You can also refer to [Selecting Component, Port, and Command Kinds](https://fprime.jpl.nasa.gov/devel/docs/user-manual/framework/component-and-port-selection/) for more information about component kinds.
 
 #### Commands
 
@@ -1074,15 +1074,15 @@ To do this, add the following lines to `LedBlinker/LedBlinkerDeployment/Top/topo
 ```
     # Named connection group
     connections LedBlinker {
-      # Rate Group 1 (1Hz cycle) output is connected to led's run input
-      rateGroup1.RateGroupMemberOut[6] -> led.run
+      # Rate Group clocked at 1Hz - output is connected to led's run input
+      rateGroup_1Hz.RateGroupMemberOut[6] -> led.run
       # led's gpioSet output is connected to gpioDriver's gpioWrite input
       led.gpioSet -> gpioDriver.gpioWrite
     }
 ```
 
 > [!IMPORTANT]
-> `rateGroup1` is preconfigured to call all `RateGroupMemberOut` at a rate of 1 Hz. We use index `RateGroupMemberOut[6]` because `RateGroupMemberOut[0]` through `RateGroupMemberOut[5]` are used already (see the `RateGroups` connection block in `topology.fpp`).
+> `rateGroup_1Hz` is preconfigured to call all `RateGroupMemberOut` at a rate of 1 Hz. We use index `RateGroupMemberOut[6]` because `RateGroupMemberOut[0]` through `RateGroupMemberOut[5]` are used already (see the `RateGroups` connection block in `topology.fpp`).
 
 ### Configuring The GPIO Driver
 
