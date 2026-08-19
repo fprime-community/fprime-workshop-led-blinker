@@ -38,7 +38,7 @@ void LedTester ::testBlinking() {
 
     ASSERT_from_gpioSet_SIZE(0);  // ensure gpio LED wasn't set
 
-    ASSERT_TLM_LedTransitionCount_SIZE(0);  // ensure no LedTransitionCount were recorded
+    ASSERT_TLM_LedTransitionCount_SIZE(0);  // ensure no LedTransitionCount values were recorded
 
     // Send command to enable blinking
     this->sendCmd_BLINKING_ON_OFF(0, 0, Fw::On::ON);

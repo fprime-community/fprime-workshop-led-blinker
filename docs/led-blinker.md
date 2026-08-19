@@ -927,7 +927,7 @@ Add the following code to the `testBlinking` method in `LedBlinker/Components/Le
 
     ASSERT_from_gpioSet_SIZE(0);  // ensure gpio LED wasn't set
 
-    ASSERT_TLM_LedTransitionCount_SIZE(0);  // ensure no LedTransitionCount were recorded
+    ASSERT_TLM_LedTransitionCount_SIZE(0);  // ensure no LedTransitionCount values were recorded
 ```
 
 The `this->invoke_to_<port-name>()` methods are used to call input ports on the component under test acting like a port invocation in the system topology but driven by our test harness. `run` is an `async` input port, it's not dispatched immediately, but instead added to an execution queue that would normally be driven off the component's thread.
