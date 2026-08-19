@@ -340,10 +340,10 @@ Many of the behaviors of the component discussed in the [Component Design](#comp
 Open `Led.hpp` in `LedBlinker/Components/Led`. Add the following private member variables to the end of the file just before the two closing `}` of the class definition and namespace.
 
 ```cpp
-    Fw::On m_state = Fw::On::OFF; //! Keeps track if LED is on or off
-    U64 m_transitions = 0; //! The number of on/off transitions that have occurred from FSW boot up
-    U32 m_toggleCounter = 0; //! Keeps track of how many ticks the LED has been on for
-    bool m_blinking = false; //! Flag: if true then LED blinking will occur else no blinking will happen
+    Fw::On m_ledState = Fw::On::OFF; //! Keeps track if LED is on or off
+    U64 m_transitionCount = 0; //! The number of on/off transitions that have occurred from FSW boot up
+    U32 m_ticksSinceToggle = 0; //! Keeps track of rate-group ticks since the last toggle, modulo the blink interval
+    bool m_isBlinking = false; //! Flag: if true then LED blinking will occur else no blinking will happen
 ```
 
 Run the following in the `LedBlinker/Components/Led` directory to verify your component is building correctly.
@@ -361,8 +361,8 @@ Now we will implement the behavior of the `BLINKING_ON_OFF` command. An initial 
 
 ```cpp
 void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const Fw::On& onOff) {
-    this->m_toggleCounter = 0;               // Reset count on any successful command
-    this->m_blinking = Fw::On::ON == onOff;  // Update blinking state
+    this->m_ticksSinceToggle = 0;                // Reset count on any successful command
+    this->m_isBlinking = Fw::On::ON == onOff;    // Update blinking state
 
     // TODO: Emit an event SetBlinkingState to report the blinking state (onOff).
     // NOTE: This event will be added during the "Events" exercise.
@@ -413,8 +413,8 @@ fprime-util build
 Congratulations!  You have now implemented some basic functionality in a new F´ component. Your command should look like this
 ```cpp
 void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const Fw::On& onOff) {
-    this->m_toggleCounter = 0;               // Reset count on any successful command
-    this->m_blinking = Fw::On::ON == onOff;  // Update blinking state
+    this->m_ticksSinceToggle = 0;                // Reset count on any successful command
+    this->m_isBlinking = Fw::On::ON == onOff;    // Update blinking state
 
     this->log_ACTIVITY_HI_SetBlinkingState(onOff);
 
@@ -671,34 +671,34 @@ void Led ::run_handler(FwIndexType portNum, U32 context) {
               static_cast<FwAssertArgType>(isValid));
 
     // Only perform actions when set to blinking
-    if (this->m_blinking && (interval != 0)) {
+    if (this->m_isBlinking && (interval != 0)) {
         // If toggling state
-        if (this->m_toggleCounter == 0) {
+        if (this->m_ticksSinceToggle == 0) {
             // Toggle state
-            this->m_state = (this->m_state == Fw::On::ON) ? Fw::On::OFF : Fw::On::ON;
-            this->m_transitions++;
-            // TODO: Report the number of LED transitions (this->m_transitions) on channel LedTransitions
+            this->m_ledState = (this->m_ledState == Fw::On::ON) ? Fw::On::OFF : Fw::On::ON;
+            this->m_transitionCount++;
+            // TODO: Report the number of LED transitions (this->m_transitionCount) on channel LedTransitions
 
             // Port may not be connected, so check before sending output
             if (this->isConnected_gpioSet_OutputPort(0)) {
-                this->gpioSet_out(0, (Fw::On::ON == this->m_state) ? Fw::Logic::HIGH : Fw::Logic::LOW);
+                this->gpioSet_out(0, (Fw::On::ON == this->m_ledState) ? Fw::Logic::HIGH : Fw::Logic::LOW);
             }
 
-            // TODO: Emit an event LedState to report the LED state (this->m_state).
+            // TODO: Emit an event LedState to report the LED state (this->m_ledState).
         }
 
-        this->m_toggleCounter = (this->m_toggleCounter + 1) % interval;
+        this->m_ticksSinceToggle = (this->m_ticksSinceToggle + 1) % interval;
     }
     // We are not blinking
     else {
-        if (this->m_state == Fw::On::ON) {
+        if (this->m_ledState == Fw::On::ON) {
             // Port may not be connected, so check before sending output
             if (this->isConnected_gpioSet_OutputPort(0)) {
                 this->gpioSet_out(0, Fw::Logic::LOW);
             }
 
-            this->m_state = Fw::On::OFF;
-            // TODO: Emit an event LedState to report the LED state (this->m_state).
+            this->m_ledState = Fw::On::OFF;
+            // TODO: Emit an event LedState to report the LED state (this->m_ledState).
         }
     }
 }
@@ -794,8 +794,8 @@ Below is a table with tasks you must complete. These tasks require you to go bac
 | Task | Solution |
 |------|----------|
 | Inside the `parameterUpdated` function, emit an activity high event named `BlinkIntervalSet` that takes in an argument of type `U32` to report the blink interval. | <details><summary>Answer</summary>`this->log_ACTIVITY_HI_BlinkIntervalSet(interval);`</details> |
-| Inside the `run_handler` port handler, report the number of LED transitions (this->m_transitions) on channel LedTransitions. | <details><summary>Answer</summary>`this->tlmWrite_LedTransitions(this->m_transitions);`</details> |
-| Inside the `run_handler` port handler, emit an event LedState to report the LED state (this->m_state). There are two places to add this event. | <details><summary>Answer</summary>`this->log_ACTIVITY_LO_LedState(this->m_state);`</details> |
+| Inside the `run_handler` port handler, report the number of LED transitions (this->m_transitionCount) on channel LedTransitions. | <details><summary>Answer</summary>`this->tlmWrite_LedTransitions(this->m_transitionCount);`</details> |
+| Inside the `run_handler` port handler, emit an event LedState to report the LED state (this->m_ledState). There are two places to add this event. | <details><summary>Answer</summary>`this->log_ACTIVITY_LO_LedState(this->m_ledState);`</details> |
 
 > [!TIP]
 > Emitting an event follows this pattern: `this->log_<severity>_<eventName>(<argument_if_any>);`
