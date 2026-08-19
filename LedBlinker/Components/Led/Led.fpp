@@ -11,7 +11,7 @@ module LedBlinker {
         telemetry BlinkingState: Fw.On
 
         @ Telemetry channel counting LED transitions
-        telemetry LedTransitions: U64
+        telemetry LedTransitionCount: U64
 
         @ Reports the state we set to blinking.
         event SetBlinkingState($state: Fw.On) \

@@ -48,34 +48,34 @@ void Led ::run_handler(FwIndexType portNum, U32 context) {
               static_cast<FwAssertArgType>(isValid));
 
     // Only perform actions when set to blinking
-    if (this->m_blinking && (interval != 0)) {
+    if ((this->m_blinkingState == Fw::On::ON) && (interval != 0)) {
         // If toggling state
-        if (this->m_toggleCounter == 0) {
+        if (this->m_ticksSinceToggle == 0) {
             // Toggle state
-            this->m_state = (this->m_state == Fw::On::ON) ? Fw::On::OFF : Fw::On::ON;
-            this->m_transitions++;
-            this->tlmWrite_LedTransitions(this->m_transitions);
+            this->m_ledState = (this->m_ledState == Fw::On::ON) ? Fw::On::OFF : Fw::On::ON;
+            this->m_transitionCount++;
+            this->tlmWrite_LedTransitionCount(this->m_transitionCount);
 
             // Port may not be connected, so check before sending output
             if (this->isConnected_gpioSet_OutputPort(0)) {
-                this->gpioSet_out(0, (Fw::On::ON == this->m_state) ? Fw::Logic::HIGH : Fw::Logic::LOW);
+                this->gpioSet_out(0, (Fw::On::ON == this->m_ledState) ? Fw::Logic::HIGH : Fw::Logic::LOW);
             }
 
-            this->log_ACTIVITY_LO_LedState(this->m_state);
+            this->log_ACTIVITY_LO_LedState(this->m_ledState);
         }
 
-        this->m_toggleCounter = (this->m_toggleCounter + 1) % interval;
+        this->m_ticksSinceToggle = (this->m_ticksSinceToggle + 1) % interval;
     }
     // We are not blinking
     else {
-        if (this->m_state == Fw::On::ON) {
+        if (this->m_ledState == Fw::On::ON) {
             // Port may not be connected, so check before sending output
             if (this->isConnected_gpioSet_OutputPort(0)) {
                 this->gpioSet_out(0, Fw::Logic::LOW);
             }
 
-            this->m_state = Fw::On::OFF;
-            this->log_ACTIVITY_LO_LedState(this->m_state);
+            this->m_ledState = Fw::On::OFF;
+            this->log_ACTIVITY_LO_LedState(this->m_ledState);
         }
     }
 }
@@ -85,8 +85,8 @@ void Led ::run_handler(FwIndexType portNum, U32 context) {
 // ----------------------------------------------------------------------
 
 void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const Fw::On& onOff) {
-    this->m_toggleCounter = 0;               // Reset count on any successful command
-    this->m_blinking = Fw::On::ON == onOff;  // Update blinking state
+    this->m_ticksSinceToggle = 0;   // Reset count on any successful command
+    this->m_blinkingState = onOff;  // Update blinking state
 
     this->log_ACTIVITY_HI_SetBlinkingState(onOff);
 
