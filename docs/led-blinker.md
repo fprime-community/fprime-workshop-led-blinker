@@ -361,8 +361,8 @@ Now we will implement the behavior of the `BLINKING_ON_OFF` command. An initial 
 
 ```cpp
 void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const Fw::On& onOff) {
-    this->m_ticksSinceToggle = 0;                // Reset count on any successful command
-    this->m_isBlinking = Fw::On::ON == onOff;    // Update blinking state
+    this->m_ticksSinceToggle = 0;              // Reset count on any successful command
+    this->m_isBlinking = Fw::On::ON == onOff;  // Update blinking state
 
     // TODO: Emit an event SetBlinkingState to report the blinking state (onOff).
     // NOTE: This event will be added during the "Events" exercise.
@@ -413,8 +413,8 @@ fprime-util build
 Congratulations!  You have now implemented some basic functionality in a new F´ component. Your command should look like this
 ```cpp
 void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const Fw::On& onOff) {
-    this->m_ticksSinceToggle = 0;                // Reset count on any successful command
-    this->m_isBlinking = Fw::On::ON == onOff;    // Update blinking state
+    this->m_ticksSinceToggle = 0;              // Reset count on any successful command
+    this->m_isBlinking = Fw::On::ON == onOff;  // Update blinking state
 
     this->log_ACTIVITY_HI_SetBlinkingState(onOff);
 
