@@ -192,7 +192,7 @@ In this exercise, the `BLINKING_ON_OFF` command shall toggle the blinking state 
 **Telemetry Channels:**
 
 1. `BlinkingState`: state of the LED blinking
-2. `LedTransitions`: count of the LED transitions
+2. `LedTransitionCount`: count of the LED transitions
 
 **Parameters:**
 
@@ -340,10 +340,12 @@ Many of the behaviors of the component discussed in the [Component Design](#comp
 Open `Led.hpp` in `LedBlinker/Components/Led`. Add the following private member variables to the end of the file just before the two closing `}` of the class definition and namespace.
 
 ```cpp
-    Fw::On m_ledState = Fw::On::OFF; //! Keeps track if LED is on or off
-    U64 m_transitionCount = 0; //! The number of on/off transitions that have occurred from FSW boot up
-    U32 m_ticksSinceToggle = 0; //! Keeps track of rate-group ticks since the last toggle, modulo the blink interval
-    bool m_isBlinking = false; //! Flag: if true then LED blinking will occur else no blinking will happen
+    Fw::On m_ledState = Fw::On::OFF;       //! Keeps track if LED is on or off
+    U64 m_transitionCount = 0;             //! The number of on/off transitions that have occurred
+                                           //! from FSW boot up
+    U32 m_ticksSinceToggle = 0;            //! Keeps track of rate-group ticks since the last toggle,
+                                           //! modulo the blink interval
+    Fw::On m_blinkingState = Fw::On::OFF;  //! Indicates whether LED blinking is on or off
 ```
 
 Run the following in the `LedBlinker/Components/Led` directory to verify your component is building correctly.
@@ -361,8 +363,8 @@ Now we will implement the behavior of the `BLINKING_ON_OFF` command. An initial 
 
 ```cpp
 void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const Fw::On& onOff) {
-    this->m_ticksSinceToggle = 0;              // Reset count on any successful command
-    this->m_isBlinking = Fw::On::ON == onOff;  // Update blinking state
+    this->m_ticksSinceToggle = 0;   // Reset count on any successful command
+    this->m_blinkingState = onOff;  // Update blinking state
 
     // TODO: Emit an event SetBlinkingState to report the blinking state (onOff).
     // NOTE: This event will be added during the "Events" exercise.
@@ -413,8 +415,8 @@ fprime-util build
 Congratulations!  You have now implemented some basic functionality in a new F´ component. Your command should look like this
 ```cpp
 void Led ::BLINKING_ON_OFF_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const Fw::On& onOff) {
-    this->m_ticksSinceToggle = 0;              // Reset count on any successful command
-    this->m_isBlinking = Fw::On::ON == onOff;  // Update blinking state
+    this->m_ticksSinceToggle = 0;   // Reset count on any successful command
+    this->m_blinkingState = onOff;  // Update blinking state
 
     this->log_ACTIVITY_HI_SetBlinkingState(onOff);
 
@@ -580,7 +582,7 @@ Below is a table with a task you must complete before moving on to the next sect
 
 | Task | Solution |
 |-------|-------------|
-| 1. Add a telemetry channel `LedTransitions` of type `U64` to count LED Transitions to `Led.fpp`. | <details><summary>Answer</summary>`telemetry LedTransitions: U64`</details> |
+| 1. Add a telemetry channel `LedTransitionCount` of type `U64` to count LED transitions to `Led.fpp`. | <details><summary>Answer</summary>`telemetry LedTransitionCount: U64`</details> |
 
 #### Parameters
 
@@ -671,13 +673,13 @@ void Led ::run_handler(FwIndexType portNum, U32 context) {
               static_cast<FwAssertArgType>(isValid));
 
     // Only perform actions when set to blinking
-    if (this->m_isBlinking && (interval != 0)) {
+    if ((this->m_blinkingState == Fw::On::ON) && (interval != 0)) {
         // If toggling state
         if (this->m_ticksSinceToggle == 0) {
             // Toggle state
             this->m_ledState = (this->m_ledState == Fw::On::ON) ? Fw::On::OFF : Fw::On::ON;
             this->m_transitionCount++;
-            // TODO: Report the number of LED transitions (this->m_transitionCount) on channel LedTransitions
+            // TODO: Report the number of LED transitions (this->m_transitionCount) on channel LedTransitionCount
 
             // Port may not be connected, so check before sending output
             if (this->isConnected_gpioSet_OutputPort(0)) {
@@ -794,7 +796,7 @@ Below is a table with tasks you must complete. These tasks require you to go bac
 | Task | Solution |
 |------|----------|
 | Inside the `parameterUpdated` function, emit an activity high event named `BlinkIntervalSet` that takes in an argument of type `U32` to report the blink interval. | <details><summary>Answer</summary>`this->log_ACTIVITY_HI_BlinkIntervalSet(interval);`</details> |
-| Inside the `run_handler` port handler, report the number of LED transitions (this->m_transitionCount) on channel LedTransitions. | <details><summary>Answer</summary>`this->tlmWrite_LedTransitions(this->m_transitionCount);`</details> |
+| Inside the `run_handler` port handler, report the number of LED transitions (this->m_transitionCount) on channel LedTransitionCount. | <details><summary>Answer</summary>`this->tlmWrite_LedTransitionCount(this->m_transitionCount);`</details> |
 | Inside the `run_handler` port handler, emit an event LedState to report the LED state (this->m_ledState). There are two places to add this event. | <details><summary>Answer</summary>`this->log_ACTIVITY_LO_LedState(this->m_ledState);`</details> |
 
 > [!TIP]
@@ -925,7 +927,7 @@ Add the following code to the `testBlinking` method in `LedBlinker/Components/Le
 
     ASSERT_from_gpioSet_SIZE(0);  // ensure gpio LED wasn't set
 
-    ASSERT_TLM_LedTransitions_SIZE(0);  // ensure no LedTransitions were recorded
+    ASSERT_TLM_LedTransitionCount_SIZE(0);  // ensure no LedTransitionCount were recorded
 ```
 
 The `this->invoke_to_<port-name>()` methods are used to call input ports on the component under test acting like a port invocation in the system topology but driven by our test harness. `run` is an `async` input port, it's not dispatched immediately, but instead added to an execution queue that would normally be driven off the component's thread.
@@ -966,8 +968,8 @@ Now, check that the state of the component matches expectations after each of th
     ASSERT_EVENTS_LedState(0, Fw::On::ON);
     ASSERT_from_gpioSet_SIZE(1);
     ASSERT_from_gpioSet(0, Fw::Logic::HIGH);
-    ASSERT_TLM_LedTransitions_SIZE(1);
-    ASSERT_TLM_LedTransitions(0, 1);
+    ASSERT_TLM_LedTransitionCount_SIZE(1);
+    ASSERT_TLM_LedTransitionCount(0, 1);
 
     // Cycle 2: LED On->Off
     this->invoke_to_run(0, 0);
@@ -976,7 +978,7 @@ Now, check that the state of the component matches expectations after each of th
     ASSERT_EVENTS_LedState(1, Fw::On::OFF);
     ASSERT_from_gpioSet_SIZE(2);
     ASSERT_from_gpioSet(1, Fw::Logic::LOW);
-    // TODO: Add assertions for LedTransitions telemetry
+    // TODO: Add assertions for LedTransitionCount telemetry
 
     // Cycle 3: LED Off->On
     this->invoke_to_run(0, 0);
@@ -1265,9 +1267,9 @@ To correct this, add `timeout=2` to `fprime_test_api.assert_telemetry`. This wil
 
 Run `pytest` and the tests should now pass.
 
-### Advanced: Test LedTransitions Telemetry
+### Advanced: Test LedTransitionCount Telemetry
 
-To check that blinking stops after turning blinking off, we can check that the `LedTransitions` channel is no longer being emitted.
+To check that blinking stops after turning blinking off, we can check that the `LedTransitionCount` channel is no longer being emitted.
 
 Add the following assertion after disabling blinking:
 
@@ -1276,23 +1278,23 @@ Add the following assertion after disabling blinking:
     # Save reference to current telemetry history so we can search against future telemetry
     telem_after_blink_off = fprime_test_api.telemetry_history.size()
     time.sleep(2)  # Wait to receive telemetry after stopping blinking
-    # Assert that blinking has stopped and that LedTransitions is no longer updating
+    # Assert that blinking has stopped and that LedTransitionCount is no longer updating
     fprime_test_api.assert_telemetry_count(
-        0, "LedBlinker.led.LedTransitions", start=telem_after_blink_off
+        0, "LedBlinker.led.LedTransitionCount", start=telem_after_blink_off
     )
 ```
 
 Because telemetry is sent once per second, some outdated telemetry may be sent after disabling blinking.
-After waiting 1 second for old telemetry to be sent, we can save a reference to telemetry history size, allowing us to search any telemetry received after this point. We then search telemetry using that start reference to assert that 0 new values of the LedTransitions channel are received after this start time. This allows us to confirm that blinking is no longer occurring.
+After waiting 1 second for old telemetry to be sent, we can save a reference to telemetry history size, allowing us to search any telemetry received after this point. We then search telemetry using that start reference to assert that 0 new values of the LedTransitionCount channel are received after this start time. This allows us to confirm that blinking is no longer occurring.
 
 
-Finally, while blinking is enabled, verify that LedTransitions increments over time.
-To verify this, `fprime_test_api.assert_telemetry_count` can be used to wait for and collect a number of LedTransitions values.
+Finally, while blinking is enabled, verify that LedTransitionCount increments over time.
+To verify this, `fprime_test_api.assert_telemetry_count` can be used to wait for and collect a number of LedTransitionCount values.
 
 ```python
-    # Assert that the LedTransitions channel increments
+    # Assert that the LedTransitionCount channel increments
     results = fprime_test_api.assert_telemetry_count(
-        predicates.greater_than(2), "LedBlinker.led.LedTransitions", timeout=4
+        predicates.greater_than(2), "LedBlinker.led.LedTransitionCount", timeout=4
     )
     ascending = True
     prev = None
@@ -1301,11 +1303,11 @@ To verify this, `fprime_test_api.assert_telemetry_count` can be used to wait for
             if not res.get_val() > prev.get_val():
                 ascending = False
                 fprime_test_api.log(
-                    f"LedBlinker.led.LedTransitions not in ascending order: First ({prev.get_val()}) Second ({res.get_val()})"
+                    f"LedBlinker.led.LedTransitionCount not in ascending order: First ({prev.get_val()}) Second ({res.get_val()})"
                 )
         prev = res
     assert fprime_test_api.test_assert(
-        ascending, "Expected all LedBlinker.led.LedTransitions updates to ascend.", True
+        ascending, "Expected all LedBlinker.led.LedTransitionCount updates to ascend.", True
     )
 ```
 

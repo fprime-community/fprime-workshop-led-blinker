@@ -38,7 +38,7 @@ void LedTester ::testBlinking() {
 
     ASSERT_from_gpioSet_SIZE(0);  // ensure gpio LED wasn't set
 
-    ASSERT_TLM_LedTransitions_SIZE(0);  // ensure no LedTransitions were recorded
+    ASSERT_TLM_LedTransitionCount_SIZE(0);  // ensure no LedTransitionCount were recorded
 
     // Send command to enable blinking
     this->sendCmd_BLINKING_ON_OFF(0, 0, Fw::On::ON);
@@ -55,8 +55,8 @@ void LedTester ::testBlinking() {
     ASSERT_EVENTS_LedState(0, Fw::On::ON);
     ASSERT_from_gpioSet_SIZE(1);
     ASSERT_from_gpioSet(0, Fw::Logic::HIGH);
-    ASSERT_TLM_LedTransitions_SIZE(1);
-    ASSERT_TLM_LedTransitions(0, 1);
+    ASSERT_TLM_LedTransitionCount_SIZE(1);
+    ASSERT_TLM_LedTransitionCount(0, 1);
 
     // Cycle 2: LED On->Off
     this->invoke_to_run(0, 0);
@@ -65,8 +65,8 @@ void LedTester ::testBlinking() {
     ASSERT_EVENTS_LedState(1, Fw::On::OFF);
     ASSERT_from_gpioSet_SIZE(2);
     ASSERT_from_gpioSet(1, Fw::Logic::LOW);
-    ASSERT_TLM_LedTransitions_SIZE(2);
-    ASSERT_TLM_LedTransitions(1, 2);
+    ASSERT_TLM_LedTransitionCount_SIZE(2);
+    ASSERT_TLM_LedTransitionCount(1, 2);
 
     // Cycle 3: LED Off->On
     this->invoke_to_run(0, 0);
@@ -75,8 +75,8 @@ void LedTester ::testBlinking() {
     ASSERT_EVENTS_LedState(2, Fw::On::ON);
     ASSERT_from_gpioSet_SIZE(3);
     ASSERT_from_gpioSet(2, Fw::Logic::HIGH);
-    ASSERT_TLM_LedTransitions_SIZE(3);
-    ASSERT_TLM_LedTransitions(2, 3);
+    ASSERT_TLM_LedTransitionCount_SIZE(3);
+    ASSERT_TLM_LedTransitionCount(2, 3);
 }
 
 void LedTester ::testBlinkInterval() {
@@ -98,7 +98,7 @@ void LedTester ::testBlinkInterval() {
     // Verify the LED has toggled on and off 4 times in 8 cycles
     ASSERT_EVENTS_LedState_SIZE(blinkInterval);
     ASSERT_from_gpioSet_SIZE(blinkInterval);
-    ASSERT_TLM_LedTransitions(this->tlmHistory_LedTransitions->size() - 1, blinkInterval);
+    ASSERT_TLM_LedTransitionCount(this->tlmHistory_LedTransitionCount->size() - 1, blinkInterval);
 }
 
 // ----------------------------------------------------------------------

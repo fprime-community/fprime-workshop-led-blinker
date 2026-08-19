@@ -59,13 +59,12 @@ class Led : public LedComponentBase {
                                    const Fw::On& onOff   //!< Indicates whether the blinking should be on or off
                                    ) override;
 
-    Fw::On m_ledState = Fw::On::OFF;  //! Keeps track if LED is on or off
-    U64 m_transitionCount = 0;        //! The number of on/off transitions that have occurred
-                                      //! from FSW boot up
-    U32 m_ticksSinceToggle = 0;       //! Keeps track of rate-group ticks since the last toggle,
-                                      //! modulo the blink interval
-    bool m_isBlinking = false;        //! Flag: if true then LED blinking will occur else
-                                      //! no blinking will happen
+    Fw::On m_ledState = Fw::On::OFF;       //! Keeps track if LED is on or off
+    U64 m_transitionCount = 0;             //! The number of on/off transitions that have occurred
+                                           //! from FSW boot up
+    U32 m_ticksSinceToggle = 0;            //! Keeps track of rate-group ticks since the last toggle,
+                                           //! modulo the blink interval
+    Fw::On m_blinkingState = Fw::On::OFF;  //! Indicates whether LED blinking is on or off
 };
 
 }  // namespace Components

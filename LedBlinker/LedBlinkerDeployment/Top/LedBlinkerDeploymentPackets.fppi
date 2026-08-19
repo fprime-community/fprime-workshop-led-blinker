@@ -22,7 +22,7 @@ telemetry packets LedBlinkerDeploymentPackets {
 
     # LED Blinker telemetry channels
     LedBlinker.led.BlinkingState
-    LedBlinker.led.LedTransitions
+    LedBlinker.led.LedTransitionCount
 
     LedBlinker.rateGroup1.RgMaxTime
     LedBlinker.rateGroup2.RgMaxTime
