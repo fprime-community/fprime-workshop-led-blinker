@@ -29,7 +29,7 @@ Svc::ActiveRateGroup::ContextArray rateGroup_0_5HzContext(0);
 Svc::ActiveRateGroup::ContextArray rateGroup_0_25HzContext(0);
 
 enum TopologyConstants {
-    COMM_PRIORITY = 100,
+    COMM_PRIORITY = 90,
 };
 
 // Public functions for use in main program are namespaced with deployment module name
