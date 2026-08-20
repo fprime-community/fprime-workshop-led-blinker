@@ -19,7 +19,7 @@ module LedBlinker {
 
   module Default {
     constant QUEUE_SIZE = 10
-    constant STACK_SIZE = 64 * 1024
+    constant STACK_SIZE = 128 * 1024
   }
 
   # ----------------------------------------------------------------------
@@ -29,27 +29,27 @@ module LedBlinker {
   instance rateGroup_1Hz: Svc.ActiveRateGroup base id 0x10001000 \
     queue size Default.QUEUE_SIZE \
     stack size Default.STACK_SIZE \
-    priority 120
+    priority 99
 
   instance rateGroup_0_5Hz: Svc.ActiveRateGroup base id 0x10002000 \
     queue size Default.QUEUE_SIZE \
     stack size Default.STACK_SIZE \
-    priority 119
+    priority 98
 
   instance rateGroup_0_25Hz: Svc.ActiveRateGroup base id 0x10003000 \
     queue size Default.QUEUE_SIZE \
     stack size Default.STACK_SIZE \
-    priority 118
+    priority 97
 
   instance cmdSeq: Svc.CmdSequencer base id 0x10004000 \
     queue size Default.QUEUE_SIZE \
     stack size Default.STACK_SIZE \
-    priority 117
+    priority 96
 
   instance led: LedBlinker.Led base id 0x10005000 \
     queue size Default.QUEUE_SIZE \
     stack size Default.STACK_SIZE \
-    priority 95
+    priority 80
 
   # ----------------------------------------------------------------------
   # Queued component instances
