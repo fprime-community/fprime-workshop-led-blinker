@@ -54,6 +54,9 @@ void configureTopology() {
     // Command sequencer needs to allocate memory to hold contents of command sequences
     cmdSeq.allocateBuffer(0, mallocator, 5 * 1024);
 
+    // PrmDb file name must be supplied by the using topology
+    FileHandling::prmDb.configure("PrmDb.dat");
+
     Os::File::Status status =
         gpioDriver.open("/dev/gpiochip4", 13, Drv::LinuxGpioDriver::GpioConfiguration::GPIO_OUTPUT);
     if (status != Os::File::Status::OP_OK) {
@@ -77,6 +80,8 @@ void setupTopology(const TopologyState& state) {
     }
     // Project-specific component configuration. Function provided above. May be inlined, if desired.
     configureTopology();
+    // Autocoded parameter read from file. Function provided by autocoder.
+    readParameters();
     // Autocoded parameter loading. Function provided by autocoder.
     loadParameters();
     // Autocoded task kick-off (active components). Function provided by autocoder.
