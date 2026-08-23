@@ -963,7 +963,7 @@ The F´ unit test framework provides `this->sendCmd_COMMAND_NAME(args)` function
 
 To dispatch a queued command, unit tests must explicitly call the `doDispatch()` function to dispatch the first message on the queue.
 
-Once dispatched, the command is ran. In your unit tests, it's good practice to check the command responded and it responded with the expected results. In this case, we expect our command to succeed with an `Fw::CmdResponse::OK` response.
+Once dispatched, the command is run. In your unit tests, it's good practice to check the command responded and it responded with the expected results. In this case, we expect our command to succeed with an `Fw::CmdResponse::OK` response.
 
 Now, check that the state of the component matches expectations after each of three cycles. Write assertions to fill in the todo comments.
 
@@ -1039,7 +1039,7 @@ xdg-open coverage.html  # Linux
 
 ### LED Blinker Step 6 Conclusion
 
-Congratulations!  You've tested the `Led` component with some unit-tests. It is time to finish implementation and run on hardware!
+Congratulations!  You've tested the `Led` component with some unit tests. It is time to finish implementation and run on hardware!
 
 ---
 
