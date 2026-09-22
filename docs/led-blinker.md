@@ -71,7 +71,7 @@ This tutorial is composed of the following steps:
 
 **Extension Lessons:**
 
-- [Timeliness and Deadline-Driven Components](timeliness.md) — refactor the LED component to use a queued component with rate group dispatch for deadline enforcement
+- [Timeliness and Deadline-Driven Components](docs/timeliness.md) — refactor the LED component to use a queued component with rate group dispatch for deadline enforcement
 
 
 ---
@@ -254,7 +254,7 @@ Your new component is located in the directory `LedBlinker/Components/Led`.
 
 We chose an `active` component because it owns a thread and processes commands asynchronously from its own queue. For this tutorial, the LED blinker does not have hard timing deadlines — it is sufficient for the blink to happen at approximately the right rate. An active component with an `async` rate group port is a simple way to achieve this event-driven periodic behavior.
 
-However, in flight software where timing is critical (e.g. control loops that must execute within a strict deadline), a `queued` component with a `sync` rate group port is preferred. This pattern runs the component's work directly on the rate group's thread, enabling the rate group to detect when work exceeds the allotted cycle time (a "slip"). To learn more about this pattern and refactor the `Led` component accordingly, see the extension lesson on [Timeliness and Deadline-Driven Components](timeliness.md). You can also refer to [Selecting Component, Port, and Command Kinds](https://fprime.jpl.nasa.gov/devel/docs/user-manual/framework/component-and-port-selection/) for more information about component kinds.
+However, in flight software where timing is critical (e.g. control loops that must execute within a strict deadline), a `queued` component with a `sync` rate group port is preferred. This pattern runs the component's work directly on the rate group's thread, enabling the rate group to detect when work exceeds the allotted cycle time (a "slip"). To learn more about this pattern and refactor the `Led` component accordingly, see the extension lesson on [Timeliness and Deadline-Driven Components](docs/timeliness.md). You can also refer to [Selecting Component, Port, and Command Kinds](https://fprime.jpl.nasa.gov/devel/docs/user-manual/framework/component-and-port-selection/) for more information about component kinds.
 
 #### Commands
 
