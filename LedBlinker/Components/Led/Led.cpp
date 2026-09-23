@@ -4,6 +4,7 @@
 // \brief  cpp file for Led component implementation class
 // ======================================================================
 
+#include "Fw/Prm/ParamValid.hpp"
 #include "LedBlinker/Components/Led/Led.hpp"
 #include "config/FpConfig.hpp"
 
@@ -23,8 +24,8 @@ void Led ::parameterUpdated(FwPrmIdType id) {
         case PARAMID_BLINK_INTERVAL: {
             // Read back the parameter value
             const U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
-            // NOTE: isValid is always VALID in parameterUpdated as it was just properly set
-            FW_ASSERT(isValid == Fw::ParamValid::VALID, static_cast<FwAssertArgType>(isValid));
+            // Check that the parameter value is OK
+            FW_ASSERT(FW_PARAM_OK(isValid), static_cast<FwAssertArgType>(isValid));
 
             // Emit the blink interval set event
             this->log_ACTIVITY_HI_BlinkIntervalSet(interval);
