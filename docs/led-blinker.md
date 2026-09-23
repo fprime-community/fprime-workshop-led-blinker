@@ -350,7 +350,7 @@ Open `Led.hpp` in `LedBlinker/Components/Led`. Add the following private member 
     U64 m_transitionCount = 0;             //! The number of on/off transitions that have occurred
                                            //! from FSW boot up
     U32 m_ticksSinceToggle = 0;            //! Keeps track of rate-group ticks since the last toggle,
-                                           //! modulo the blink interval
+step                                            //! modulo the blink interval
     Fw::On m_blinkingState = Fw::On::OFF;  //! Indicates whether LED blinking is on or off
 ```
 
@@ -751,7 +751,15 @@ fprime-util build
 
 When ground updates a component's parameter, the user may want the component to react to the parameter update. F Prime provides a function called `parameterUpdated` where your component can react to each parameter update. Implementing `parameterUpdated` for a component is optional but we'll implement it for this tutorial.
 
-In your `LedBlinker/Components/Led` directory, open the file `Led.hpp` and add the following function signature in the `private:` scope:
+In your `LedBlinker/Components/Led` directory, open the file `Led.hpp` and add the following include directive at the top of the file:
+
+```cpp
+#include "Fw/Prm/ParamValid.hpp"
+```
+
+> This step includes a helper macro for checking parameter validity.
+
+Then add the following function signature in the `private:` scope:
 
 ```cpp
     //! Emit parameter updated EVR
@@ -771,8 +779,8 @@ void Led ::parameterUpdated(FwPrmIdType id) {
         case PARAMID_BLINK_INTERVAL: {
             // Read back the parameter value
             const U32 interval = this->paramGet_BLINK_INTERVAL(isValid);
-            // NOTE: isValid is always VALID in parameterUpdated as it was just properly set
-            FW_ASSERT(isValid == Fw::ParamValid::VALID, static_cast<FwAssertArgType>(isValid));
+            // Check that the parameter value is OK
+            FW_ASSERT(FW_PARAM_OK(isValid), static_cast<FwAssertArgType>(isValid));
 
             // Emit the blink interval set event
             // TODO: Emit an event with, severity activity high, named BlinkIntervalSet that takes in an argument of
