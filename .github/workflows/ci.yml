@@ -147,13 +147,13 @@ jobs:
         shell: bash
       - name: "Run Unit Tests"
         working-directory: LedBlinker/LedBlinkerDeployment
-        run: fprime-util check -j8 2>&1 | output-cleaner
+        run: fprime-util check -j8 --pass-through --output-on-failure
         shell: bash
       - name: "Archive test logs"
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: led-blinker-unit-test-logs
-          path: build-fprime-automatic-native-ut/Testing/Temporary/LastTest.log
+          path: LedBlinker/LedBlinkerDeployment/build-*/Testing/Temporary/*.log
           if-no-files-found: ignore
           retention-days: 5
