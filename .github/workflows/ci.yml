@@ -1,0 +1,159 @@
+# CI for this external F´ project.
+#
+# Runs on its own pushes/PRs (using the fprime submodule as committed) and on `workflow_dispatch`
+# from the nasa/fprime external-CI orchestrator, which overlays an exact F´ commit under lib/fprime
+# and reports the result back as a Check Run on that commit. Dispatched runs build untrusted F´ PR
+# code: they get no secrets, `contents: read` only, and ccache is disabled so nothing is written to
+# this repository's default-branch cache.
+name: CI
+run-name: ${{ github.event_name == 'workflow_dispatch' && inputs.dispatch_id != '' && format('ext-ci {0} ({1}@{2})', inputs.dispatch_id, inputs.fprime_repository, inputs.fprime_ref) || '' }}
+
+on:
+  push:
+    branches: [ devel ]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      fprime_repository:
+        description: "F´ repository to overlay under lib/fprime (<owner>/<repo>); a fork for fork PRs"
+        type: string
+        default: nasa/fprime
+      fprime_ref:
+        description: "F´ ref to overlay; the orchestrator passes an exact commit SHA"
+        type: string
+        default: devel
+      fprime_pr_number:
+        description: "nasa/fprime PR number being tested (empty for branch runs); used to pick nasa/fprime-gds@pr-<N>"
+        type: string
+        default: ""
+      dispatch_id:
+        description: "Correlation id set by the orchestrator (informational)"
+        type: string
+        default: ""
+
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.dispatch_id || github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  DISPATCHED: ${{ github.event_name == 'workflow_dispatch' }}
+
+jobs:
+  build:
+    name: "Build"
+    runs-on: ubuntu-22.04
+    steps:
+      - name: "Setup output-cleaner"
+        uses: nasa/fprime-actions/output-cleaner@devel
+      - name: "Checkout project"
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: "Overlay requested F´ revision"
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.fprime_repository }}
+          ref: ${{ inputs.fprime_ref }}
+          path: lib/fprime
+          submodules: true
+          fetch-depth: 0
+          filter: blob:none
+      - name: "Setup F´ toolchain"
+        uses: nasa/fprime-actions/setup@devel
+        with:
+          location: lib/fprime
+          ccache: ${{ github.event_name != 'workflow_dispatch' }}
+      - name: "Upgrade fprime-gds to pr-<N> (if the F´ PR has a matching GDS branch)"
+        if: github.event_name == 'workflow_dispatch' && inputs.fprime_pr_number != ''
+        shell: bash
+        env:
+          PR_NUMBER: ${{ inputs.fprime_pr_number }}
+        run: |
+          set -euo pipefail
+          [[ "${PR_NUMBER}" =~ ^[0-9]+$ ]] || { echo "::error::fprime_pr_number must be numeric"; exit 1; }
+          code=$(curl -s -o /dev/null -w '%{http_code}' "https://api.github.com/repos/nasa/fprime-gds/branches/pr-${PR_NUMBER}")
+          if [ "${code}" = "200" ]; then
+            echo "Installing nasa/fprime-gds@pr-${PR_NUMBER}"
+            pip install --upgrade "git+https://github.com/nasa/fprime-gds.git@pr-${PR_NUMBER}"
+          else
+            echo "No nasa/fprime-gds pr-${PR_NUMBER} branch (HTTP ${code}); keeping the pinned version"
+          fi
+      - name: "Generate build cache"
+        working-directory: LedBlinker/LedBlinkerDeployment
+        run: fprime-util generate 2>&1 | output-cleaner
+        shell: bash
+      - name: "Build"
+        working-directory: LedBlinker/LedBlinkerDeployment
+        run: fprime-util build -j8 2>&1 | output-cleaner
+        shell: bash
+      - name: "Upload build artifacts"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: led-blinker-build-artifacts
+          path: build-artifacts
+          retention-days: 5
+  unit-tests:
+    name: "Unit Tests"
+    runs-on: ubuntu-22.04
+    steps:
+      - name: "Setup output-cleaner"
+        uses: nasa/fprime-actions/output-cleaner@devel
+      - name: "Checkout project"
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: "Overlay requested F´ revision"
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.fprime_repository }}
+          ref: ${{ inputs.fprime_ref }}
+          path: lib/fprime
+          submodules: true
+          fetch-depth: 0
+          filter: blob:none
+      - name: "Setup F´ toolchain"
+        uses: nasa/fprime-actions/setup@devel
+        with:
+          location: lib/fprime
+          ccache: ${{ github.event_name != 'workflow_dispatch' }}
+      - name: "Upgrade fprime-gds to pr-<N> (if the F´ PR has a matching GDS branch)"
+        if: github.event_name == 'workflow_dispatch' && inputs.fprime_pr_number != ''
+        shell: bash
+        env:
+          PR_NUMBER: ${{ inputs.fprime_pr_number }}
+        run: |
+          set -euo pipefail
+          [[ "${PR_NUMBER}" =~ ^[0-9]+$ ]] || { echo "::error::fprime_pr_number must be numeric"; exit 1; }
+          code=$(curl -s -o /dev/null -w '%{http_code}' "https://api.github.com/repos/nasa/fprime-gds/branches/pr-${PR_NUMBER}")
+          if [ "${code}" = "200" ]; then
+            echo "Installing nasa/fprime-gds@pr-${PR_NUMBER}"
+            pip install --upgrade "git+https://github.com/nasa/fprime-gds.git@pr-${PR_NUMBER}"
+          else
+            echo "No nasa/fprime-gds pr-${PR_NUMBER} branch (HTTP ${code}); keeping the pinned version"
+          fi
+      - name: "Generate UT build cache"
+        working-directory: LedBlinker/LedBlinkerDeployment
+        run: fprime-util generate --ut 2>&1 | output-cleaner
+        shell: bash
+      - name: "Build UTs"
+        working-directory: LedBlinker/LedBlinkerDeployment
+        run: fprime-util build --ut -j8 2>&1 | output-cleaner
+        shell: bash
+      - name: "Run Unit Tests"
+        working-directory: LedBlinker/LedBlinkerDeployment
+        run: fprime-util check -j8 --pass-through --output-on-failure
+        shell: bash
+      - name: "Archive test logs"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: led-blinker-unit-test-logs
+          path: LedBlinker/LedBlinkerDeployment/build-*/Testing/Temporary/*.log
+          if-no-files-found: ignore
+          retention-days: 5
