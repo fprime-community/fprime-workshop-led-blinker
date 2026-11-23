@@ -165,5 +165,7 @@ telemetry packets LedBlinkerDeploymentPackets {
   }
 
 } omit {
+  FileHandling.prmDb.PrmFileLoadStatus
+  FileHandling.prmDb.PrmFileLoadRecords
   CdhCore.cmdDisp.CommandErrors
 }
